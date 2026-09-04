@@ -1,53 +1,101 @@
 {% extends "base.html" %}
-{% block title %}Donation Appointments ? LIFEFlow{% endblock %}
+{% block title %}Donation Appointments — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0">Donation Appointments</h3>
-        <a href="{% url 'appointments:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-calendar-plus me-1"></i>Schedule Appointment</a>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Donation Appointments &amp; Reception Queue</h2>
+            <div class="page-header-subtitle">Scheduled donor visits, slot capacity management, and reception check-in workflows</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'appointments:create' %}" class="btn btn-lf-primary">
+                <i class="bi bi-calendar-plus-fill"></i> Schedule Appointment
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 mb-4">
-        <form method="get" class="row g-2">
-            <div class="col-md-5"><input type="text" name="search" class="form-control" placeholder="Search donor name or appointment ID..." value="{{ search }}"></div>
+    <!-- Filter Bar -->
+    <div class="lf-filter-bar">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search donor name or appointment ID..." value="{{ search }}">
+                </div>
+            </div>
             <div class="col-md-3">
                 <select name="status" class="form-select">
-                    <option value="">All Statuses</option>
-                    {% for s_val, s_name in statuses %}<option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>{% endfor %}
+                    <option value="">All Appointment Statuses</option>
+                    {% for s_val, s_name in statuses %}
+                        <option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2"><input type="date" name="date" class="form-control" value="{{ date }}"></div>
-            <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Filter</button></div>
+            <div class="col-md-2">
+                <input type="date" name="date" class="form-control" value="{{ date }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-lf-primary w-100 justify-content-center">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
         </form>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Appointment ID</th><th>Donor</th><th>Type</th><th>Scheduled Date</th><th>Time Slot</th><th>Status</th><th>Actions</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Donor Name</th>
+                        <th>Blood Group</th>
+                        <th>Procedure Type</th>
+                        <th>Scheduled Date</th>
+                        <th>Time Slot</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for a in page_obj %}
                     <tr>
-                        <td><strong>{{ a.appointment_id }}</strong></td>
-                        <td>{{ a.donor.full_name }} <span class="badge badge-blood ms-1">{{ a.donor.blood_group }}</span></td>
-                        <td>{{ a.get_appointment_type_display }}</td>
-                        <td>{{ a.scheduled_date }}</td>
-                        <td><span class="badge bg-light text-dark border">{{ a.time_slot }}</span></td>
-                        <td>
-                            {% if a.status == 'SCHEDULED' %}<span class="badge bg-primary">Scheduled</span>
-                            {% elif a.status == 'CHECKED_IN' %}<span class="badge bg-info text-dark">Checked-In</span>
-                            {% elif a.status == 'COMPLETED' %}<span class="badge bg-success">Completed</span>
-                            {% else %}<span class="badge bg-secondary">{{ a.get_status_display }}</span>{% endif %}
-                        </td>
+                        <td><strong class="cell-id text-danger">{{ a.appointment_id }}</strong></td>
+                        <td><strong>{{ a.donor.full_name }}</strong></td>
+                        <td><span class="badge-blood-group">{{ a.donor.blood_group }}</span></td>
+                        <td><span class="text-secondary small">{{ a.get_appointment_type_display }}</span></td>
+                        <td>{{ a.scheduled_date|date:"M d, Y" }}</td>
+                        <td><span class="cell-id bg-light px-2 py-1 border rounded">{{ a.time_slot }}</span></td>
                         <td>
                             {% if a.status == 'SCHEDULED' %}
-                                <a href="{% url 'appointments:checkin' a.pk %}" class="btn btn-success btn-sm"><i class="bi bi-check2-circle me-1"></i>Check-In</a>
-                                <a href="{% url 'appointments:cancel' a.pk %}" class="btn btn-outline-danger btn-sm">Cancel</a>
+                                <span class="lf-badge lf-badge-info">Scheduled</span>
+                            {% elif a.status == 'CHECKED_IN' %}
+                                <span class="lf-badge lf-badge-warning"><i class="bi bi-person-check-fill"></i> Checked-In</span>
+                            {% elif a.status == 'COMPLETED' %}
+                                <span class="lf-badge lf-badge-success"><i class="bi bi-check2"></i> Completed</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">{{ a.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-3 text-nowrap">
+                            {% if a.status == 'SCHEDULED' %}
+                                <a href="{% url 'appointments:checkin' a.pk %}" class="btn btn-sm btn-success text-white py-1 px-2" style="font-size:0.8rem;">
+                                    <i class="bi bi-check2-circle me-1"></i> Check-In
+                                </a>
+                                <a href="{% url 'appointments:cancel' a.pk %}" class="btn btn-sm btn-outline-danger py-1 px-2 ms-1" style="font-size:0.8rem;">
+                                    Cancel
+                                </a>
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="7" class="text-center text-muted py-3">No appointments found.</td></tr>
+                    <tr>
+                        <td colspan="8" class="empty-state py-5">
+                            <i class="bi bi-calendar-x empty-state-icon"></i>
+                            <div class="empty-state-title">No Appointments Found</div>
+                            <div class="empty-state-desc">No donor appointments match the selected filters or date.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
