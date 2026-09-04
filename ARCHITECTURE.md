@@ -1,7 +1,7 @@
-# LIFEFlow Architecture & Technical Design
+# RedLink Architecture & Technical Design
 
 ## 1. Architectural Philosophy
-LIFEFlow is engineered as a monolithic, modular Django application prioritizing data integrity, strict auditability, deterministic state machines, and concurrency safety.
+RedLink is engineered as a monolithic, modular Django application prioritizing data integrity, strict auditability, deterministic state machines, and concurrency safety.
 
 Microservices, Kafka, and separate frontend frameworks (e.g. React/Node) were explicitly avoided to eliminate network partitioning hazards, eventual consistency gaps, and unnecessary operational complexity in mission-critical blood transfusion workflows.
 
@@ -49,5 +49,5 @@ otifications**: Asynchronous/in-app alert queue for cold-chain alarms, expiratio
 eports**: Reporting and regulatory audit export suite (CSV & ReportLab PDF).
 
 ## 4. Concurrency & Integrity Model
-- **Atomic Reservation Workflow:** When reserving a unit, LIFEFlow wraps the operation inside 	ransaction.atomic() and locks the candidate row using select_for_update(). If two users request the same unit at the same millisecond, the database serializes access, preventing double allocations.
+- **Atomic Reservation Workflow:** When reserving a unit, RedLink wraps the operation inside 	ransaction.atomic() and locks the candidate row using select_for_update(). If two users request the same unit at the same millisecond, the database serializes access, preventing double allocations.
 - **Quarantine Safety Gate:** Quarantined or expired units are strictly filtered out of the issuable pool at the ORM query level and validated on the model layer (is_issuable).

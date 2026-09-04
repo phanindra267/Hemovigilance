@@ -1,4 +1,4 @@
-# LIFEFlow Testing Strategy & Quality Assurance
+# RedLink Testing Strategy & Quality Assurance
 
 ## 1. Test Suite Overview
 The project contains comprehensive unit and integration tests verifying every layer of the hemovigilance system:

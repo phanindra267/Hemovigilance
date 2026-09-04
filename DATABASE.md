@@ -1,4 +1,4 @@
-# LIFEFlow Database Specification & Entity Model
+# RedLink Database Specification & Entity Model
 
 ## 1. Storage Engine
 - **Local Development:** SQLite 3 with full foreign key constraints enabled.

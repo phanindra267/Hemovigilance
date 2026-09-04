@@ -53,7 +53,7 @@ def export_to_pdf(title, headers, rows, subtitle=''):
     )
 
     story = []
-    story.append(Paragraph("LIFEFlow Hemovigilance & Blood Bank System", title_style))
+    story.append(Paragraph("RedLink Hemovigilance & Blood Bank System", title_style))
     story.append(Paragraph(title, title_style))
     if subtitle:
         story.append(Paragraph(subtitle, subtitle_style))

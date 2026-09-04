@@ -1,4 +1,4 @@
-# LIFEFlow Clinical & Operational Workflows
+# RedLink Clinical & Operational Workflows
 
 ## 1. Donor & Phlebotomy Workflow
 1. **Registration:** Voluntary donor registers online or at front desk.

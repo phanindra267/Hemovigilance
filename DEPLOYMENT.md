@@ -1,4 +1,4 @@
-# LIFEFlow Production Deployment Guide
+# RedLink Production Deployment Guide
 
 ## 1. Production Architecture
 - **Reverse Proxy:** Nginx with SSL/TLS (Let's Encrypt)
@@ -20,7 +20,7 @@ gunicorn lifeflow_project.wsgi:application \
 ## 3. Systemd Service Unit (/etc/systemd/system/lifeflow.service)
 `ini
 [Unit]
-Description=LIFEFlow Hemovigilance Application Server
+Description=RedLink Hemovigilance Application Server
 After=network.target
 
 [Service]

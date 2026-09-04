@@ -79,7 +79,7 @@ def register_donor_view(request):
 
                 log_audit(user, 'CREATE', donor, f"Public self-registration for donor {donor.full_name}", request=request)
                 login(request, user)
-                messages.success(request, f"Registration complete! Welcome to LIFEFlow, {donor.full_name}.")
+                messages.success(request, f"Registration complete! Welcome to RedLink, {donor.full_name}.")
                 return redirect('accounts:dashboard')
     else:
         form = DonorRegistrationUserForm()

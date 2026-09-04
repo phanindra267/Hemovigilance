@@ -1,6 +1,6 @@
-# Contributing to LIFEFlow
+# Contributing to RedLink
 
-Thank you for your interest in contributing to **LIFEFlow**! We welcome contributions from developers, clinical informaticians, and healthcare professionals.
+Thank you for your interest in contributing to **RedLink**! We welcome contributions from developers, clinical informaticians, and healthcare professionals.
 
 ---
 

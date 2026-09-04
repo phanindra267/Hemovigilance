@@ -14,7 +14,7 @@ def lifeflow_global_context(request):
             unread_count = 0
 
     return {
-        'ORGANIZATION_NAME': getattr(settings, 'ORGANIZATION_NAME', 'LIFEFlow Hemovigilance'),
+        'ORGANIZATION_NAME': getattr(settings, 'ORGANIZATION_NAME', 'RedLink Hemovigilance'),
         'ORGANIZATION_CODE': getattr(settings, 'ORGANIZATION_CODE', 'LIFEFLOW-HQ'),
         'current_user_profile': user_profile,
         'unread_notifications_count': unread_count,

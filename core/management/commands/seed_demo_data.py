@@ -21,17 +21,17 @@ from notifications.models import Notification
 from audit.models import AuditLog
 
 class Command(BaseCommand):
-    help = 'Seeds complete realistic synthetic demo data across all 15 LIFEFlow apps'
+    help = 'Seeds complete realistic synthetic demo data across all 15 RedLink apps'
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.NOTICE('Starting LIFEFlow complete demo data seeding...'))
+        self.stdout.write(self.style.NOTICE('Starting RedLink complete demo data seeding...'))
 
         with transaction.atomic():
             # 1. Primary Blood Bank
             bank, _ = BloodBank.objects.get_or_create(
-                code='LIFEFLOW-HQ',
+                code='REDLINK-HQ',
                 defaults={
-                    'name': 'LIFEFlow National Blood & Hemovigilance Centre',
+                    'name': 'RedLink National Blood & Hemovigilance Centre',
                     'license_number': 'LIC-NBTC-2026-0982',
                     'registration_number': 'REG-HEALTH-IN-4921',
                     'address': 'Plot 42, Health City Avenue, Medical Enclave',
@@ -40,8 +40,8 @@ class Command(BaseCommand):
                     'state': 'Delhi',
                     'postal_code': '110001',
                     'phone': '+91-11-2394-8000',
-                    'email': 'centre@lifeflow.org',
-                    'emergency_helpline': '1800-LIFE-FLOW (1800-543-3356)',
+                    'email': 'centre@redlink.org',
+                    'emergency_helpline': '1800-RED-LINK (1800-733-5465)',
                     'operating_hours': '24x7 Round-the-Clock Emergency Operations',
                 }
             )
@@ -114,12 +114,12 @@ class Command(BaseCommand):
 
             # 4. User Accounts across 9 Roles
             users_meta = [
-                ('admin', 'admin@lifeflow.org', 'Super', 'Administrator', Role.SUPER_ADMIN, True, True),
-                ('bb_admin', 'bbadmin@lifeflow.org', 'Vikram', 'Malhotra', Role.BLOOD_BANK_ADMIN, True, False),
-                ('doctor_rajesh', 'rajesh.mo@lifeflow.org', 'Dr. Rajesh', 'Khurana', Role.MEDICAL_OFFICER, True, False),
-                ('tech_priya', 'priya.lab@lifeflow.org', 'Priya', 'Sharma', Role.LAB_TECHNICIAN, True, False),
-                ('tech_arun', 'arun.tech@lifeflow.org', 'Arun', 'Patel', Role.BLOOD_BANK_TECH, True, False),
-                ('recep_meena', 'meena.reception@lifeflow.org', 'Meena', 'Iyer', Role.RECEPTIONIST, True, False),
+                ('admin', 'admin@redlink.org', 'Super', 'Administrator', Role.SUPER_ADMIN, True, True),
+                ('bb_admin', 'bbadmin@redlink.org', 'Vikram', 'Malhotra', Role.BLOOD_BANK_ADMIN, True, False),
+                ('doctor_rajesh', 'rajesh.mo@redlink.org', 'Dr. Rajesh', 'Khurana', Role.MEDICAL_OFFICER, True, False),
+                ('tech_priya', 'priya.lab@redlink.org', 'Priya', 'Sharma', Role.LAB_TECHNICIAN, True, False),
+                ('tech_arun', 'arun.tech@redlink.org', 'Arun', 'Patel', Role.BLOOD_BANK_TECH, True, False),
+                ('recep_meena', 'meena.reception@redlink.org', 'Meena', 'Iyer', Role.RECEPTIONIST, True, False),
                 ('hospital_user', 'transfusion@metrohospital.org', 'Dr. Sanjay', 'Mehta', Role.HOSPITAL_USER, False, False),
                 ('donor_user', 'rahul.donor@gmail.com', 'Rahul', 'Deshmukh', Role.DONOR, False, False),
                 ('patient_user', 'ananya.recipient@gmail.com', 'Ananya', 'Sen', Role.PATIENT, False, False),
@@ -639,7 +639,7 @@ class Command(BaseCommand):
             Notification.objects.get_or_create(
                 recipient=created_users['donor_user'],
                 notification_type='APPOINTMENT_REMINDER',
-                title='Thank you for donating blood with LIFEFlow!',
+                title='Thank you for donating blood with RedLink!',
                 defaults={
                     'message': 'Dear Rahul, your donation 2 days ago was successfully tested and separated into life-saving components. You are a hero!',
                     'link_url': '/appointments/',
@@ -658,4 +658,4 @@ class Command(BaseCommand):
                 defaults={'object_repr': str(sample_rahul), 'user': created_users['doctor_rajesh'], 'reason': 'Verified serology and released blood bag BB-2026-000001'}
             )
 
-        self.stdout.write(self.style.SUCCESS('Successfully seeded synthetic demo data across all LIFEFlow models!'))
+        self.stdout.write(self.style.SUCCESS('Successfully seeded synthetic demo data across all RedLink models!'))

@@ -1,4 +1,4 @@
-# LIFEFlow — Blood Bank Management & Hemovigilance System
+# RedLink — Blood Bank Management & Hemovigilance System
 
 [![CI Pipeline](https://github.com/phanindra267/Hemovigilance/actions/workflows/ci.yml/badge.svg)](https://github.com/phanindra267/Hemovigilance/actions)
 [![Django Version](https://img.shields.io/badge/Django-6.0.6-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
@@ -8,7 +8,7 @@
 [![Traceability](https://img.shields.io/badge/Traceability-Unit--Level%20Vein--to--Vein-c0392b.svg)](WORKFLOWS.md)
 [![Cold Chain](https://img.shields.io/badge/Cold%20Chain-Monitored%20(+4°C)-0284c7.svg)](ARCHITECTURE.md)
 
-**LIFEFlow** is an enterprise-grade, production-oriented Blood Bank Management and Hemovigilance Information System built with **Python**, **Django**, and **Bootstrap 5**. Designed for regional transfusion centers, hospital blood banks, and healthcare authorities, it provides strict vein-to-vein unit traceability, cold chain governance, serological release gates, and atomic requisition management.
+**RedLink** is an enterprise-grade, production-oriented Blood Bank Management and Hemovigilance Information System built with **Python**, **Django**, and **Bootstrap 5**. Designed for regional transfusion centers, hospital blood banks, and healthcare authorities, it provides strict vein-to-vein unit traceability, cold chain governance, serological release gates, and atomic requisition management.
 
 ---
 
@@ -151,7 +151,7 @@ Visit **[http://127.0.0.1:8000](http://127.0.0.1:8000)** in your browser.
 
 ## Automated Management Commands
 
-LIFEFlow includes automated administrative tasks for routine operations:
+RedLink includes automated administrative tasks for routine operations:
 
 ```bash
 # Audit inventory and flag stock nearing or past expiration date
@@ -168,7 +168,7 @@ python manage.py generate_notifications
 
 ## Running Automated Tests
 
-LIFEFlow comes with a comprehensive test suite covering the entire 12-stage lifecycle, role access control, inventory concurrency, and PDF/CSV reporting:
+RedLink comes with a comprehensive test suite covering the entire 12-stage lifecycle, role access control, inventory concurrency, and PDF/CSV reporting:
 
 ```bash
 python manage.py test --verbosity=2

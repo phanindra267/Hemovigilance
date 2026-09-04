@@ -1,6 +1,6 @@
 # Academic Syllabus & Curriculum Compliance Matrix
 
-This document provides a comprehensive, unit-by-unit audit demonstrating how **LIFEFlow** fulfills and exceeds every single topic outlined in the Django Web Development Curriculum (Units I through VI).
+This document provides a comprehensive, unit-by-unit audit demonstrating how **RedLink** fulfills and exceeds every single topic outlined in the Django Web Development Curriculum (Units I through VI).
 
 ---
 
@@ -162,4 +162,4 @@ This document provides a comprehensive, unit-by-unit audit demonstrating how **L
 
 ## Conclusion
 
-**LIFEFlow** is 100% compliant with the entire Django Web Development curriculum across all 6 Units. It serves as an exemplary real-world capstone project that demonstrates both foundational Django concepts and production-grade software engineering practices.
+**RedLink** is 100% compliant with the entire Django Web Development curriculum across all 6 Units. It serves as an exemplary real-world capstone project that demonstrates both foundational Django concepts and production-grade software engineering practices.

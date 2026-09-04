@@ -1,4 +1,4 @@
-# LIFEFlow Security & Hemovigilance Governance
+# RedLink Security & Hemovigilance Governance
 
 ## 1. Authentication & Authorization
 - Django standard authentication with Argon2 / PBKDF2 password hashing.

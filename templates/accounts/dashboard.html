@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Dashboard — LIFEFlow Hemovigilance{% endblock %}
+{% block title %}Dashboard — RedLink Hemovigilance{% endblock %}
 {% block content %}
 <div class="container-fluid px-lg-4 py-2">
     <!-- Page Header -->
@@ -9,7 +9,7 @@
             <div class="page-header-subtitle d-flex align-items-center gap-2 flex-wrap">
                 <span>Role: <strong class="text-danger">{{ profile.get_role_display }}</strong></span>
                 <span class="text-lf-light">&bull;</span>
-                <span>Facility: <strong>{{ profile.blood_bank.name|default:"LIFEFlow National Network" }}</strong></span>
+                <span>Facility: <strong>{{ profile.blood_bank.name|default:"RedLink National Network" }}</strong></span>
                 <span class="text-lf-light">&bull;</span>
                 <span><span class="live-dot"></span> System Live</span>
             </div>
