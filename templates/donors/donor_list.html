@@ -1,16 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Donor Registry ? LIFEFlow{% endblock %}
+{% block title %}Donor Registry — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0">Donor Registry</h3>
-        <a href="{% url 'donors:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-person-plus me-1"></i>Register Donor</a>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Voluntary Donor Registry</h2>
+            <div class="page-header-subtitle">Comprehensive registry of voluntary donors, eligibility records, and deferral schedules</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'donors:create' %}" class="btn btn-lf-primary">
+                <i class="bi bi-person-plus-fill"></i> Register New Donor
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 mb-4">
-        <form method="get" class="row g-2">
+    <!-- Search & Filter Bar -->
+    <div class="lf-filter-bar">
+        <form method="get" class="row g-2 align-items-center">
             <div class="col-md-5">
-                <input type="text" name="search" class="form-control" placeholder="Search by name, donor ID, phone..." value="{{ search }}">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by name, donor ID, phone, city..." value="{{ search }}">
+                </div>
             </div>
             <div class="col-md-3">
                 <select name="blood_group" class="form-select">
@@ -29,45 +40,64 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Search</button>
+                <button type="submit" class="btn btn-lf-primary w-100 justify-content-center">
+                    <i class="bi bi-search"></i> Search
+                </button>
             </div>
         </form>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr><th>Donor ID</th><th>Name & Contact</th><th>Group</th><th>Type</th><th>Status</th><th>Total Donated</th><th>Last Donated</th><th>Actions</th></tr>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Donor ID</th>
+                        <th>Name & Contact</th>
+                        <th>Blood Group</th>
+                        <th>Donor Type</th>
+                        <th>Eligibility Status</th>
+                        <th>Total Donations</th>
+                        <th>Last Donated</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {% for d in page_obj %}
                     <tr>
-                        <td><a href="{% url 'donors:detail' d.pk %}" class="fw-bold text-danger text-decoration-none">{{ d.donor_id }}</a></td>
                         <td>
-                            <strong>{{ d.full_name }}</strong> ({{ d.get_gender_display }})<br>
-                            <small class="text-muted">{{ d.phone }} &bull; {{ d.city }}</small>
+                            <a href="{% url 'donors:detail' d.pk %}" class="cell-id text-danger fw-700">{{ d.donor_id }}</a>
                         </td>
-                        <td><span class="badge badge-blood">{{ d.blood_group }}</span></td>
-                        <td><small>{{ d.get_donor_type_display }}</small></td>
+                        <td>
+                            <div class="fw-700">{{ d.full_name }} <span class="text-muted small">({{ d.get_gender_display }})</span></div>
+                            <small class="text-muted"><i class="bi bi-telephone me-1"></i>{{ d.phone }} &bull; {{ d.city }}</small>
+                        </td>
+                        <td><span class="badge-blood-group">{{ d.blood_group }}</span></td>
+                        <td><span class="text-secondary small">{{ d.get_donor_type_display }}</span></td>
                         <td>
                             {% if d.donor_status == 'ACTIVE' %}
-                                <span class="badge bg-success">Active</span>
+                                <span class="lf-badge lf-badge-success"><i class="bi bi-check-circle-fill"></i> Active</span>
                             {% elif d.donor_status == 'TEMPORARILY_DEFERRED' %}
-                                <span class="badge bg-warning text-dark">Temp Deferred</span>
+                                <span class="lf-badge lf-badge-warning"><i class="bi bi-clock-history"></i> Deferred</span>
                             {% else %}
-                                <span class="badge bg-danger">{{ d.get_donor_status_display }}</span>
+                                <span class="lf-badge lf-badge-danger">{{ d.get_donor_status_display }}</span>
                             {% endif %}
                         </td>
-                        <td>{{ d.total_donations_count }} units</td>
+                        <td><strong>{{ d.total_donations_count }}</strong> units</td>
                         <td>{{ d.last_donation_date|default:"Never" }}</td>
-                        <td>
-                            <a href="{% url 'donors:detail' d.pk %}" class="btn btn-outline-secondary btn-sm">Profile</a>
-                            <a href="{% url 'donors:assess_eligibility' d.pk %}" class="btn btn-outline-primary btn-sm">Assess</a>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a href="{% url 'donors:detail' d.pk %}" class="btn btn-sm btn-lf-ghost py-1 px-2" style="font-size:0.8rem;">Profile</a>
+                            <a href="{% url 'donors:assess_eligibility' d.pk %}" class="btn btn-sm btn-lf-outline py-1 px-2" style="font-size:0.8rem;">Assess</a>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="8" class="text-center text-muted py-3">No donors found.</td></tr>
+                    <tr>
+                        <td colspan="8" class="empty-state py-5">
+                            <i class="bi bi-people empty-state-icon"></i>
+                            <div class="empty-state-title">No Donors Found</div>
+                            <div class="empty-state-desc">No donor records match your search or filter criteria.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

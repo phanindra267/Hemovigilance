@@ -1,75 +1,155 @@
 {% extends "base.html" %}
-{% block title %}Operational & Hemovigilance Reports ? LIFEFlow{% endblock %}
+{% block title %}Reporting & Analytics Hub — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="mb-4">
-        <h3 class="fw-bold text-dark mb-1"><i class="bi bi-file-earmark-bar-graph-fill text-danger me-2"></i>Executive & Clinical Reports Suite</h3>
-        <p class="text-secondary mb-0">Generate, filter, print, and export CSV & PDF regulatory audit reports.</p>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Reporting & Regulatory Analytics Hub</h2>
+            <div class="page-header-subtitle">Official hemovigilance audits, dynamic summaries, and instant CSV / ReportLab PDF exports</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'reports:monthly_summary' %}" class="btn btn-lf-primary">
+                <i class="bi bi-calendar3"></i> View Monthly Executive Audit
+            </a>
+        </div>
     </div>
 
+    <!-- Report Categories Cards -->
     <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
-                <i class="bi bi-people-fill text-danger display-5 mb-3"></i>
-                <h5 class="fw-bold">Donor Registry Report</h5>
-                <p class="text-secondary small mb-3">Comprehensive voluntary donor database, donation frequency, eligibility statuses, and geographic distribution.</p>
-                <a href="{% url 'reports:donors' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
-                <i class="bi bi-droplet-half text-danger display-5 mb-3"></i>
-                <h5 class="fw-bold">Donations Collection Report</h5>
-                <p class="text-secondary small mb-3">Total whole blood collections, mobile camp outputs, apheresis yields, volume metrics, and phlebotomy audits.</p>
-                <a href="{% url 'reports:donations' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
-                <i class="bi bi-box-seam-fill text-danger display-5 mb-3"></i>
-                <h5 class="fw-bold">Inventory & Expiry Report</h5>
-                <p class="text-secondary small mb-3">Real-time cold storage inventory matrix by ABO/Rh group, component type, quarantine state, and shelf-life aging.</p>
-                <a href="{% url 'reports:inventory' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
-                <i class="bi bi-clipboard-pulse text-danger display-5 mb-3"></i>
-                <h5 class="fw-bold">Crossmatch & Issue Report</h5>
-                <p class="text-secondary small mb-3">Hospital distribution logs, crossmatching confirmations, emergency STAT deliveries, and recipient traceability.</p>
-                <a href="{% url 'reports:issues' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
-                <i class="bi bi-trash3-fill text-danger display-5 mb-3"></i>
-                <h5 class="fw-bold">Discard & Wastage Report</h5>
-                <p class="text-secondary small mb-3">Regulatory hemovigilance wastage audit: expired units, reactive TTI screenings, cold-chain violations, and biohazard manifests.</p>
-                <a href="{% url 'reports:discards' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
-                <i class="bi bi-star-fill text-danger display-5 mb-3"></i>
-                <h5 class="fw-bold">Rare Donor Registry</h5>
-                <p class="text-secondary small mb-3">Dedicated emergency contact registry for scarce blood groups (AB-, B-, A-, O-) for immediate trauma response.</p>
-                <a href="{% url 'reports:rare_donors' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="card border-0 shadow-sm p-4 rounded-3 bg-light">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="fw-bold text-dark mb-1"><i class="bi bi-graph-up text-danger me-2"></i>Monthly Operational Summary Dashboard</h5>
-                        <p class="text-muted small mb-0">High-level blood bank KPIs: collections, transfusions, discards, and net inventory reserve index.</p>
+        <!-- 1. Inventory & Traceability Report -->
+        <div class="col-md-6 col-xl-4">
+            <div class="lf-card h-100 p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-card-icon green" style="width:46px;height:46px;font-size:1.25rem;">
+                        <i class="bi bi-box-seam-fill"></i>
                     </div>
-                    <a href="{% url 'reports:monthly_summary' %}" class="btn btn-blood px-4">View Executive Summary &rarr;</a>
+                    <div>
+                        <h6 class="fw-700 text-dark mb-0">Inventory Stock Status</h6>
+                        <small class="text-muted">Component stock, expiry dates & cold chain</small>
+                    </div>
+                </div>
+                <p class="small text-secondary mb-3">
+                    Comprehensive ledger of available, reserved, quarantined, and expired units organized by component and blood group.
+                </p>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'reports:inventory' %}" class="btn btn-sm btn-lf-ghost flex-fill justify-content-center">View Interactive</a>
+                    <a href="{% url 'reports:inventory' %}?export=csv" class="btn btn-sm btn-outline-secondary"><i class="bi bi-filetype-csv"></i> CSV</a>
+                    <a href="{% url 'reports:inventory' %}?export=pdf" class="btn btn-sm btn-outline-danger"><i class="bi bi-filetype-pdf"></i> PDF</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Donation & Phlebotomy Report -->
+        <div class="col-md-6 col-xl-4">
+            <div class="lf-card h-100 p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-card-icon red" style="width:46px;height:46px;font-size:1.25rem;">
+                        <i class="bi bi-droplet-half"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 text-dark mb-0">Blood Donation Summary</h6>
+                        <small class="text-muted">Whole blood and apheresis collections</small>
+                    </div>
+                </div>
+                <p class="small text-secondary mb-3">
+                    Detailed donor collection metrics, volume yields, adverse reaction logs, and phlebotomist duty records.
+                </p>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'reports:donations' %}" class="btn btn-sm btn-lf-ghost flex-fill justify-content-center">View Interactive</a>
+                    <a href="{% url 'reports:donations' %}?export=csv" class="btn btn-sm btn-outline-secondary"><i class="bi bi-filetype-csv"></i> CSV</a>
+                    <a href="{% url 'reports:donations' %}?export=pdf" class="btn btn-sm btn-outline-danger"><i class="bi bi-filetype-pdf"></i> PDF</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Clinical Blood Issues -->
+        <div class="col-md-6 col-xl-4">
+            <div class="lf-card h-100 p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-card-icon blue" style="width:46px;height:46px;font-size:1.25rem;">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 text-dark mb-0">Hospital Blood Issues</h6>
+                        <small class="text-muted">Clinical dispatch manifests & recipient logs</small>
+                    </div>
+                </div>
+                <p class="small text-secondary mb-3">
+                    Hospital dispatch audit trail, recipient patient verification records, transport cold-box identifiers, and crossmatch reports.
+                </p>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'reports:issues' %}" class="btn btn-sm btn-lf-ghost flex-fill justify-content-center">View Interactive</a>
+                    <a href="{% url 'reports:issues' %}?export=csv" class="btn btn-sm btn-outline-secondary"><i class="bi bi-filetype-csv"></i> CSV</a>
+                    <a href="{% url 'reports:issues' %}?export=pdf" class="btn btn-sm btn-outline-danger"><i class="bi bi-filetype-pdf"></i> PDF</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Discard & Hemovigilance Biowaste -->
+        <div class="col-md-6 col-xl-4">
+            <div class="lf-card h-100 p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-card-icon yellow" style="width:46px;height:46px;font-size:1.25rem;">
+                        <i class="bi bi-trash3-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 text-dark mb-0">Discards & Hemovigilance</h6>
+                        <small class="text-muted">Wastage root-cause & bio-disposal manifests</small>
+                    </div>
+                </div>
+                <p class="small text-secondary mb-3">
+                    Audit log of discarded units (TTI reactivity, cold chain excursions, expired shelf life, hemolyzed bags) for quality assurance.
+                </p>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'reports:discards' %}" class="btn btn-sm btn-lf-ghost flex-fill justify-content-center">View Interactive</a>
+                    <a href="{% url 'reports:discards' %}?export=csv" class="btn btn-sm btn-outline-secondary"><i class="bi bi-filetype-csv"></i> CSV</a>
+                    <a href="{% url 'reports:discards' %}?export=pdf" class="btn btn-sm btn-outline-danger"><i class="bi bi-filetype-pdf"></i> PDF</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Voluntary Donors Demographics -->
+        <div class="col-md-6 col-xl-4">
+            <div class="lf-card h-100 p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-card-icon purple" style="width:46px;height:46px;font-size:1.25rem;">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 text-dark mb-0">Donor Registry Analytics</h6>
+                        <small class="text-muted">Donor demographics, retention & deferrals</small>
+                    </div>
+                </div>
+                <p class="small text-secondary mb-3">
+                    Population distribution across ABO/Rh types, deferral categories, repeat donor frequencies, and geographic breakdown.
+                </p>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'reports:donors' %}" class="btn btn-sm btn-lf-ghost flex-fill justify-content-center">View Interactive</a>
+                    <a href="{% url 'reports:donors' %}?export=csv" class="btn btn-sm btn-outline-secondary"><i class="bi bi-filetype-csv"></i> CSV</a>
+                    <a href="{% url 'reports:donors' %}?export=pdf" class="btn btn-sm btn-outline-danger"><i class="bi bi-filetype-pdf"></i> PDF</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Rare Blood Types Search -->
+        <div class="col-md-6 col-xl-4">
+            <div class="lf-card h-100 p-3">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="stat-card-icon red" style="width:46px;height:46px;font-size:1.25rem;">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-700 text-dark mb-0">Rare Blood Type Registry</h6>
+                        <small class="text-muted">AB-, B-, O- emergency donor roster</small>
+                    </div>
+                </div>
+                <p class="small text-secondary mb-3">
+                    Filtered directory of eligible rare Rh-negative donors for immediate SOS call-in during catastrophic trauma emergencies.
+                </p>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="{% url 'reports:rare_donors' %}" class="btn btn-sm btn-lf-primary flex-fill justify-content-center">
+                        <i class="bi bi-telephone-outbound me-1"></i> Open Rare Roster
+                    </a>
                 </div>
             </div>
         </div>

@@ -1,99 +1,76 @@
-<aside class="sidebar d-none d-md-block">
-    <div class="py-3 px-3 border-bottom border-secondary">
-        <small class="text-uppercase text-secondary fw-bold" style="font-size: 0.7rem; letter-spacing: 0.08em;">Operations Menu</small>
-    </div>
-    <ul class="nav flex-column py-2">
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'accounts:dashboard' %}">
-                <i class="bi bi-grid-1x2-fill"></i> Dashboard
-            </a>
-        </li>
+<aside class="sidebar d-none d-lg-flex">
+    <div class="py-2">
+
+        <div class="sidebar-section-label">Main</div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:dashboard' %}">
+                    <i class="bi bi-grid-fill"></i> Dashboard
+                </a>
+            </li>
+        </ul>
 
         {% if user.profile.is_staff_role or user.is_superuser %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'donors:list' %}">
-                    <i class="bi bi-people-fill"></i> Donor Registry
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'donations:list' %}">
-                    <i class="bi bi-droplet-half"></i> Blood Donations
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'laboratory:blood_bag_list' %}">
-                    <i class="bi bi-collection-fill"></i> Blood Bags
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'laboratory:sample_list' %}">
-                    <i class="bi bi-virus"></i> Laboratory Screening
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'blood_components:list' %}">
-                    <i class="bi bi-pie-chart-fill"></i> Components
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'inventory:stock' %}">
-                    <i class="bi bi-box-seam-fill"></i> Inventory & Traceability
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'inventory:temperature_list' %}">
-                    <i class="bi bi-thermometer-half"></i> Temperature Cold-Chain
-                </a>
-            </li>
+        <div class="sidebar-section-label">Donor Operations</div>
+        <ul class="nav flex-column">
+            <li><a class="nav-link" href="{% url 'donors:list' %}"><i class="bi bi-people-fill"></i> Donor Registry</a></li>
+            <li><a class="nav-link" href="{% url 'appointments:list' %}"><i class="bi bi-calendar-check-fill"></i> Appointments</a></li>
+            <li><a class="nav-link" href="{% url 'camps:list' %}"><i class="bi bi-geo-alt-fill"></i> Blood Camps</a></li>
+            <li><a class="nav-link" href="{% url 'donations:list' %}"><i class="bi bi-droplet-half"></i> Donations</a></li>
+        </ul>
+
+        <div class="sidebar-section-label">Laboratory</div>
+        <ul class="nav flex-column">
+            <li><a class="nav-link" href="{% url 'laboratory:blood_bag_list' %}"><i class="bi bi-collection-fill"></i> Blood Bags</a></li>
+            <li><a class="nav-link" href="{% url 'laboratory:sample_list' %}"><i class="bi bi-virus"></i> Screening</a></li>
+            <li><a class="nav-link" href="{% url 'blood_components:list' %}"><i class="bi bi-pie-chart-fill"></i> Components</a></li>
+        </ul>
+
+        <div class="sidebar-section-label">Inventory</div>
+        <ul class="nav flex-column">
+            <li><a class="nav-link" href="{% url 'inventory:stock' %}"><i class="bi bi-box-seam-fill"></i> Stock & Traceability</a></li>
+            <li><a class="nav-link" href="{% url 'inventory:temperature_list' %}"><i class="bi bi-thermometer-half"></i> Cold Chain</a></li>
+        </ul>
         {% endif %}
 
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'requests_app:list' %}">
-                <i class="bi bi-clipboard-pulse"></i> Blood Requisitions
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'appointments:list' %}">
-                <i class="bi bi-calendar-check-fill"></i> Appointments
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'camps:list' %}">
-                <i class="bi bi-geo-alt-fill"></i> Blood Camps
-            </a>
-        </li>
-
-        {% if user.profile.is_staff_role or user.is_superuser or user.profile.role == 'HOSPITAL_USER' %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'patients:list' %}">
-                    <i class="bi bi-person-lines-fill"></i> Patients
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'hospitals:list' %}">
-                    <i class="bi bi-hospital-fill"></i> Hospitals
-                </a>
-            </li>
-        {% endif %}
+        <div class="sidebar-section-label">Clinical</div>
+        <ul class="nav flex-column">
+            <li><a class="nav-link" href="{% url 'requests_app:list' %}"><i class="bi bi-clipboard-pulse"></i> Blood Requests</a></li>
+            {% if user.profile.is_staff_role or user.is_superuser or user.profile.role == "HOSPITAL_USER" %}
+            <li><a class="nav-link" href="{% url 'patients:list' %}"><i class="bi bi-person-lines-fill"></i> Patients</a></li>
+            <li><a class="nav-link" href="{% url 'hospitals:list' %}"><i class="bi bi-hospital-fill"></i> Hospitals</a></li>
+            {% endif %}
+        </ul>
 
         {% if user.profile.is_medical_or_admin or user.is_superuser %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'reports:index' %}">
-                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Reports & Audits
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'audit:list' %}">
-                    <i class="bi bi-journal-text"></i> Audit Trail
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:user_list' %}">
-                    <i class="bi bi-person-gear"></i> User Management
-                </a>
-            </li>
+        <div class="sidebar-section-label">Analytics</div>
+        <ul class="nav flex-column">
+            <li><a class="nav-link" href="{% url 'reports:index' %}"><i class="bi bi-bar-chart-fill"></i> Reports</a></li>
+            <li><a class="nav-link" href="{% url 'audit:list' %}"><i class="bi bi-journal-text"></i> Audit Trail</a></li>
+            <li><a class="nav-link" href="{% url 'accounts:user_list' %}"><i class="bi bi-person-gear"></i> User Management</a></li>
+        </ul>
         {% endif %}
-    </ul>
+
+        <ul class="nav flex-column mt-2">
+            <li><a class="nav-link" href="{% url 'notifications:list' %}"><i class="bi bi-bell-fill"></i> Notifications
+                {% if unread_notifications_count > 0 %}
+                <span class="badge bg-danger ms-auto" style="font-size:0.65rem;">{{ unread_notifications_count }}</span>
+                {% endif %}
+            </a></li>
+        </ul>
+    </div>
+
+    <!-- Sidebar footer -->
+    <div class="sidebar-footer">
+        <div class="user-avatar" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;">
+            {{ user.first_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+        </div>
+        <div style="overflow:hidden;min-width:0;">
+            <div class="sf-name">{{ user.get_full_name|default:user.username }}</div>
+            <div class="sf-role">{{ user.profile.get_role_display|default:"User" }}</div>
+        </div>
+        <a href="{% url 'accounts:logout' %}" class="ms-auto text-secondary" style="font-size:1rem;" data-bs-toggle="tooltip" title="Sign out">
+            <i class="bi bi-box-arrow-right"></i>
+        </a>
+    </div>
 </aside>

@@ -1,36 +1,72 @@
 {% extends "base.html" %}
-{% block title %}Sign In ? LIFEFlow{% endblock %}
+{% block title %}Sign In — LIFEFlow Hemovigilance Portal{% endblock %}
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
-                <div class="text-center mb-4">
-                    <div class="text-danger display-4 mb-2"><i class="bi bi-droplet-fill"></i></div>
-                    <h3 class="fw-bold text-dark">LIFEFlow Portal</h3>
-                    <p class="text-muted small">Sign in with your authorized account credentials</p>
-                </div>
-
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label fw-medium">Username</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-medium">Password</label>
-                        {{ form.password }}
-                        {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
-                    </div>
-                    <button type="submit" class="btn btn-blood w-100 py-2 rounded-3 fw-bold">Sign In to LIFEFlow</button>
-                </form>
-
-                <div class="mt-4 pt-3 border-top text-center">
-                    <p class="small text-muted mb-1">New voluntary blood donor?</p>
-                    <a href="{% url 'accounts:register_donor' %}" class="fw-semibold text-danger text-decoration-none">Create Donor Account &rarr;</a>
-                </div>
+<div class="login-page">
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <div class="login-logo">
+                <i class="bi bi-droplet-fill"></i>
             </div>
+            <h3 class="fw-800 text-dark mb-1">LIFEFlow Portal</h3>
+            <p class="text-muted small mb-0">Authorized Clinical & Administrative Access</p>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger mb-3 py-2 px-3 small">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                {{ form.non_field_errors.0 }}
+            </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="{{ form.username.id_for_label }}">Username or Employee ID</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-person"></i></span>
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}" class="form-control border-start-0 ps-0" placeholder="Enter username" required autofocus value="{{ form.username.value|default:'' }}">
+                </div>
+                {% if form.username.errors %}
+                    <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label class="form-label mb-0" for="{{ form.password.id_for_label }}">Password</label>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text bg-light text-secondary border-end-0"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="{{ form.password.id_for_label }}" class="form-control border-start-0 ps-0" placeholder="Enter password" required>
+                </div>
+                {% if form.password.errors %}
+                    <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-lf-primary w-100 py-2 justify-content-center fw-bold fs-6">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to LIFEFlow
+            </button>
+        </form>
+
+        <!-- Quick Demo Credentials Helper for Evaluators -->
+        <div class="mt-4 pt-3 border-top">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-700 text-uppercase letter-spacing-1 text-secondary" style="font-size: 0.7rem;">Demo Accounts (PW: password123)</span>
+            </div>
+            <div class="d-flex flex-wrap gap-1">
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.75rem;" onclick="document.getElementById('id_username').value='admin'; document.getElementById('id_password').value='password123';">SuperAdmin</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.75rem;" onclick="document.getElementById('id_username').value='doctor_rajesh'; document.getElementById('id_password').value='password123';">Doctor / MO</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.75rem;" onclick="document.getElementById('id_username').value='tech_priya'; document.getElementById('id_password').value='password123';">Lab Tech</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.75rem;" onclick="document.getElementById('id_username').value='tech_arun'; document.getElementById('id_password').value='password123';">Inventory</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.75rem;" onclick="document.getElementById('id_username').value='hospital_user'; document.getElementById('id_password').value='password123';">Hospital</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.75rem;" onclick="document.getElementById('id_username').value='donor_user'; document.getElementById('id_password').value='password123';">Donor</button>
+            </div>
+        </div>
+
+        <div class="mt-3 pt-3 border-top text-center d-flex justify-content-between small">
+            <a href="{% url 'accounts:register_donor' %}" class="fw-semibold text-danger">Register as Donor &rarr;</a>
+            <a href="{% url 'accounts:register_hospital' %}" class="text-secondary">Hospital Portal</a>
         </div>
     </div>
 </div>

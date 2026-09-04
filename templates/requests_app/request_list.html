@@ -1,57 +1,111 @@
 {% extends "base.html" %}
-{% block title %}Blood Requisitions ? LIFEFlow{% endblock %}
+{% block title %}Blood Requisitions — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0">Blood Requisitions & Crossmatch Orders</h3>
-        <a href="{% url 'requests_app:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-clipboard-plus me-1"></i>New Blood Request</a>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Clinical Blood Requisitions</h2>
+            <div class="page-header-subtitle">Hospital blood orders, urgency triage, atomic unit reservation, and dispatch tracking</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'requests_app:create' %}" class="btn btn-lf-primary">
+                <i class="bi bi-clipboard-plus-fill"></i> New Blood Requisition
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 mb-4">
-        <form method="get" class="row g-2">
-            <div class="col-md-5"><input type="text" name="search" class="form-control" placeholder="Search by Request ID, Patient, Hospital..." value="{{ search }}"></div>
+    <!-- Filter Bar -->
+    <div class="lf-filter-bar">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by Request ID, Patient, Hospital..." value="{{ search }}">
+                </div>
+            </div>
             <div class="col-md-3">
                 <select name="status" class="form-select">
-                    <option value="">All Statuses</option>
-                    {% for s_val, s_name in statuses %}<option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>{% endfor %}
+                    <option value="">All Requisition Statuses</option>
+                    {% for s_val, s_name in statuses %}
+                        <option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-2">
                 <select name="urgency" class="form-select">
-                    <option value="">All Urgency</option>
-                    {% for u_val, u_name in urgency_choices %}<option value="{{ u_val }}" {% if urgency == u_val %}selected{% endif %}>{{ u_name }}</option>{% endfor %}
+                    <option value="">All Urgencies</option>
+                    {% for u_val, u_name in urgency_choices %}
+                        <option value="{{ u_val }}" {% if urgency == u_val %}selected{% endif %}>{{ u_name }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Search</button></div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-lf-primary w-100 justify-content-center">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+            </div>
         </form>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Request ID</th><th>Hospital</th><th>Patient</th><th>Required At</th><th>Urgency</th><th>Status</th><th>Actions</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Hospital Partner</th>
+                        <th>Patient Details</th>
+                        <th>Required By</th>
+                        <th>Urgency Level</th>
+                        <th>Order Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for r in page_obj %}
                     <tr>
-                        <td><a href="{% url 'requests_app:detail' r.pk %}" class="fw-bold text-danger text-decoration-none">{{ r.request_id }}</a></td>
-                        <td>{{ r.hospital.name }}</td>
-                        <td>{{ r.patient.full_name }} <span class="badge badge-blood">{{ r.patient.blood_group }}</span></td>
-                        <td>{{ r.required_date_time|date:"M d, H:i" }}</td>
                         <td>
-                            {% if r.urgency == 'EMERGENCY' %}<span class="badge bg-danger">EMERGENCY (STAT)</span>
-                            {% elif r.urgency == 'URGENT' %}<span class="badge bg-warning text-dark">Urgent</span>
-                            {% else %}<span class="badge bg-secondary">Routine</span>{% endif %}
+                            <a href="{% url 'requests_app:detail' r.pk %}" class="cell-id text-danger fw-700">{{ r.request_id }}</a>
                         </td>
-                        <td><span class="badge bg-light text-dark border">{{ r.get_status_display }}</span></td>
+                        <td><strong class="text-dark">{{ r.hospital.name }}</strong></td>
                         <td>
-                            <a href="{% url 'requests_app:detail' r.pk %}" class="btn btn-outline-secondary btn-sm">Manage</a>
+                            <div>{{ r.patient.full_name }}</div>
+                            <span class="badge-blood-group">{{ r.patient.blood_group }}</span>
+                        </td>
+                        <td>{{ r.required_date_time|date:"M d, Y H:i" }}</td>
+                        <td>
+                            {% if r.urgency == 'EMERGENCY' %}
+                                <span class="lf-badge lf-badge-danger"><i class="bi bi-lightning-charge-fill"></i> STAT EMERGENCY</span>
+                            {% elif r.urgency == 'URGENT' %}
+                                <span class="lf-badge lf-badge-warning"><i class="bi bi-exclamation-triangle-fill"></i> URGENT</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">ROUTINE</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if r.status == 'ISSUED' %}
+                                <span class="lf-badge lf-badge-success">Issued & Dispatched</span>
+                            {% elif r.status == 'APPROVED' or r.status == 'RESERVED' %}
+                                <span class="lf-badge lf-badge-info">{{ r.get_status_display }}</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">{{ r.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a href="{% url 'requests_app:detail' r.pk %}" class="btn btn-sm btn-lf-ghost py-1 px-2" style="font-size:0.8rem;">Manage</a>
                             {% if r.status == 'SUBMITTED' and user.profile.is_medical_or_admin %}
-                                <a href="{% url 'requests_app:review' r.pk %}" class="btn btn-warning btn-sm">Review</a>
+                                <a href="{% url 'requests_app:review' r.pk %}" class="btn btn-sm btn-warning py-1 px-2 text-dark fw-600" style="font-size:0.8rem;">Review Order</a>
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="7" class="text-center text-muted py-3">No blood requests found.</td></tr>
+                    <tr>
+                        <td colspan="7" class="empty-state py-5">
+                            <i class="bi bi-clipboard2-pulse empty-state-icon"></i>
+                            <div class="empty-state-title">No Requisitions Found</div>
+                            <div class="empty-state-desc">No clinical blood requests match the specified search parameters.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

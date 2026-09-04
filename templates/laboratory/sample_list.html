@@ -1,32 +1,72 @@
 {% extends "base.html" %}
-{% block title %}Laboratory Screening ? LIFEFlow{% endblock %}
+{% block title %}Laboratory Screening — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0">Laboratory Screening Samples</h3>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Laboratory Serological Screening Queue</h2>
+            <div class="page-header-subtitle">Mandatory TTI assays (HIV, HBV, HCV, Syphilis, Malaria) and Medical Officer release gates</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'laboratory:blood_bag_list' %}" class="btn btn-lf-ghost">
+                <i class="bi bi-collection-fill text-danger"></i> Blood Bags Custody
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Sample ID</th><th>Blood Bag</th><th>Donor</th><th>Group</th><th>Collected</th><th>Status</th><th>Actions</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Parent Blood Bag</th>
+                        <th>Donor Name</th>
+                        <th>ABO / Rh</th>
+                        <th>Collected At</th>
+                        <th>Screening Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for s in page_obj %}
                     <tr>
-                        <td><a href="{% url 'laboratory:sample_detail' s.pk %}" class="fw-bold text-danger text-decoration-none">{{ s.sample_id }}</a></td>
-                        <td><a href="{% url 'laboratory:blood_bag_detail' s.blood_bag.pk %}" class="badge bg-primary text-decoration-none">{{ s.blood_bag.bag_id }}</a></td>
-                        <td>{{ s.blood_bag.donation.donor.full_name }}</td>
-                        <td><span class="badge badge-blood">{{ s.blood_bag.blood_group }}</span></td>
-                        <td>{{ s.collected_at|date:"M d, H:i" }}</td>
-                        <td><span class="badge bg-secondary">{{ s.get_status_display }}</span></td>
                         <td>
-                            <a href="{% url 'laboratory:sample_detail' s.pk %}" class="btn btn-outline-secondary btn-sm">Details</a>
-                            <a href="{% url 'laboratory:add_result' s.pk %}" class="btn btn-outline-primary btn-sm">+ Add Test</a>
-                            <a href="{% url 'laboratory:verify_sample' s.pk %}" class="btn btn-warning btn-sm">Verify / Release</a>
+                            <a href="{% url 'laboratory:sample_detail' s.pk %}" class="cell-id text-danger fw-700">{{ s.sample_id }}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'laboratory:blood_bag_detail' s.blood_bag.pk %}" class="cell-id text-primary fw-600 bg-light px-2 py-1 rounded border">{{ s.blood_bag.bag_id }}</a>
+                        </td>
+                        <td><strong>{{ s.blood_bag.donation.donor.full_name }}</strong></td>
+                        <td><span class="badge-blood-group">{{ s.blood_bag.blood_group }}</span></td>
+                        <td>{{ s.collected_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            {% if s.status == 'VERIFIED' %}
+                                <span class="lf-badge lf-badge-success"><i class="bi bi-shield-check"></i> Released</span>
+                            {% elif s.status == 'REJECTED' %}
+                                <span class="lf-badge lf-badge-danger"><i class="bi bi-x-octagon-fill"></i> Reactive / Ineligible</span>
+                            {% elif s.status == 'TESTED' %}
+                                <span class="lf-badge lf-badge-info"><i class="bi bi-hourglass-split"></i> Awaiting Verification</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-warning"><i class="bi bi-clock"></i> Pending Screening</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a href="{% url 'laboratory:sample_detail' s.pk %}" class="btn btn-sm btn-lf-ghost py-1 px-2" style="font-size:0.8rem;">Details</a>
+                            <a href="{% url 'laboratory:add_result' s.pk %}" class="btn btn-sm btn-lf-outline py-1 px-2" style="font-size:0.8rem;">+ Add Assay</a>
+                            {% if s.status != 'VERIFIED' and s.status != 'REJECTED' %}
+                                <a href="{% url 'laboratory:verify_sample' s.pk %}" class="btn btn-sm btn-warning py-1 px-2 text-dark fw-600" style="font-size:0.8rem;">Verify / Gate</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="7" class="text-center text-muted py-3">No laboratory samples found.</td></tr>
+                    <tr>
+                        <td colspan="7" class="empty-state py-5">
+                            <i class="bi bi-virus empty-state-icon"></i>
+                            <div class="empty-state-title">No Lab Samples in Queue</div>
+                            <div class="empty-state-desc">All blood donation samples have undergone screening and release.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

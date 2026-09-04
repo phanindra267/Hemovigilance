@@ -1,18 +1,76 @@
 {% extends "base.html" %}
-{% block title %}About ? LIFEFlow Hemovigilance{% endblock %}
+{% block title %}About LIFEFlow — National Hemovigilance Platform{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="card border-0 shadow-sm p-4 rounded-3">
-        <h3 class="fw-bold text-danger mb-3"><i class="bi bi-droplet-fill me-2"></i>About LIFEFlow</h3>
-        <p class="lead text-secondary">LIFEFlow is a production-oriented Blood Bank Management and Hemovigilance Information System designed for blood transfusion centres, regional transfusion facilities, and affiliated hospitals.</p>
-        
-        <h5 class="fw-bold mt-4">Core Principles</h5>
-        <ul class="text-secondary">
-            <li><strong>Unit-Level Traceability:</strong> Every blood bag, apheresis donation, and separated component receives an immutable, globally unique tracking ID.</li>
-            <li><strong>Cold Chain Assurance:</strong> Continuous physical and digital logging of storage devices (refrigerators, platelet incubators, deep freezers) with automated threshold excursion alarms.</li>
-            <li><strong>Regulatory Hemovigilance:</strong> Full tracking of adverse events, return dispositions, quarantine investigations, and biohazard discard manifests with audit trails.</li>
-            <li><strong>Concurrency Safety:</strong> Database-level atomic reservations guarantee that no two users or emergency requisitions can lock or issue the same physical unit simultaneously.</li>
-        </ul>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">About LIFEFlow</h2>
+            <div class="page-header-subtitle">National Blood Bank Information Management & Hemovigilance System</div>
+        </div>
+    </div>
+
+    <!-- Overview Banner -->
+    <div class="lf-card mb-4 p-4 bg-white">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="brand-icon" style="width:48px;height:48px;font-size:1.5rem;">
+                <i class="bi bi-droplet-fill"></i>
+            </div>
+            <div>
+                <h4 class="fw-800 text-dark mb-0">Engineered for Safety, Speed, and Compliance</h4>
+                <div class="text-muted small">Standardized vein-to-vein hemovigilance workflow</div>
+            </div>
+        </div>
+        <p class="lead text-secondary" style="font-size: 1.05rem;">
+            LIFEFlow is a production-oriented web application designed to support full-spectrum operations of regional blood transfusion services, component processing laboratories, hospital transfusion centers, and voluntary donor communities.
+        </p>
+    </div>
+
+    <!-- Core Pillars Grid -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-card-icon">
+                    <i class="bi bi-upc-scan"></i>
+                </div>
+                <h5 class="feature-card-title">Unit-Level Traceability</h5>
+                <p class="feature-card-desc">
+                    Every phlebotomy donation bag, lab test aliquot, and separated blood component carries a unique alphanumeric identifier guaranteeing traceability from donor to recipient.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-card-icon" style="background:var(--lf-info-bg);color:var(--lf-info);">
+                    <i class="bi bi-thermometer-snow"></i>
+                </div>
+                <h5 class="feature-card-title">Cold Chain Governance</h5>
+                <p class="feature-card-desc">
+                    Real-time temperature logging across storage refrigerators (+2°C to +6°C), deep plasma freezers (-40°C to -80°C), and platelet agitators (+20°C to +24°C) with automatic excursion quarantining.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-card-icon" style="background:var(--lf-warning-bg);color:var(--lf-warning);">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+                <h5 class="feature-card-title">Release Gatekeeping</h5>
+                <p class="feature-card-desc">
+                    No blood unit can transition from quarantine to available inventory without verified non-reactive screening assays (HIV, HBV, HCV, Syphilis, Malaria) signed off by a qualified Medical Officer.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="feature-card">
+                <div class="feature-card-icon" style="background:var(--lf-success-bg);color:var(--lf-success);">
+                    <i class="bi bi-cpu"></i>
+                </div>
+                <h5 class="feature-card-title">Atomic Concurrency</h5>
+                <p class="feature-card-desc">
+                    Row-level database locking (<code>select_for_update</code>) ensures that simultaneous emergency hospital requisitions cannot reserve or issue the exact same physical blood unit.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

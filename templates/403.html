@@ -1,14 +1,17 @@
 {% extends "base.html" %}
-{% block title %}403 - Access Forbidden{% endblock %}
+{% block title %}Access Forbidden (403) — LIFEFlow{% endblock %}
 {% block content %}
 <div class="container py-5 text-center">
-    <div class="card shadow-sm border-0 p-5 mx-auto" style="max-width: 600px;">
-        <i class="bi bi-shield-exclamation text-danger display-1 mb-3"></i>
-        <h2 class="fw-bold text-danger">403 - Access Forbidden</h2>
-        <p class="text-secondary mt-2">You do not have the required clinical or role authorizations to view or perform this action.</p>
-        <div class="mt-4">
-            <a href="{% url 'accounts:dashboard' %}" class="btn btn-blood px-4">Back to Dashboard</a>
-            <a href="{% url 'core:home' %}" class="btn btn-outline-secondary px-4 ms-2">Home</a>
+    <div class="card border-0 shadow-sm rounded-4 p-5 mx-auto" style="max-width:560px;background:white;">
+        <div class="text-warning mb-3" style="font-size:4rem;"><i class="bi bi-shield-lock-fill"></i></div>
+        <h2 class="fw-800 text-dark mb-2">403 — Access Restricted</h2>
+        <p class="text-muted mb-4">
+            Your user account role does not have authorization to access this clinical hemovigilance screen. Please contact your Medical Officer or System Administrator.
+        </p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-lf-primary px-4">
+                <i class="bi bi-speedometer2 me-1"></i> Back to Dashboard
+            </a>
         </div>
     </div>
 </div>

@@ -1,26 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Guidelines & SOPs ? LIFEFlow{% endblock %}
+{% block title %}Clinical Guidelines & SOPs — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="card border-0 shadow-sm p-4 rounded-3 mb-4">
-        <h3 class="fw-bold text-danger mb-3"><i class="bi bi-shield-check me-2"></i>Clinical & Regulatory Guidelines (SOPs)</h3>
-        <p class="text-secondary">All medical, eligibility, testing, and storage limits are governed by configurable business rules aligned with National Blood Transfusion Council (NBTC) and WHO standards.</p>
-        
-        <div class="table-responsive mt-3">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr><th>Parameter / Policy</th><th>Configured Threshold</th><th>Category</th><th>Description</th></tr>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Clinical Guidelines & Regulatory SOPs</h2>
+            <div class="page-header-subtitle">Standard operating parameters aligned with National Blood Transfusion Council (NBTC) and WHO directives</div>
+        </div>
+        <span class="lf-badge lf-badge-success align-self-start"><i class="bi bi-check2-circle"></i> Config Active</span>
+    </div>
+
+    <div class="lf-card mb-4">
+        <div class="lf-card-header">
+            <h6 class="lf-card-header-title">
+                <i class="bi bi-sliders"></i> Active Clinical & Storage Threshold Configurations
+            </h6>
+            <span class="lf-badge lf-badge-neutral">{{ configs|length }} Configured Rules</span>
+        </div>
+        <div class="table-responsive">
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Configuration Key</th>
+                        <th>Standard Parameter Value</th>
+                        <th>Clinical Domain</th>
+                        <th>Regulatory Standard Description</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {% for cfg in configs %}
                     <tr>
-                        <td class="fw-bold">{{ cfg.key }}</td>
-                        <td><span class="badge bg-secondary px-2 py-1">{{ cfg.value }}</span></td>
-                        <td><span class="badge bg-light text-dark border">{{ cfg.get_category_display }}</span></td>
-                        <td class="small text-muted">{{ cfg.description }}</td>
+                        <td>
+                            <code class="fw-700 text-danger bg-light px-2 py-1 rounded border">{{ cfg.key }}</code>
+                        </td>
+                        <td>
+                            <span class="lf-badge lf-badge-info fw-700">{{ cfg.value }}</span>
+                        </td>
+                        <td>
+                            <span class="lf-badge lf-badge-neutral">{{ cfg.get_category_display }}</span>
+                        </td>
+                        <td class="text-secondary small">{{ cfg.description }}</td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="4" class="text-center text-muted">Standard regulatory default values loaded.</td></tr>
+                    <tr>
+                        <td colspan="4" class="empty-state py-4">
+                            <i class="bi bi-sliders empty-state-icon"></i>
+                            <div class="empty-state-title">No System Configurations Available</div>
+                            <div class="empty-state-desc">Default clinical thresholds are active in memory.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

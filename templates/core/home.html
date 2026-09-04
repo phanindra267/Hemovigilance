@@ -1,85 +1,205 @@
 {% extends "base.html" %}
-{% block title %}LIFEFlow ? Blood Bank Management & Hemovigilance System{% endblock %}
+{% block title %}LIFEFlow — National Blood Bank & Hemovigilance System{% endblock %}
 {% block content %}
-<div class="container py-4">
+<div class="container-fluid px-lg-4 py-2">
     <!-- Hero Banner -->
-    <div class="card border-0 shadow-sm rounded-4 p-5 text-white mb-5" style="background: linear-gradient(135deg, #7a1212 0%, #a81c1c 50%, #dc2626 100%);">
+    <div class="hero-section">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <span class="badge bg-white text-danger fw-bold px-3 py-2 mb-3 rounded-pill">NATIONAL HEMOVIGILANCE NETWORK</span>
-                <h1 class="display-5 fw-bold mb-3">Every Drop Traceable.<br>Every Transfusion Safe.</h1>
-                <p class="lead opacity-90 mb-4">
-                    LIFEFlow is an enterprise-grade blood bank management and hemovigilance information system. 
-                    From donor registration and laboratory serological screening to cold chain tracking and hospital crossmatch issue.
+                <div class="hero-badge">
+                    <span class="live-dot"></span>
+                    <span>National Hemovigilance Network Active</span>
+                </div>
+                <h1 class="hero-title">Every Drop Traceable.<br>Every Transfusion Safe.</h1>
+                <p class="hero-desc">
+                    LIFEFlow provides end-to-end vein-to-vein traceability, strict cold chain governance, serological viral screening verification, and atomic requisition management for blood banks and hospital transfusion services.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="{% url 'accounts:login' %}" class="btn btn-light text-danger fw-bold px-4 py-2 rounded-pill shadow-sm">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Staff / Hospital Login
+                    <a href="{% url 'accounts:login' %}" class="hero-btn-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> Access Portal
                     </a>
-                    <a href="{% url 'accounts:register_donor' %}" class="btn btn-outline-light fw-bold px-4 py-2 rounded-pill">
-                        <i class="bi bi-heart-fill me-1"></i> Register as Voluntary Donor
+                    <a href="{% url 'accounts:register_donor' %}" class="hero-btn-outline">
+                        <i class="bi bi-heart-fill"></i> Register as Voluntary Donor
                     </a>
-                    <a href="{% url 'accounts:register_hospital' %}" class="btn btn-dark opacity-90 fw-bold px-4 py-2 rounded-pill">
-                        <i class="bi bi-hospital me-1"></i> Hospital Requisitions
+                    <a href="{% url 'accounts:register_hospital' %}" class="hero-btn-outline">
+                        <i class="bi bi-hospital"></i> Hospital Partner Registration
                     </a>
                 </div>
             </div>
             <div class="col-lg-4 text-center d-none d-lg-block">
-                <i class="bi bi-droplet-half display-1 opacity-75" style="font-size: 8rem;"></i>
+                <div style="font-size: 8rem; line-height: 1; opacity: 0.85; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">
+                    <i class="bi bi-droplet-half"></i>
+                </div>
+                <div class="mt-3 text-white-50 small fw-600 letter-spacing-1">
+                    CERTIFIED COLD CHAIN COMPLIANT
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Features -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card h-100 border-0 shadow-sm rounded-3 p-4">
-                <div class="text-danger fs-1 mb-3"><i class="bi bi-shield-check"></i></div>
-                <h5 class="fw-bold">100% Traceable Lifecycle</h5>
-                <p class="text-secondary small mb-0">From donor phlebotomy bag to patient bedside. Verified by automated cold chain and state-transition locking.</p>
+    <!-- Live System Highlights Bar -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-card-icon green">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                    <div class="stat-card-label">Cold Chain Integrity</div>
+                    <div class="stat-card-value text-success">+4.0°C</div>
+                    <div class="stat-card-sub"><span class="live-dot"></span> Automated Sensor Monitoring</div>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100 border-0 shadow-sm rounded-3 p-4">
-                <div class="text-danger fs-1 mb-3"><i class="bi bi-virus"></i></div>
-                <h5 class="fw-bold">Laboratory Safety Gate</h5>
-                <p class="text-secondary small mb-0">Strict screening workflow for HIV, HBV, HCV, Syphilis, and Malaria. Quarantined units cannot be issued until released by a Medical Officer.</p>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-card-icon blue">
+                    <i class="bi bi-virus"></i>
+                </div>
+                <div>
+                    <div class="stat-card-label">TTI Assay Screening</div>
+                    <div class="stat-card-value text-primary">5 / 5</div>
+                    <div class="stat-card-sub">HIV, HBV, HCV, Syphilis, Malaria</div>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100 border-0 shadow-sm rounded-3 p-4">
-                <div class="text-danger fs-1 mb-3"><i class="bi bi-lightning-charge"></i></div>
-                <h5 class="fw-bold">Atomic Requisitions</h5>
-                <p class="text-secondary small mb-0">Emergency STAT ordering and database row-level locking prevent double reservations or stock race conditions.</p>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-card-icon red">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+                <div>
+                    <div class="stat-card-label">Emergency Protocol</div>
+                    <div class="stat-card-value text-danger">STAT</div>
+                    <div class="stat-card-sub">Atomic Concurrency Reservation</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-card-icon purple">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div>
+                    <div class="stat-card-label">Auditability</div>
+                    <div class="stat-card-value text-purple" style="color:var(--lf-purple);">100%</div>
+                    <div class="stat-card-sub">Immutable Regulatory Log Trail</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Blood Compatibility Reference Chart -->
-    <div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
-        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-grid-3x3-gap-fill text-danger me-2"></i>Red Blood Cell Compatibility Matrix (Configurable SOP Reference)</h5>
+    <!-- Core Pillars Grid -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-card-icon">
+                    <i class="bi bi-person-heart"></i>
+                </div>
+                <h5 class="feature-card-title">1. Voluntary Donor Management</h5>
+                <p class="feature-card-desc">
+                    Comprehensive donor registry with automated deferral calculations, vital sign thresholds, hemoglobin validation, and donation interval compliance checks.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-card-icon">
+                    <i class="bi bi-flask"></i>
+                </div>
+                <h5 class="feature-card-title">2. Laboratory & Component Lab</h5>
+                <p class="feature-card-desc">
+                    Dual-technician TTI assay entry with Medical Officer release gatekeeping. Separation of whole blood into PRBC, FFP, Platelets, and Cryoprecipitate with yield tracking.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-card-icon">
+                    <i class="bi bi-clipboard2-pulse"></i>
+                </div>
+                <h5 class="feature-card-title">3. Hemovigilance Requisition Desk</h5>
+                <p class="feature-card-desc">
+                    Hospital crossmatch ordering, cold-box dispatch manifests with tamper-evident security tags, adverse reaction logging, and quarantine return triage.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Compatibility Matrix Reference -->
+    <div class="lf-card mb-4">
+        <div class="lf-card-header">
+            <h5 class="lf-card-header-title">
+                <i class="bi bi-grid-3x3-gap-fill"></i> Standard Red Blood Cell (PRBC) Transfusion Compatibility SOP
+            </h5>
+            <span class="lf-badge lf-badge-neutral">Clinical Reference Guide</span>
+        </div>
         <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle mb-0">
-                <thead class="table-light">
+            <table class="lf-table text-center align-middle mb-0">
+                <thead>
                     <tr>
-                        <th>Recipient Blood Type</th>
+                        <th class="text-start">Recipient ABO / Rh Group</th>
                         <th>Compatible Donor Red Blood Cells (PRBC)</th>
-                        <th>Universal Recipient / Donor</th>
+                        <th>Clinical Transfusion Rule</th>
+                        <th>Classification Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td><span class="badge badge-blood">O-</span></td><td>O- only</td><td><span class="badge bg-danger">Universal Red Cell Donor</span></td></tr>
-                    <tr><td><span class="badge badge-blood">O+</span></td><td>O+, O-</td><td>-</td></tr>
-                    <tr><td><span class="badge badge-blood">A-</span></td><td>A-, O-</td><td>-</td></tr>
-                    <tr><td><span class="badge badge-blood">A+</span></td><td>A+, A-, O+, O-</td><td>-</td></tr>
-                    <tr><td><span class="badge badge-blood">B-</span></td><td>B-, O-</td><td>-</td></tr>
-                    <tr><td><span class="badge badge-blood">B+</span></td><td>B+, B-, O+, O-</td><td>-</td></tr>
-                    <tr><td><span class="badge badge-blood">AB-</span></td><td>AB-, A-, B-, O-</td><td>-</td></tr>
-                    <tr><td><span class="badge badge-blood">AB+</span></td><td>AB+, AB-, A+, A-, B+, B-, O+, O-</td><td><span class="badge bg-success">Universal Red Cell Recipient</span></td></tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">O-</span></td>
+                        <td><strong class="text-danger">O- only</strong></td>
+                        <td>Must receive O- only to prevent acute hemolytic reactions</td>
+                        <td><span class="lf-badge lf-badge-danger">Universal Red Cell Donor</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">O+</span></td>
+                        <td>O+, O-</td>
+                        <td>Can receive Rh-negative units if Rh-positive is depleted</td>
+                        <td><span class="lf-badge lf-badge-neutral">Common Recipient</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">A-</span></td>
+                        <td>A-, O-</td>
+                        <td>Anti-B antibodies present; avoid all B and AB components</td>
+                        <td><span class="lf-badge lf-badge-neutral">Rh- Restricted</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">A+</span></td>
+                        <td>A+, A-, O+, O-</td>
+                        <td>Compatible with A and universal O units</td>
+                        <td><span class="lf-badge lf-badge-neutral">Standard ABO</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">B-</span></td>
+                        <td>B-, O-</td>
+                        <td>Anti-A antibodies present; avoid all A and AB components</td>
+                        <td><span class="lf-badge lf-badge-neutral">Rh- Restricted</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">B+</span></td>
+                        <td>B+, B-, O+, O-</td>
+                        <td>Compatible with B and universal O units</td>
+                        <td><span class="lf-badge lf-badge-neutral">Standard ABO</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">AB-</span></td>
+                        <td>AB-, A-, B-, O-</td>
+                        <td>Can receive any Rh-negative red cells</td>
+                        <td><span class="lf-badge lf-badge-warning">Universal Plasma Donor</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-start"><span class="badge-blood-group">AB+</span></td>
+                        <td>AB+, AB-, A+, A-, B+, B-, O+, O-</td>
+                        <td>No ABO/Rh antibodies; compatible with all red blood cell groups</td>
+                        <td><span class="lf-badge lf-badge-success">Universal Red Cell Recipient</span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        <small class="text-muted mt-2 d-block"><i class="bi bi-info-circle me-1"></i>Clinical crossmatching tube testing and antibody screening are strictly required prior to issue per hospital blood centre SOPs.</small>
+        <div class="p-3 bg-light border-top text-muted small d-flex align-items-center gap-2">
+            <i class="bi bi-info-circle-fill text-primary fs-5"></i>
+            <span><strong>Regulatory Mandate:</strong> Immediate spin or electronic crossmatching and recipient antibody screening are required before issuing any unit from available inventory.</span>
+        </div>
     </div>
 </div>
 {% endblock %}
