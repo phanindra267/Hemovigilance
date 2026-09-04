@@ -1,267 +1,219 @@
-# LIFEFlow ? Blood Bank Management & Hemovigilance System
+# LIFEFlow — Blood Bank Management & Hemovigilance System
 
-![Django Version](https://img.shields.io/badge/Django-6.0.6-green.svg)
-![Python Version](https://img.shields.io/badge/Python-3.14.7-blue.svg)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Build Status](https://img.shields.io/badge/Tests-14%20Passed-brightgreen.svg)
-![Traceability](https://img.shields.io/badge/Traceability-Unit--Level-red.svg)
+[![CI Pipeline](https://github.com/phanindra267/Hemovigilance/actions/workflows/ci.yml/badge.svg)](https://github.com/phanindra267/Hemovigilance/actions)
+[![Django Version](https://img.shields.io/badge/Django-6.0.6-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![Python Version](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Automated Tests](https://img.shields.io/badge/Tests-14%20Passed%20(100%25)-brightgreen.svg)](TESTING.md)
+[![Traceability](https://img.shields.io/badge/Traceability-Unit--Level%20Vein--to--Vein-c0392b.svg)](WORKFLOWS.md)
+[![Cold Chain](https://img.shields.io/badge/Cold%20Chain-Monitored%20(+4°C)-0284c7.svg)](ARCHITECTURE.md)
 
-LIFEFlow is a complete, modular, production-ready Django web application designed for enterprise blood transfusion services, regional blood banks, and affiliated healthcare networks.
-
-It models the entire lifecycle of blood donation and transfusion with unit-level cold chain traceability, validated state transitions, atomic concurrency-safe reservations, immutable audit logging, role-based access control, responsive Bootstrap 5 UI, and automated hemovigilance reporting.
-
----
-
-## Table of Contents
-1. [Core Principles & Medical Safety Boundary](#core-principles--medical-safety-boundary)
-2. [Architecture & 15 Django Apps](#architecture--15-django-apps)
-3. [User Roles & Access Control](#user-roles--access-control)
-4. [Prerequisites & Installation](#prerequisites--installation)
-5. [Configuration & Environment](#configuration--environment)
-6. [Database Migrations & Demo Seeding](#database-migrations--demo-seeding)
-7. [Running the Application](#running-the-application)
-8. [Automated Testing](#automated-testing)
-9. [Production Deployment Outline](#production-deployment-outline)
-10. [Documentation Index](#documentation-index)
+**LIFEFlow** is an enterprise-grade, production-oriented Blood Bank Management and Hemovigilance Information System built with **Python**, **Django**, and **Bootstrap 5**. Designed for regional transfusion centers, hospital blood banks, and healthcare authorities, it provides strict vein-to-vein unit traceability, cold chain governance, serological release gates, and atomic requisition management.
 
 ---
 
-## Core Principles & Medical Safety Boundary
+## Key Highlights
 
-### The Traceable Lifecycle
-`
-Donor Registration
-   ?
-   ?
-Eligibility Assessment (Weight, Hb, BP, Pulse, Deferral Rules)
-   ?
-   ?
-Appointment / Walk-in Check-in
-   ?
-   ?
-Donation Session & Phlebotomy (Volume, Bag Type, Phlebotomist)
-   ?
-   ?
-Blood Bag (Unique ID: BB-YYYY-NNNNNN, Quarantined)
-   ?
-   ?
-Laboratory Screening (ABO/Rh, HIV, HBV, HCV, Syphilis, Malaria)
-   ?
-   ?
-Medical Officer Verification & Safety Release Gate
-   ?
-   ?
-Component Processing & Separation (PRBC, Platelets, FFP, Cryo)
-   ?
-   ?
-Unit-Level Inventory (Storage Area, Device, Rack, Shelf, Position)
-   ?
-   ?
-Temperature Cold-Chain Monitoring & Excursion Logging
-   ?
-   ?
-Hospital Blood Requisition (Routine, Urgent, STAT Emergency)
-   ?
-   ?
-Medical Officer Review & Authorization
-   ?
-   ?
-Atomic Concurrency-Safe Reservation (select_for_update Row Locking)
-   ?
-   ?
-Crossmatch Confirmation & Dispatch Issue (ISS-YYYY-NNNNNN)
-   ?
-   ???> Transfusion & Bedside Receipt
-   ?
-   ???> Blood Return & Clinical Triage (Cold Chain Check, Disposition)
-   ?
-   ???> Authorized Biohazard Discard (Wastage Tracking & Manifest)
-`
-
-> [!IMPORTANT]
-> **Medical Safety Boundary:** Medical and regulatory decisions are never hardcoded as arbitrary heuristics. Eligibility criteria, infectious disease testing rules, storage limits, and compatibility rules are implemented as configurable business rules that can be validated against approved blood centre Standard Operating Procedures (SOPs) and NBTC / WHO / FDA regulations.
+- **15 Modular Django Apps:** Domain-driven structure separating clinical, operational, and laboratory concerns.
+- **Vein-to-Vein Unit Traceability:** Alphanumeric IDs for Donors (`DNR-`), Appointments (`APT-`), Blood Bags (`BB-`), Lab Samples (`SMP-`), Components (`CMPNT-`), Stock (`INV-`), Requisitions (`REQ-`), Issues (`ISS-`), and Discards (`DIS-`).
+- **Atomic Concurrency-Safe Reservations:** `select_for_update()` row-level database locking ensures units cannot be double-booked during simultaneous emergency orders.
+- **Medical Officer Safety Release Gate:** Quarantined units cannot enter available inventory until all 5 mandatory TTI viral screening assays (HIV, HBV, HCV, Syphilis, Malaria) are verified non-reactive by an authorized Medical Officer.
+- **Cold Chain Governance:** Continuous physical storage tracking (+2°C to +6°C PRBC fridges, -40°C plasma freezers, +20°C to +24°C platelet incubators) with excursion alarm logging and automatic unit quarantine.
+- **9 Granular User Roles:** SuperAdmin, Blood Bank Admin, Medical Officer, Lab Tech, Inventory Tech, Receptionist, Hospital Coordinator, Donor, and Patient with dedicated role-specific dashboards.
+- **Automated Regulatory Reporting:** Real-time stock ledgers, discard root-cause analytics, and one-click **CSV** and **ReportLab PDF** downloads.
+- **Modern Healthcare UI (v2.0):** Clean responsive clinical interface with live network indicators, stat cards, and one-click demo credentials picker.
 
 ---
 
-## Architecture & 15 Django Apps
+## The Traceable 12-Stage Lifecycle
 
-The codebase is split into 15 specialized applications:
-- **core**: Blood bank organization master, configurable system parameters, base models, error handlers (400, 403, 404, 500), context processors.
-- **ccounts**: Custom role-based authentication, user profiles, 9 distinct roles, role decorators, customized dashboard dispatcher.
-- **donors**: Voluntary donor registry, demographic records, contact details, donor statuses, next eligible donation dates.
-- **ppointments**: Appointment scheduling, time-slot management, check-in workflow, and cancellation tracking.
-- **camps**: Mobile and corporate blood donation drives, organizer liaison, venue tracking, and donor registrations.
-- **donations**: Phlebotomy collection records, bag types, volume metrics, adverse event logging.
-- **laboratory**: Blood bag registry, sample tubes, TTI screening assays, reactive isolation, Medical Officer verification.
-- **lood_components**: Component processing (Whole Blood, PRBC, Platelet, FFP, Cryoprecipitate), default shelf lives.
-- **inventory**: Physical cold storage hierarchy (Area -> Device -> Position), automated expiry tracking, unit status transitions.
-- **
-equests_app**: Hospital requisitions, clinical triage, emergency STAT alerts, atomic reservations, issue generation, returns, and discards.
-- **patients**: Transfusion recipient records, hospital MRN linkage, medical history.
-- **hospitals**: Affiliated hospital directory, verification statuses, authorized representatives.
-- **
-otifications**: Real-time in-app notification alerts for low stock, expiring units, emergency requests, and lab actions.
-- **
-eports**: Operational reporting engine with date filtering, CSV export, and ReportLab PDF document generation.
-- **udit**: Immutable regulatory audit logging of all entity updates, approvals, reservations, issues, and discards.
+```mermaid
+flowchart TD
+    A[1. Voluntary Donor Registration] --> B[2. Clinical Eligibility Assessment]
+    B --> C[3. Appointment / Walk-in Phlebotomy]
+    C --> D[4. Custody Blood Bag Issued: BB-YYYY-NNNNNN]
+    D --> E[5. Serological TTI Screening: HIV, HBV, HCV, Syphilis, Malaria]
+    E --> F[6. Medical Officer Verification & Safety Release Gate]
+    F --> G[7. Component Separation: PRBC, FFP, Platelets, Cryo]
+    G --> H[8. Cold Storage Allocation: Area, Device, Shelf, Slot]
+    H --> I[9. Hospital Clinical Blood Requisition: Routine, Urgent, STAT]
+    I --> J[10. Atomic Reservation Locking via select_for_update]
+    J --> K[11. Crossmatch Verification & Dispatch Manifest]
+    K --> L[12. Transfusion Surveillance, Quarantine Return, or Biohazard Discard]
 
----
-
-## User Roles & Access Control
-
-LIFEFlow implements 9 distinct operational roles with restricted dashboards and permission gates:
-1. **Super Administrator** (SUPER_ADMIN): Full system control, user account provisioning, system settings.
-2. **Blood Bank Administrator** (BLOOD_BANK_ADMIN): Facility operations, staff management, audit trail inspection.
-3. **Medical Officer** (MEDICAL_OFFICER): Donor eligibility assessment, lab screening verification, requisition approval, return disposition, discard sign-off.
-4. **Laboratory Technician** (LAB_TECHNICIAN): Sample collection, TTI assay result entry, temperature logging.
-5. **Blood Bank Technician** (BLOOD_BANK_TECH): Phlebotomy recording, component separation, cold storage management, reservation, and issue.
-6. **Receptionist** (RECEPTIONIST): Donor registration, appointment scheduling, camp coordination, donor check-in.
-7. **Hospital User** (HOSPITAL_USER): Blood requisitions, patient record entry, crossmatch status tracking.
-8. **Donor** (DONOR): Personal donation history, certificate download, eligibility calendar, appointment booking.
-9. **Patient** (PATIENT): Transfusion history and patient recipient records.
+    style A fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style F fill:#fef3c7,stroke:#d97706,stroke-width:2px
+    style J fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+    style K fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+```
 
 ---
 
-## Prerequisites & Installation
+## Default User Accounts (Demo Logins)
 
-### Requirements
-- Python 3.10 to 3.14
-- Git
-- SQLite (default for development) or PostgreSQL 14+ (for production)
+All roles are seeded automatically via `python manage.py seed_demo_data`. All preconfigured accounts share the default password: **`password123`**.
 
-### Setup Steps
-`ash
-# 1. Clone repository
+| Role | Username | Password | Accessible Portals & Dashboards |
+|---|---|---|---|
+| **Super Administrator** | `admin` | `password123` | Global Administration, User Roles, Audit Logs, Settings |
+| **Blood Bank Director** | `bb_admin` | `password123` | Operational Command Center, Facility Metrics, Staff Mgmt |
+| **Medical Officer** | `doctor_rajesh` | `password123` | Lab Verification Gate, Clinical Requisitions, Assessments |
+| **Laboratory Technician** | `tech_priya` | `password123` | Viral TTI Assays, Blood Bags, Component Processing |
+| **Inventory Manager** | `tech_arun` | `password123` | Cold Storage Vault, Temperature Monitoring, Discards |
+| **Phlebotomist / Front Desk** | `recep_meena` | `password123` | Donor Registration, Appointments, Phlebotomy Logs |
+| **Hospital Coordinator** | `hospital_user` | `password123` | Clinical Blood Orders, Bedside Patient Tracking |
+| **Voluntary Donor** | `donor_user` | `password123` | Donor Dashboard, Appointment Booking, Donation History |
+| **Patient / Recipient** | `patient_user` | `password123` | Recipient Portal, Transfusion Records |
+
+> [!TIP]
+> On the sign-in page at `/accounts/login/`, you can simply click any role button in the **Demo Accounts** box to autofill the credentials immediately!
+
+---
+
+## Technology Stack
+
+- **Backend:** Python 3.11–3.14, Django 6.0.6 (ORM, Forms, Auth, Admin)
+- **Database:** SQLite for zero-config local development; production-ready for PostgreSQL 14+
+- **Frontend:** Django Templates, Bootstrap 5.3.3, Bootstrap Icons 1.11.3, Custom Healthcare CSS (v2.0)
+- **Reporting:** ReportLab (vector PDF generation), Python CSV Engine
+- **Static Assets:** WhiteNoise for efficient, zero-config production static file serving
+- **Testing:** Django TestCase (14 automated unit, integration, and lifecycle tests)
+- **Deployment:** Gunicorn, Nginx reverse proxy, Docker, Docker Compose
+
+---
+
+## 15 Modular Django Applications
+
+| Application | Description & Responsibilities |
+|---|---|
+| **`core`** | Organization master, configurable clinical thresholds (SOPs), global error handlers (400, 403, 404, 500), management commands |
+| **`accounts`** | Custom `UserProfile`, 9 roles, RBAC decorators (`@role_required`), role-adaptive dashboards |
+| **`donors`** | Donor registry, deferral date tracking, rare blood flags, eligibility questionnaires |
+| **`appointments`** | Time-slot capacity validation, scheduling, reception check-in, cancellations |
+| **`camps`** | Community donation drives, venue coordination, target metrics, self-registration |
+| **`donations`** | Phlebotomy documentation, bag linkage, volume metrics, adverse donor reaction tracking |
+| **`laboratory`** | Blood bag custody, sample aliquots, 5-assay TTI screening, Medical Officer release gate |
+| **`blood_components`** | Component separation engine (PRBC, FFP, Platelets, Cryo), volume yields, shelf-life rules |
+| **`inventory`** | Storage hierarchy (Area, Device, Position), cold chain temperature alerts, quarantine triage |
+| **`requests_app`** | Hospital orders, urgency triage, `select_for_update()` atomic locks, issue manifests, returns |
+| **`patients`** | Transfusion recipient directory, hospital MRN linkage, medical history |
+| **`hospitals`** | Healthcare institutions master, licensing, tiers, contact persons |
+| **`notifications`** | Real-time system notifications drawer, automated expiry alerts, urgent requisition alarms |
+| **`reports`** | Dynamic reporting hub with live data tables and instant **CSV** / **ReportLab PDF** downloads |
+| **`audit`** | Automated request middleware capturing user, IP, entity, and mutation details in immutable logs |
+
+---
+
+## Quickstart & Installation
+
+### 1. Clone the Repository
+```bash
 git clone https://github.com/phanindra267/Hemovigilance.git
 cd Hemovigilance
+```
 
-# 2. Create virtual environment
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Linux/macOS:
+### 2. Create and Activate Virtual Environment
+```bash
+# Linux / macOS
+python3 -m venv venv
 source venv/bin/activate
 
-# 3. Install dependencies
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+```bash
 pip install -r requirements.txt
-`
+```
 
----
-
-## Configuration & Environment
-
-Copy the example environment file:
-`ash
+### 4. Configure Environment
+```bash
 cp .env.example .env
-`
+# Default settings work out of the box with local SQLite!
+```
 
-Configure parameters in .env:
-`ini
-DEBUG=True
-SECRET_KEY=your-secure-random-secret-key-here
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-
-# Database (default sqlite for local development)
-DB_ENGINE=sqlite
-
-# For PostgreSQL production:
-# DB_ENGINE=postgresql
-# DB_NAME=lifeflow_db
-# DB_USER=lifeflow_user
-# DB_PASSWORD=your_secure_password
-# DB_HOST=localhost
-# DB_PORT=5432
-`
-
----
-
-## Database Migrations & Demo Seeding
-
-Run migrations and seed realistic synthetic test data across all 15 apps:
-`ash
-# Apply migrations
+### 5. Run Migrations & Seed Demo Data
+```bash
 python manage.py migrate
-
-# Seed complete synthetic demo data
 python manage.py seed_demo_data
+```
 
-# Collect static assets
-python manage.py collectstatic --noinput
-`
+### 6. Start the Development Server
+```bash
+python manage.py runserver
+```
 
-### Pre-configured Demo Accounts
-All seeded accounts use password: password123
-
-| Username | Role | Full Name | Primary Responsibility |
-|---|---|---|---|
-| dmin | Super Administrator | Super Admin | Full System Configuration |
-| b_admin | Blood Bank Admin | Vikram Malhotra | Operations & Compliance |
-| doctor_rajesh | Medical Officer | Dr. Rajesh Khurana | Eligibility, Lab Sign-off, Issues |
-| 	ech_priya | Laboratory Tech | Priya Sharma | Serological Screening & Assays |
-| 	ech_arun | Blood Bank Tech | Arun Patel | Phlebotomy, Components, Storage |
-| 
-ecep_meena | Receptionist | Meena Iyer | Front Desk, Camps, Check-in |
-| hospital_user| Hospital User | Dr. Sanjay Mehta | Hospital Requisitions (Metro Hosp) |
-| donor_user | Voluntary Donor | Rahul Deshmukh | Donor Portal & Appointments |
-| patient_user| Patient / Recipient | Ananya Sen | Patient Portal & Transfusions |
+Visit **[http://127.0.0.1:8000](http://127.0.0.1:8000)** in your browser.
 
 ---
 
-## Running the Application
+## Automated Management Commands
 
-Start the development web server:
-`ash
-python manage.py runserver
-`
-Navigate to: **http://127.0.0.1:8000/**
+LIFEFlow includes automated administrative tasks for routine operations:
 
-### Management Commands
-`ash
-# Audit cold-chain stock levels and detect low stock
-python manage.py check_inventory
-
-# Scan inventory for expired units and alert staff
+```bash
+# Audit inventory and flag stock nearing or past expiration date
 python manage.py check_expiry
 
-# Generate routine appointment and emergency alerts
+# Audit inventory levels and trigger low-stock alerts across blood groups
+python manage.py check_inventory
+
+# Dispatch routine appointment reminders and pending lab screening alerts
 python manage.py generate_notifications
-`
+```
 
 ---
 
-## Automated Testing
+## Running Automated Tests
 
-Execute the complete automated test suite (14 test cases covering models, workflows, security, exports, and end-to-end integration):
-`ash
-python manage.py test
-`
+LIFEFlow comes with a comprehensive test suite covering the entire 12-stage lifecycle, role access control, inventory concurrency, and PDF/CSV reporting:
 
-### Key Tested Scenarios:
-- **Full End-to-End Lifecycle:** Donor -> Eligibility -> Phlebotomy -> Bag -> Lab -> Screening -> Medical Officer Verification -> Component Preparation -> Inventory -> Hospital Requisition -> Approval -> Atomic Concurrency Reservation -> Crossmatched Issue -> Return.
-- **Negative Workflow Tests:** Rejection of expired units, blocking of quarantined units, double reservation prevention via row-level locks, reactive assay safety gating.
-- **Security & RBAC:** Role-based access control permission gates (403 Forbidden on unauthorized access), CSRF protection.
-- **Reporting Engine:** Validation of CSV data streams and ReportLab binary PDF file generation.
+```bash
+python manage.py test --verbosity=2
+```
 
----
-
-## Production Deployment Outline
-
-### Recommended Stack
-- **Web Server:** Nginx (reverse proxy, SSL termination, static file caching)
-- **WSGI Application Server:** Gunicorn (with 4-8 worker processes)
-- **Database:** PostgreSQL 16 with daily backup snapshotting
-- **Static Assets:** WhiteNoise / CDN
-- **Containerization:** Docker & Docker Compose (configs provided)
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for full systemd service units, Nginx virtual hosts, and Docker configurations.
+Expected result:
+```
+Ran 14 tests in ~5.6s
+OK
+```
 
 ---
 
-## Documentation Index
-- [ARCHITECTURE.md](ARCHITECTURE.md): Comprehensive system architecture & domain design.
-- [DATABASE.md](DATABASE.md): Data dictionary, ER model, constraints, and indexes.
-- [WORKFLOWS.md](WORKFLOWS.md): Clinical and operational lifecycle procedures.
-- [SECURITY.md](SECURITY.md): RBAC matrix, encryption, audit trails, and data hygiene.
-- [TESTING.md](TESTING.md): Testing methodology, test cases, and execution guidelines.
-- [DEPLOYMENT.md](DEPLOYMENT.md): Production deployment guides for Ubuntu/Linux, Docker, and Nginx.
-- [API_OR_URL_REFERENCE.md](API_OR_URL_REFERENCE.md): Complete list of named routes, URL converters, and permissions.
+## Production Deployment
+
+A complete production-ready Docker Compose and Nginx configuration is included:
+
+```bash
+# Build and run PostgreSQL, Gunicorn, and Nginx containers
+docker compose up -d --build
+
+# Run migrations inside the web container
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py collectstatic --noinput
+docker compose exec web python manage.py seed_demo_data
+```
+
+For detailed bare-metal, systemd, or Nginx setup, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+---
+
+## Project Documentation Index
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) — Architectural patterns, cold chain schema, safety rules
+- [DATABASE.md](DATABASE.md) — Entity-relationship models, primary keys, indexing strategy
+- [WORKFLOWS.md](WORKFLOWS.md) — 12-stage vein-to-vein clinical state machine
+- [SECURITY.md](SECURITY.md) — Role-based access control, session security, CSRF, audit logging
+- [TESTING.md](TESTING.md) — Test plan, coverage matrix, automated test execution
+- [DEPLOYMENT.md](DEPLOYMENT.md) — Nginx reverse proxy, Gunicorn, Docker, systemd services
+- [API_OR_URL_REFERENCE.md](API_OR_URL_REFERENCE.md) — Exhaustive catalog of all 260+ system routes
+- [CONTRIBUTING.md](CONTRIBUTING.md) — Contribution guidelines and development workflow
+- [LICENSE](LICENSE) — Open Source MIT License
+
+---
+
+## License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
