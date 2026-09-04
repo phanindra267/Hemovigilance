@@ -1,31 +1,48 @@
 {% extends "base.html" %}
-{% block title %}System Notifications ? LIFEFlow{% endblock %}
+{% block title %}System Notifications — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0"><i class="bi bi-bell-fill text-danger me-2"></i>Notifications</h3>
-        <a href="{% url 'notifications:mark_all_read' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-check2-all me-1"></i>Mark All Read</a>
+<div class="container-fluid px-lg-4 py-2" style="max-width: 900px;">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title"><i class="bi bi-bell-fill text-danger me-2"></i>System Notifications</h2>
+            <div class="page-header-subtitle">Real-time alerts, clinical expiry notices, temperature alarms, and appointment reminders</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'notifications:mark_all_read' %}" class="btn btn-lf-ghost">
+                <i class="bi bi-check2-all text-success"></i> Mark All as Read
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
-        <ul class="list-group list-group-flush">
+    <div class="lf-card">
+        <ul class="list-group list-group-flush mb-0">
             {% for n in page_obj %}
-            <li class="list-group-item p-3 {% if not n.is_read %}bg-danger-subtle border-start border-danger border-4{% endif %}">
-                <div class="d-flex justify-content-between align-items-start">
+            <li class="list-group-item p-3 {% if not n.is_read %}bg-light border-start border-danger border-4{% endif %}">
+                <div class="d-flex justify-content-between align-items-start gap-3">
                     <div>
-                        <h6 class="fw-bold mb-1 {% if not n.is_read %}text-danger{% else %}text-dark{% endif %}">{{ n.title }}</h6>
-                        <p class="mb-1 text-secondary small">{{ n.message }}</p>
-                        <small class="text-muted">{{ n.created_at|timesince }} ago &bull; {{ n.get_notification_type_display }}</small>
+                        <h6 class="fw-700 mb-1 {% if not n.is_read %}text-danger{% else %}text-dark{% endif %}">{{ n.title }}</h6>
+                        <p class="mb-2 text-secondary small">{{ n.message }}</p>
+                        <div class="d-flex align-items-center gap-2 small text-muted">
+                            <span class="lf-badge lf-badge-neutral" style="font-size:0.7rem;">{{ n.get_notification_type_display }}</span>
+                            <span>&bull;</span>
+                            <span>{{ n.created_at|timesince }} ago</span>
+                        </div>
                     </div>
-                    {% if not n.is_read %}
-                        <a href="{% url 'notifications:mark_read' n.pk %}" class="btn btn-sm btn-outline-danger">Open</a>
-                    {% elif n.link_url %}
-                        <a href="{{ n.link_url }}" class="btn btn-sm btn-outline-secondary">View</a>
-                    {% endif %}
+                    <div>
+                        {% if not n.is_read %}
+                            <a href="{% url 'notifications:mark_read' n.pk %}" class="btn btn-sm btn-lf-primary py-1 px-3 text-nowrap" style="font-size:0.8rem;">Open &rarr;</a>
+                        {% elif n.link_url %}
+                            <a href="{{ n.link_url }}" class="btn btn-sm btn-lf-ghost py-1 px-3 text-nowrap" style="font-size:0.8rem;">View &rarr;</a>
+                        {% endif %}
+                    </div>
                 </div>
             </li>
             {% empty %}
-            <li class="list-group-item text-center text-muted py-5">No notifications.</li>
+            <li class="empty-state py-5">
+                <i class="bi bi-bell-slash empty-state-icon"></i>
+                <div class="empty-state-title">No Notifications</div>
+                <div class="empty-state-desc">You are completely up to date. New system alerts will appear here.</div>
+            </li>
             {% endfor %}
         </ul>
     </div>

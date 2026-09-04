@@ -1,89 +1,159 @@
 {% extends "base.html" %}
-{% block title %}{{ donor.full_name }} ? LIFEFlow{% endblock %}
+{% block title %}{{ donor.full_name }} — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid px-lg-4 py-2">
+    <!-- Header -->
+    <div class="page-header">
         <div>
-            <h3 class="fw-bold text-dark mb-0">{{ donor.full_name }}</h3>
-            <span class="badge badge-blood me-2 fs-6">{{ donor.blood_group }} ({{ donor.get_rh_factor_display }})</span>
-            <span class="badge bg-secondary">{{ donor.donor_id }}</span>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="cell-id bg-white px-2 py-1 border rounded text-danger fw-700">{{ donor.donor_id }}</span>
+                <span class="badge-blood-group">{{ donor.blood_group }}</span>
+            </div>
+            <h2 class="page-header-title">{{ donor.full_name }}</h2>
+            <div class="page-header-subtitle">Registered Voluntary Donor &bull; Total Donations: <strong>{{ donor.total_donations_count }}</strong></div>
         </div>
-        <div class="d-flex gap-2">
-            <a href="{% url 'donors:assess_eligibility' donor.pk %}" class="btn btn-primary btn-sm"><i class="bi bi-clipboard2-pulse me-1"></i>New Eligibility Assessment</a>
-            <a href="{% url 'donors:update' donor.pk %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'donors:assess_eligibility' donor.pk %}" class="btn btn-lf-primary">
+                <i class="bi bi-clipboard2-pulse me-1"></i> New Eligibility Assessment
+            </a>
+            <a href="{% url 'donors:update' donor.pk %}" class="btn btn-lf-outline">
+                <i class="bi bi-pencil me-1"></i> Edit Profile
+            </a>
+            <a href="{% url 'donors:list' %}" class="btn btn-lf-ghost">
+                <i class="bi bi-arrow-left me-1"></i> Back to Registry
+            </a>
         </div>
     </div>
 
     <div class="row g-4">
+        <!-- Left Column: Donor Info Card -->
         <div class="col-lg-4">
-            <div class="card border-0 shadow-sm p-4 rounded-3 mb-4">
-                <h6 class="fw-bold text-danger border-bottom pb-2 mb-3">Demographics & Contact</h6>
-                <p class="mb-2"><strong>Phone:</strong> {{ donor.phone }}</p>
-                <p class="mb-2"><strong>Email:</strong> {{ donor.email|default:"N/A" }}</p>
-                <p class="mb-2"><strong>Date of Birth:</strong> {{ donor.dob }} ({{ donor.get_gender_display }})</p>
-                <p class="mb-2"><strong>National ID:</strong> {{ donor.national_id|default:"N/A" }}</p>
-                <p class="mb-2"><strong>Address:</strong> {{ donor.address }}, {{ donor.city }}, {{ donor.state }} {{ donor.postal_code }}</p>
-                <hr>
-                <h6 class="fw-bold text-danger pb-1">Emergency Contact</h6>
-                <p class="mb-1"><strong>Name:</strong> {{ donor.emergency_contact_name|default:"-" }} ({{ donor.emergency_contact_relation|default:"-" }})</p>
-                <p class="mb-0"><strong>Phone:</strong> {{ donor.emergency_contact_phone|default:"-" }}</p>
+            <div class="lf-card mb-4 p-4 bg-white">
+                <h6 class="fw-700 text-danger border-bottom pb-2 mb-3">
+                    <i class="bi bi-person-lines-fill me-1"></i> Demographics &amp; Contact
+                </h6>
+                <div class="mb-2"><small class="text-muted d-block">Contact Phone</small><strong>{{ donor.phone }}</strong></div>
+                <div class="mb-2"><small class="text-muted d-block">Email Address</small><strong>{{ donor.email|default:"N/A" }}</strong></div>
+                <div class="mb-2"><small class="text-muted d-block">Date of Birth</small><strong>{{ donor.dob }}</strong> ({{ donor.get_gender_display }})</div>
+                <div class="mb-2"><small class="text-muted d-block">National Identification</small><strong>{{ donor.national_id|default:"N/A" }}</strong></div>
+                <div class="mb-3"><small class="text-muted d-block">Residential Address</small><span>{{ donor.address }}, {{ donor.city }}, {{ donor.state }} {{ donor.postal_code }}</span></div>
+
+                <h6 class="fw-700 text-danger border-bottom pb-2 mb-3 mt-4">
+                    <i class="bi bi-telephone-plus me-1"></i> Emergency Contact
+                </h6>
+                <div class="mb-1"><small class="text-muted d-block">Contact Person</small><strong>{{ donor.emergency_contact_name|default:"-" }}</strong> ({{ donor.emergency_contact_relation|default:"-" }})</div>
+                <div><small class="text-muted d-block">Emergency Phone</small><strong>{{ donor.emergency_contact_phone|default:"-" }}</strong></div>
             </div>
 
-            <div class="card border-0 shadow-sm p-4 rounded-3">
-                <h6 class="fw-bold text-danger border-bottom pb-2 mb-3">Donation Status</h6>
-                <p class="mb-2"><strong>Status:</strong> <span class="badge bg-secondary">{{ donor.get_donor_status_display }}</span></p>
-                <p class="mb-2"><strong>Total Donations:</strong> {{ donor.total_donations_count }}</p>
-                <p class="mb-2"><strong>Last Donated:</strong> {{ donor.last_donation_date|default:"Never" }}</p>
-                <p class="mb-0"><strong>Next Eligible Date:</strong> {{ donor.next_eligible_date|default:"Immediate" }}</p>
+            <div class="lf-card p-4 bg-white">
+                <h6 class="fw-700 text-danger border-bottom pb-2 mb-3">
+                    <i class="bi bi-heart-pulse me-1"></i> Donor Eligibility Status
+                </h6>
+                <div class="mb-2">
+                    <small class="text-muted d-block">Status</small>
+                    {% if donor.donor_status == 'ACTIVE' %}
+                        <span class="lf-badge lf-badge-success fs-6"><i class="bi bi-check-circle-fill"></i> Active &amp; Eligible</span>
+                    {% elif donor.donor_status == 'TEMPORARILY_DEFERRED' %}
+                        <span class="lf-badge lf-badge-warning fs-6"><i class="bi bi-clock-history"></i> Temporarily Deferred</span>
+                    {% else %}
+                        <span class="lf-badge lf-badge-danger fs-6">{{ donor.get_donor_status_display }}</span>
+                    {% endif %}
+                </div>
+                <div class="mb-2"><small class="text-muted d-block">Last Donation Date</small><strong>{{ donor.last_donation_date|default:"Never" }}</strong></div>
+                <div><small class="text-muted d-block">Next Permissible Donation</small><strong class="text-danger">{{ donor.next_eligible_date|default:"Immediate" }}</strong></div>
             </div>
         </div>
 
+        <!-- Right Column: Assessments & Donations -->
         <div class="col-lg-8">
-            <div class="card border-0 shadow-sm p-3 rounded-3 mb-4">
-                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Eligibility Assessment Records</h6>
+            <!-- Assessment History -->
+            <div class="lf-card mb-4">
+                <div class="lf-card-header">
+                    <h6 class="lf-card-header-title">
+                        <i class="bi bi-clipboard2-pulse text-danger"></i> Clinical Eligibility Assessments
+                    </h6>
+                    <span class="lf-badge lf-badge-neutral">{{ assessments|length }} Records</span>
+                </div>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light"><tr><th>Date</th><th>Assessed By</th><th>Hb (g/dL)</th><th>Weight</th><th>Status</th><th>Deferral Reason</th></tr></thead>
+                    <table class="lf-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Assessment Date</th>
+                                <th>Examiner</th>
+                                <th>Hemoglobin</th>
+                                <th>Weight</th>
+                                <th>Status</th>
+                                <th>Deferral Reason</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {% for ea in assessments %}
                             <tr>
                                 <td>{{ ea.assessment_date|date:"Y-m-d H:i" }}</td>
                                 <td>{{ ea.assessed_by.get_full_name|default:ea.assessed_by.username }}</td>
-                                <td>{{ ea.hemoglobin_g_dl }}</td>
+                                <td><strong>{{ ea.hemoglobin_g_dl }}</strong> g/dL</td>
                                 <td>{{ ea.weight_kg }} kg</td>
                                 <td>
                                     {% if ea.status == 'ELIGIBLE' %}
-                                        <span class="badge bg-success">Eligible</span>
+                                        <span class="lf-badge lf-badge-success"><i class="bi bi-check2"></i> Eligible</span>
                                     {% else %}
-                                        <span class="badge bg-warning text-dark">{{ ea.get_status_display }}</span>
+                                        <span class="lf-badge lf-badge-warning">{{ ea.get_status_display }}</span>
                                     {% endif %}
                                 </td>
-                                <td><small>{{ ea.deferral_reason|default:"None" }}</small></td>
+                                <td><small class="text-secondary">{{ ea.deferral_reason|default:"-" }}</small></td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="6" class="text-center text-muted py-3">No assessment records found.</td></tr>
+                            <tr>
+                                <td colspan="6" class="empty-state py-4">
+                                    <i class="bi bi-clipboard-x empty-state-icon"></i>
+                                    <div class="empty-state-title">No Assessments on File</div>
+                                    <div class="empty-state-desc">Click "New Eligibility Assessment" to record vitals and screening questionnaire.</div>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm p-3 rounded-3">
-                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Past Blood Donations</h6>
+            <!-- Past Donations -->
+            <div class="lf-card">
+                <div class="lf-card-header">
+                    <h6 class="lf-card-header-title">
+                        <i class="bi bi-droplet-fill text-danger"></i> Phlebotomy Collection Sessions
+                    </h6>
+                    <span class="lf-badge lf-badge-neutral">{{ donations|length }} Sessions</span>
+                </div>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light"><tr><th>Donation ID</th><th>Date</th><th>Type</th><th>Volume</th><th>Status</th></tr></thead>
+                    <table class="lf-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Donation ID</th>
+                                <th>Collection Date</th>
+                                <th>Procedure Type</th>
+                                <th>Volume</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {% for don in donations %}
                             <tr>
-                                <td><a href="{% url 'donations:detail' don.pk %}" class="fw-bold text-danger text-decoration-none">{{ don.donation_id }}</a></td>
+                                <td>
+                                    <a href="{% url 'donations:detail' don.pk %}" class="cell-id text-danger fw-700">{{ don.donation_id }}</a>
+                                </td>
                                 <td>{{ don.collection_date|date:"Y-m-d H:i" }}</td>
                                 <td>{{ don.get_donation_type_display }}</td>
                                 <td>{{ don.volume_ml }} mL</td>
-                                <td><span class="badge bg-secondary">{{ don.get_status_display }}</span></td>
+                                <td><span class="lf-badge lf-badge-success">{{ don.get_status_display }}</span></td>
                             </tr>
                             {% empty %}
-                            <tr><td colspan="5" class="text-center text-muted py-3">No completed donations yet.</td></tr>
+                            <tr>
+                                <td colspan="5" class="empty-state py-4">
+                                    <i class="bi bi-droplet empty-state-icon"></i>
+                                    <div class="empty-state-title">No Past Donations</div>
+                                    <div class="empty-state-desc">This donor has not yet participated in a phlebotomy session.</div>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

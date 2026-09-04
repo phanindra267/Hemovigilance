@@ -1,48 +1,101 @@
 {% extends "base.html" %}
-{% block title %}Audit Trail ? LIFEFlow{% endblock %}
+{% block title %}System Audit Trail — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0"><i class="bi bi-shield-lock-fill text-danger me-2"></i>System Audit Trail & Hemovigilance Logs</h3>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">System Audit Trail & Hemovigilance Event Log</h2>
+            <div class="page-header-subtitle">Immutable chronological ledger of all clinical mutations, status transitions, and user actions</div>
+        </div>
+        <span class="lf-badge lf-badge-neutral align-self-start"><i class="bi bi-shield-lock-fill text-danger"></i> Tamper-Evident Ledger</span>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 mb-4">
-        <form method="get" class="row g-2">
-            <div class="col-md-5"><input type="text" name="search" class="form-control" placeholder="Search by details, object ID, reason..." value="{{ search }}"></div>
+    <!-- Filter Bar -->
+    <div class="lf-filter-bar">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by details, object ID, or justification..." value="{{ search }}">
+                </div>
+            </div>
             <div class="col-md-3">
                 <select name="action" class="form-select">
-                    <option value="">All Actions</option>
-                    {% for a_val, a_name in actions %}<option value="{{ a_val }}" {% if selected_action == a_val %}selected{% endif %}>{{ a_name }}</option>{% endfor %}
+                    <option value="">All Mutation Actions</option>
+                    {% for a_val, a_name in actions %}
+                        <option value="{{ a_val }}" {% if selected_action == a_val %}selected{% endif %}>{{ a_name }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-2">
                 <select name="model_name" class="form-select">
                     <option value="">All Entities</option>
-                    {% for m in models_list %}<option value="{{ m }}" {% if selected_model == m %}selected{% endif %}>{{ m }}</option>{% endfor %}
+                    {% for m in models_list %}
+                        <option value="{{ m }}" {% if selected_model == m %}selected{% endif %}>{{ m }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Filter</button></div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-lf-primary w-100 justify-content-center">
+                    <i class="bi bi-filter"></i> Filter
+                </button>
+            </div>
         </form>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Timestamp</th><th>Action</th><th>Entity</th><th>Record</th><th>User</th><th>IP Address</th><th>Details / Reason</th><th>Actions</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Timestamp (UTC)</th>
+                        <th>Action Performed</th>
+                        <th>Clinical Entity</th>
+                        <th>Record ID</th>
+                        <th>Authorized User</th>
+                        <th>Client IP</th>
+                        <th>Action Justification / Details</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for log in page_obj %}
                     <tr>
-                        <td><small>{{ log.timestamp|date:"Y-m-d H:i:s" }}</small></td>
-                        <td><span class="badge {% if log.action in 'DELETE,DISCARD,REJECT' %}bg-danger{% elif log.action in 'APPROVE,RELEASE,VERIFY' %}bg-success{% elif log.action in 'QUARANTINE,RESERVE' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ log.get_action_display }}</span></td>
+                        <td><small class="cell-id text-muted">{{ log.timestamp|date:"Y-m-d H:i:s" }}</small></td>
+                        <td>
+                            {% if log.action in 'DELETE,DISCARD,REJECT' %}
+                                <span class="lf-badge lf-badge-danger">{{ log.get_action_display }}</span>
+                            {% elif log.action in 'APPROVE,RELEASE,VERIFY' %}
+                                <span class="lf-badge lf-badge-success">{{ log.get_action_display }}</span>
+                            {% elif log.action in 'QUARANTINE,RESERVE' %}
+                                <span class="lf-badge lf-badge-warning">{{ log.get_action_display }}</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">{{ log.get_action_display }}</span>
+                            {% endif %}
+                        </td>
                         <td><strong>{{ log.model_name }}</strong></td>
-                        <td><span class="badge bg-light text-dark border">#{{ log.object_id }}</span></td>
-                        <td>{{ log.user.username|default:"System Engine" }}</td>
-                        <td><small class="text-muted">{{ log.user_ip|default:"-" }}</small></td>
-                        <td><small>{{ log.reason|truncatechars:35|default:"-" }}</small></td>
-                        <td><a href="{% url 'audit:detail' log.pk %}" class="btn btn-outline-secondary btn-sm">Inspect</a></td>
+                        <td><span class="cell-id bg-light px-2 py-1 border rounded">#{{ log.object_id }}</span></td>
+                        <td>
+                            {% if log.user %}
+                                <span class="fw-600">{{ log.user.username }}</span>
+                            {% else %}
+                                <span class="text-secondary small italic"><i class="bi bi-cpu me-1"></i>System Engine</span>
+                            {% endif %}
+                        </td>
+                        <td><small class="cell-id text-muted">{{ log.user_ip|default:"-" }}</small></td>
+                        <td><small class="text-secondary">{{ log.reason|truncatechars:42|default:"-" }}</small></td>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a href="{% url 'audit:detail' log.pk %}" class="btn btn-sm btn-lf-ghost py-1 px-2" style="font-size:0.8rem;">Inspect</a>
+                        </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="8" class="text-center text-muted py-3">No audit logs matching query.</td></tr>
+                    <tr>
+                        <td colspan="8" class="empty-state py-5">
+                            <i class="bi bi-journal-text empty-state-icon"></i>
+                            <div class="empty-state-title">No Audit Events Logged</div>
+                            <div class="empty-state-desc">System mutation logs and security records will be chronologically indexed here.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

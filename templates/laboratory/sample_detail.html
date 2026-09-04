@@ -1,50 +1,110 @@
 {% extends "base.html" %}
-{% block title %}{{ sample.sample_id }} ? LIFEFlow{% endblock %}
+{% block title %}{{ sample.sample_id }} — LIFEFlow Lab{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
-        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
-            <div>
-                <span class="badge bg-danger mb-2">{{ sample.sample_id }}</span>
-                <h3 class="fw-bold text-dark mb-0">Serological Screening Card</h3>
-                <p class="text-muted mb-0">Blood Bag: <strong>{{ sample.blood_bag.bag_id }}</strong> &bull; Group: <span class="badge badge-blood">{{ sample.blood_bag.blood_group }}</span></p>
+<div class="container-fluid px-lg-4 py-2">
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="cell-id bg-white px-2 py-1 border rounded text-danger fw-700">{{ sample.sample_id }}</span>
+                <span class="badge-blood-group">{{ sample.blood_bag.blood_group }}</span>
             </div>
-            <div class="d-flex gap-2">
-                <a href="{% url 'laboratory:add_result' sample.pk %}" class="btn btn-blood btn-sm"><i class="bi bi-plus-circle me-1"></i>Add Screening Result</a>
-                <a href="{% url 'laboratory:verify_sample' sample.pk %}" class="btn btn-warning btn-sm fw-bold"><i class="bi bi-shield-check me-1"></i>Medical Officer Review</a>
-            </div>
+            <h2 class="page-header-title">Serological Screening Card</h2>
+            <div class="page-header-subtitle">Blood Bag: <strong>{{ sample.blood_bag.bag_id }}</strong> &bull; Donor: {{ sample.blood_bag.donation.donor.full_name }}</div>
         </div>
-
-        <div class="row g-3">
-            <div class="col-md-3"><strong>Status:</strong><br><span class="badge bg-secondary fs-6">{{ sample.get_status_display }}</span></div>
-            <div class="col-md-3"><strong>Collected At:</strong><br>{{ sample.collected_at|date:"Y-m-d H:i" }}</div>
-            <div class="col-md-3"><strong>Verified By:</strong><br>{{ sample.verified_by.get_full_name|default:sample.verified_by.username|default:"Pending Review" }}</div>
-            <div class="col-md-3"><strong>Verified At:</strong><br>{{ sample.verified_at|default:"Pending" }}</div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'laboratory:add_result' sample.pk %}" class="btn btn-lf-primary">
+                <i class="bi bi-plus-circle-fill me-1"></i> Add Screening Assay
+            </a>
+            {% if sample.status != 'VERIFIED' and sample.status != 'REJECTED' %}
+                <a href="{% url 'laboratory:verify_sample' sample.pk %}" class="btn btn-warning text-dark fw-700">
+                    <i class="bi bi-shield-check me-1"></i> Medical Officer Review / Release
+                </a>
+            {% endif %}
+            <a href="{% url 'laboratory:sample_list' %}" class="btn btn-lf-ghost">
+                <i class="bi bi-arrow-left me-1"></i> Back to Queue
+            </a>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 rounded-3">
-        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-file-medical-fill text-danger me-2"></i>Recorded Screening Assays</h5>
+    <!-- Sample Meta Overview -->
+    <div class="lf-card mb-4 p-4 bg-white">
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card-label">Screening Status</div>
+                <div>
+                    {% if sample.status == 'VERIFIED' %}
+                        <span class="lf-badge lf-badge-success fs-6"><i class="bi bi-shield-check"></i> Released &amp; Safe</span>
+                    {% elif sample.status == 'REJECTED' %}
+                        <span class="lf-badge lf-badge-danger fs-6"><i class="bi bi-x-octagon-fill"></i> Reactive / Biohazard</span>
+                    {% else %}
+                        <span class="lf-badge lf-badge-warning fs-6"><i class="bi bi-clock-history"></i> {{ sample.get_status_display }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-label">Collection Timestamp</div>
+                <div class="fs-6 fw-700 text-dark">{{ sample.collected_at|date:"M d, Y - H:i" }}</div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-label">Verifying Medical Officer</div>
+                <div class="fs-6 fw-700 text-dark">{{ sample.verified_by.get_full_name|default:sample.verified_by.username|default:"Awaiting MO Sign-off" }}</div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card-label">Verification Timestamp</div>
+                <div class="fs-6 fw-700 text-secondary">{{ sample.verified_at|date:"M d, Y - H:i"|default:"Pending" }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screening Assay Results -->
+    <div class="lf-card">
+        <div class="lf-card-header">
+            <h6 class="lf-card-header-title">
+                <i class="bi bi-file-medical-fill text-danger"></i> Recorded TTI Assays (Transfusion Transmissible Infections)
+            </h6>
+            <span class="lf-badge lf-badge-neutral">{{ results|length }} Assay(s) Logged</span>
+        </div>
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Category</th><th>Assay Name</th><th>Result</th><th>Technician</th><th>Kit Lot No</th><th>Value</th><th>Date</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Pathogen Category</th>
+                        <th>Assay Method</th>
+                        <th>Screening Result</th>
+                        <th>Laboratory Technician</th>
+                        <th>Test Kit Lot #</th>
+                        <th>Quantitative Reading</th>
+                        <th>Assay Timestamp</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for r in results %}
                     <tr>
                         <td><strong>{{ r.get_test_category_display }}</strong></td>
                         <td>{{ r.test_name }}</td>
                         <td>
-                            {% if r.result == 'NON_REACTIVE' %}<span class="badge bg-success">Non-Reactive (Safe)</span>
-                            {% elif r.result == 'REACTIVE' or r.result == 'CONFIRMED_REACTIVE' %}<span class="badge bg-danger">Reactive (Unsafe)</span>
-                            {% else %}<span class="badge bg-secondary">{{ r.get_result_display }}</span>{% endif %}
+                            {% if r.result == 'NON_REACTIVE' %}
+                                <span class="lf-badge lf-badge-success"><i class="bi bi-shield-check"></i> Non-Reactive (Safe)</span>
+                            {% elif r.result == 'REACTIVE' or r.result == 'CONFIRMED_REACTIVE' %}
+                                <span class="lf-badge lf-badge-danger"><i class="bi bi-x-octagon-fill"></i> Reactive (Biohazard)</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">{{ r.get_result_display }}</span>
+                            {% endif %}
                         </td>
                         <td>{{ r.tested_by.get_full_name|default:r.tested_by.username }}</td>
-                        <td><small>{{ r.kit_lot_number }}</small></td>
+                        <td><small class="cell-id">{{ r.kit_lot_number }}</small></td>
                         <td><small>{{ r.quantitative_value|default:"-" }}</small></td>
                         <td>{{ r.test_date|date:"Y-m-d H:i" }}</td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="7" class="text-center text-muted py-3">No screening tests recorded for this sample yet.</td></tr>
+                    <tr>
+                        <td colspan="7" class="empty-state py-4">
+                            <i class="bi bi-virus empty-state-icon"></i>
+                            <div class="empty-state-title">No Assays Recorded</div>
+                            <div class="empty-state-desc">Click "Add Screening Assay" above to log mandatory viral screening results.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

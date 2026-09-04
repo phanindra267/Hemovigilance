@@ -1,66 +1,111 @@
 {% extends "base.html" %}
-{% block title %}Blood Bags ? LIFEFlow{% endblock %}
+{% block title %}Blood Bags Custody — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0">Blood Bag Inventory & Tracking</h3>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Blood Bag Custody & Cold Chain Allocation</h2>
+            <div class="page-header-subtitle">Unit-level phlebotomy bag tracking, storage device assignments, and separation status</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'laboratory:sample_list' %}" class="btn btn-lf-ghost">
+                <i class="bi bi-virus text-primary"></i> Lab Screening Queue
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-3 mb-4">
-        <form method="get" class="row g-2">
-            <div class="col-md-5"><input type="text" name="search" class="form-control" placeholder="Search by Bag ID or Donor..." value="{{ search }}"></div>
+    <!-- Filter Bar -->
+    <div class="lf-filter-bar">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by Bag ID or Donor..." value="{{ search }}">
+                </div>
+            </div>
             <div class="col-md-3">
                 <select name="blood_group" class="form-select">
-                    <option value="">All Blood Groups</option>
-                    <option value="A+" {% if blood_group == 'A+' %}selected{% endif %}>A+</option>
-                    <option value="A-" {% if blood_group == 'A-' %}selected{% endif %}>A-</option>
-                    <option value="B+" {% if blood_group == 'B+' %}selected{% endif %}>B+</option>
-                    <option value="B-" {% if blood_group == 'B-' %}selected{% endif %}>B-</option>
-                    <option value="O+" {% if blood_group == 'O+' %}selected{% endif %}>O+</option>
-                    <option value="O-" {% if blood_group == 'O-' %}selected{% endif %}>O-</option>
-                    <option value="AB+" {% if blood_group == 'AB+' %}selected{% endif %}>AB+</option>
-                    <option value="AB-" {% if blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+                    <option value="">All ABO / Rh Groups</option>
+                    <option value="A+" {% if blood_group == 'A+' %}selected{% endif %}>A Positive (A+)</option>
+                    <option value="A-" {% if blood_group == 'A-' %}selected{% endif %}>A Negative (A-)</option>
+                    <option value="B+" {% if blood_group == 'B+' %}selected{% endif %}>B Positive (B+)</option>
+                    <option value="B-" {% if blood_group == 'B-' %}selected{% endif %}>B Negative (B-)</option>
+                    <option value="O+" {% if blood_group == 'O+' %}selected{% endif %}>O Positive (O+)</option>
+                    <option value="O-" {% if blood_group == 'O-' %}selected{% endif %}>O Negative (O-)</option>
+                    <option value="AB+" {% if blood_group == 'AB+' %}selected{% endif %}>AB Positive (AB+)</option>
+                    <option value="AB-" {% if blood_group == 'AB-' %}selected{% endif %}>AB Negative (AB-)</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <select name="status" class="form-select">
-                    <option value="">All Statuses</option>
-                    {% for s_val, s_name in statuses %}<option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>{% endfor %}
+                    <option value="">All Bag Statuses</option>
+                    {% for s_val, s_name in statuses %}
+                        <option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Search</button></div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-lf-primary w-100 justify-content-center">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
         </form>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Bag ID</th><th>Group</th><th>Volume</th><th>Collection Date</th><th>Expiry Date</th><th>Status</th><th>Storage</th><th>Actions</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Bag ID</th>
+                        <th>ABO / Rh</th>
+                        <th>Net Volume</th>
+                        <th>Collection Date</th>
+                        <th>Expiry Date</th>
+                        <th>Testing Status</th>
+                        <th>Assigned Storage</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for b in page_obj %}
                     <tr>
-                        <td><a href="{% url 'laboratory:blood_bag_detail' b.pk %}" class="fw-bold text-danger text-decoration-none">{{ b.bag_id }}</a></td>
-                        <td><span class="badge badge-blood">{{ b.blood_group }}</span></td>
+                        <td>
+                            <a href="{% url 'laboratory:blood_bag_detail' b.pk %}" class="cell-id text-danger fw-700">{{ b.bag_id }}</a>
+                        </td>
+                        <td><span class="badge-blood-group">{{ b.blood_group }}</span></td>
                         <td>{{ b.volume_ml }} mL</td>
                         <td>{{ b.collection_date|date:"Y-m-d" }}</td>
                         <td>{{ b.expiry_date|date:"Y-m-d" }}</td>
                         <td>
-                            {% if b.status == 'TESTED_SAFE' %}<span class="badge bg-success">Tested Safe</span>
-                            {% elif b.status == 'QUARANTINED' %}<span class="badge bg-warning text-dark">Quarantined</span>
-                            {% elif b.status == 'REACTIVE_UNSAFE' %}<span class="badge bg-danger">Reactive (Unsafe)</span>
-                            {% elif b.status == 'PROCESSED_TO_COMPONENTS' %}<span class="badge bg-info text-dark">Components Processed</span>
-                            {% else %}<span class="badge bg-secondary">{{ b.get_status_display }}</span>{% endif %}
-                        </td>
-                        <td><small>{{ b.storage_location }}</small></td>
-                        <td>
-                            <a href="{% url 'laboratory:blood_bag_detail' b.pk %}" class="btn btn-outline-secondary btn-sm">Inspect</a>
                             {% if b.status == 'TESTED_SAFE' %}
-                                <a href="{% url 'blood_components:separate' b.pk %}" class="btn btn-outline-success btn-sm">Process</a>
+                                <span class="lf-badge lf-badge-success"><i class="bi bi-shield-check"></i> Tested Safe</span>
+                            {% elif b.status == 'QUARANTINED' %}
+                                <span class="lf-badge lf-badge-warning"><i class="bi bi-shield-exclamation"></i> Quarantined</span>
+                            {% elif b.status == 'REACTIVE_UNSAFE' %}
+                                <span class="lf-badge lf-badge-danger"><i class="bi bi-x-octagon-fill"></i> Reactive (Biohazard)</span>
+                            {% elif b.status == 'PROCESSED_TO_COMPONENTS' %}
+                                <span class="lf-badge lf-badge-info"><i class="bi bi-pie-chart-fill"></i> Separated</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">{{ b.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td><small class="text-muted">{{ b.storage_location }}</small></td>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a href="{% url 'laboratory:blood_bag_detail' b.pk %}" class="btn btn-sm btn-lf-ghost py-1 px-2" style="font-size:0.8rem;">Inspect</a>
+                            {% if b.status == 'TESTED_SAFE' %}
+                                <a href="{% url 'blood_components:separate' b.pk %}" class="btn btn-sm btn-lf-outline py-1 px-2" style="font-size:0.8rem;">Process Components</a>
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="8" class="text-center text-muted py-3">No blood bags found.</td></tr>
+                    <tr>
+                        <td colspan="8" class="empty-state py-5">
+                            <i class="bi bi-collection empty-state-icon"></i>
+                            <div class="empty-state-title">No Blood Bags Found</div>
+                            <div class="empty-state-desc">No bags match the specified ABO group or quarantine filter.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

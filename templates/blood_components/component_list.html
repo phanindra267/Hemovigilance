@@ -1,30 +1,78 @@
 {% extends "base.html" %}
-{% block title %}Blood Components ? LIFEFlow{% endblock %}
+{% block title %}Blood Components — LIFEFlow{% endblock %}
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="fw-bold text-dark mb-0">Blood Components Inventory</h3>
+<div class="container-fluid px-lg-4 py-2">
+    <div class="page-header">
+        <div>
+            <h2 class="page-header-title">Separated Blood Components</h2>
+            <div class="page-header-subtitle">Packed Red Blood Cells (PRBC), Fresh Frozen Plasma (FFP), Platelet Concentrates, and Cryoprecipitate</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'laboratory:blood_bag_list' %}" class="btn btn-lf-ghost">
+                <i class="bi bi-collection-fill text-danger"></i> Source Whole Blood Bags
+            </a>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3">
+    <div class="lf-table-wrapper">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>Component ID</th><th>Parent Bag</th><th>Type</th><th>Group</th><th>Volume</th><th>Prepared</th><th>Expiry</th><th>Status</th><th>Storage</th></tr></thead>
+            <table class="lf-table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Component ID</th>
+                        <th>Parent Bag</th>
+                        <th>Component Type</th>
+                        <th>ABO / Rh</th>
+                        <th>Volume</th>
+                        <th>Preparation Date</th>
+                        <th>Expiration Date</th>
+                        <th>Component Status</th>
+                        <th>Storage Location</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for c in page_obj %}
                     <tr>
-                        <td><a href="{% url 'blood_components:detail' c.pk %}" class="fw-bold text-danger text-decoration-none">{{ c.component_id }}</a></td>
-                        <td>{{ c.parent_bag.bag_id }}</td>
+                        <td>
+                            <a href="{% url 'blood_components:detail' c.pk %}" class="cell-id text-danger fw-700">{{ c.component_id }}</a>
+                        </td>
+                        <td>
+                            <span class="cell-id bg-light px-2 py-1 border rounded">{{ c.parent_bag.bag_id }}</span>
+                        </td>
                         <td><strong>{{ c.get_component_type_display }}</strong></td>
-                        <td><span class="badge badge-blood">{{ c.blood_group }}</span></td>
+                        <td><span class="badge-blood-group">{{ c.blood_group }}</span></td>
                         <td>{{ c.volume_ml }} mL</td>
                         <td>{{ c.prepared_date|date:"Y-m-d" }}</td>
-                        <td>{{ c.expiry_date|date:"Y-m-d" }}</td>
-                        <td><span class="badge bg-secondary">{{ c.get_status_display }}</span></td>
-                        <td><small>{{ c.storage_location }}</small></td>
+                        <td>
+                            <span class="text-nowrap">{{ c.expiry_date|date:"Y-m-d" }}</span>
+                        </td>
+                        <td>
+                            {% if c.status == 'AVAILABLE' %}
+                                <span class="lf-badge lf-badge-success"><i class="bi bi-check-circle-fill"></i> Available</span>
+                            {% elif c.status == 'QUARANTINED' %}
+                                <span class="lf-badge lf-badge-warning"><i class="bi bi-shield-exclamation"></i> Quarantined</span>
+                            {% elif c.status == 'RESERVED' %}
+                                <span class="lf-badge lf-badge-info"><i class="bi bi-bookmark-fill"></i> Reserved</span>
+                            {% elif c.status == 'EXPIRED' %}
+                                <span class="lf-badge lf-badge-danger"><i class="bi bi-x-circle-fill"></i> Expired</span>
+                            {% else %}
+                                <span class="lf-badge lf-badge-neutral">{{ c.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td><small class="text-muted">{{ c.storage_location }}</small></td>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a href="{% url 'blood_components:detail' c.pk %}" class="btn btn-sm btn-lf-ghost py-1 px-2" style="font-size:0.8rem;">Details</a>
+                        </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="9" class="text-center text-muted py-3">No components found.</td></tr>
+                    <tr>
+                        <td colspan="10" class="empty-state py-5">
+                            <i class="bi bi-pie-chart empty-state-icon"></i>
+                            <div class="empty-state-title">No Separated Components Found</div>
+                            <div class="empty-state-desc">Components will appear here once whole blood bags undergo laboratory separation.</div>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
