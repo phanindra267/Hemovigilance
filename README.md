@@ -209,6 +209,7 @@ For detailed bare-metal, systemd, or Nginx setup, see [DEPLOYMENT.md](DEPLOYMENT
 - [TESTING.md](TESTING.md) — Test plan, coverage matrix, automated test execution
 - [DEPLOYMENT.md](DEPLOYMENT.md) — Nginx reverse proxy, Gunicorn, Docker, systemd services
 - [API_OR_URL_REFERENCE.md](API_OR_URL_REFERENCE.md) — Exhaustive catalog of all 260+ system routes
+- [CURRICULUM_MAPPING.md](CURRICULUM_MAPPING.md) — Academic syllabus compliance matrix across Units I to VI
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Contribution guidelines and development workflow
 - [LICENSE](LICENSE) — Open Source MIT License
 
