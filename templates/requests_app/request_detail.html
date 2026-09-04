@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{ request.request_id }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+                <span class="badge {% if request.urgency == 'EMERGENCY' %}bg-danger{% elif request.urgency == 'URGENT' %}bg-warning text-dark{% else %}bg-secondary{% endif %} mb-2">
+                    {{ request.urgency }}
+                </span>
+                <h3 class="fw-bold text-dark mb-0">{{ request.request_id }}</h3>
+                <p class="text-muted mb-0">Hospital: <strong>{{ request.hospital.name }}</strong> &bull; Attending: {{ request.requesting_doctor }}</p>
+            </div>
+            <div class="d-flex gap-2">
+                {% if request.status == 'SUBMITTED' and user.profile.is_medical_or_admin %}
+                    <a href="{% url 'requests_app:review' request.pk %}" class="btn btn-warning btn-sm"><i class="bi bi-shield-check me-1"></i>Review / Approve</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-3"><strong>Patient:</strong><br><a href="{% url 'patients:detail' request.patient.pk %}" class="text-danger fw-bold text-decoration-none">{{ request.patient.full_name }}</a></div>
+            <div class="col-md-3"><strong>Patient Blood Group:</strong><br><span class="badge badge-blood fs-6">{{ request.patient.blood_group }}</span></div>
+            <div class="col-md-3"><strong>Status:</strong><br><span class="badge bg-secondary fs-6">{{ request.get_status_display }}</span></div>
+            <div class="col-md-3"><strong>Required Date/Time:</strong><br>{{ request.required_date_time|date:"F d, Y - H:i" }}</div>
+            <div class="col-md-6"><strong>Diagnosis:</strong><br>{{ request.clinical_diagnosis }}</div>
+            <div class="col-md-6"><strong>Transfusion Indication:</strong><br>{{ request.transfusion_indication|default:"None specified" }}</div>
+            {% if request.special_requirements %}
+                <div class="col-md-12"><div class="alert alert-info py-2 mb-0"><strong>Special Requirements:</strong> {{ request.special_requirements }}</div></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Requisition Items & Atomic Reservation -->
+    <div class="card border-0 shadow-sm p-3 rounded-3 mb-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-card-checklist text-danger me-2"></i>Requested Blood Components</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Component</th><th>Group</th><th>Requested</th><th>Reserved</th><th>Issued</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td><strong>{{ item.get_component_type_display }}</strong></td>
+                        <td><span class="badge badge-blood">{{ item.blood_group }}</span></td>
+                        <td>{{ item.units_requested }} unit(s)</td>
+                        <td>{{ item.units_reserved }} unit(s)</td>
+                        <td>{{ item.units_issued }} unit(s)</td>
+                        <td><span class="badge bg-secondary">{{ item.get_status_display }}</span></td>
+                        <td>
+                            {% if item.units_reserved < item.units_requested and request.status in 'APPROVED,PARTIALLY_FULFILLED,RESERVED' %}
+                                <a href="{% url 'requests_app:reserve_inventory' item.pk %}" class="btn btn-primary btn-sm"><i class="bi bi-lock-fill me-1"></i>Reserve Matching Unit</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <!-- Active Reservations for this item -->
+                    {% for rsv in item.reservations.all %}
+                        {% if rsv.is_active %}
+                        <tr class="table-light">
+                            <td colspan="4" class="ps-4">
+                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                Reserved: <strong>{{ rsv.inventory_item.unit_identifier }}</strong> ({{ rsv.inventory_item.component_type }} [{{ rsv.inventory_item.blood_group }}])
+                                &bull; <small class="text-muted">Reserved by {{ rsv.reserved_by.username }}</small>
+                            </td>
+                            <td colspan="3" class="text-end">
+                                <a href="{% url 'requests_app:issue_blood' rsv.pk %}" class="btn btn-success btn-sm"><i class="bi bi-box-arrow-up-right me-1"></i>Issue Blood Unit</a>
+                                <a href="{% url 'requests_app:cancel_reservation' rsv.pk %}" class="btn btn-outline-danger btn-sm ms-1">Release Lock</a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-3">No requisition items found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Issues Linked to this Request -->
+    {% if issues %}
+        <div class="card border-0 shadow-sm p-3 rounded-3">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-box-arrow-up-right text-success me-2"></i>Issued Blood Units & Transfusion Tracking</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light"><tr><th>Issue ID</th><th>Unit ID</th><th>Recipient</th><th>Crossmatch</th><th>Issued At</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        {% for iss in issues %}
+                        <tr>
+                            <td><strong>{{ iss.issue_id }}</strong></td>
+                            <td><span class="badge bg-secondary">{{ iss.inventory_item.unit_identifier }}</span></td>
+                            <td>{{ iss.recipient_name }}</td>
+                            <td><span class="badge bg-success">Compatible</span></td>
+                            <td>{{ iss.issued_at|date:"M d, H:i" }}</td>
+                            <td><span class="badge bg-secondary">{{ iss.get_status_display }}</span></td>
+                            <td>
+                                {% if iss.status == 'ISSUED' %}
+                                    <a href="{% url 'requests_app:return_blood' iss.pk %}" class="btn btn-outline-warning btn-sm">Process Return</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

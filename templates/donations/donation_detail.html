@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ donation.donation_id }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+                <span class="badge bg-danger mb-2">{{ donation.donation_id }}</span>
+                <h3 class="fw-bold text-dark mb-0">Donation Record</h3>
+                <p class="text-muted mb-0">Collected: {{ donation.collection_date|date:"F d, Y - H:i" }}</p>
+            </div>
+            <span class="badge bg-secondary fs-6">{{ donation.get_status_display }}</span>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4"><strong>Donor:</strong><br><a href="{% url 'donors:detail' donation.donor.pk %}" class="text-danger fw-bold text-decoration-none">{{ donation.donor.full_name }}</a> ({{ donation.donor.donor_id }})</div>
+            <div class="col-md-4"><strong>Blood Group:</strong><br><span class="badge badge-blood fs-6">{{ donation.donor.blood_group }}</span></div>
+            <div class="col-md-4"><strong>Volume Collected:</strong><br>{{ donation.volume_ml }} mL ({{ donation.get_bag_type_display }})</div>
+            <div class="col-md-4"><strong>Phlebotomist / Tech:</strong><br>{{ donation.collected_by.get_full_name|default:donation.collected_by.username|default:"Staff" }}</div>
+            <div class="col-md-4"><strong>Vein Utilized:</strong><br>{{ donation.get_vein_used_display }}</div>
+            <div class="col-md-4"><strong>Facility:</strong><br>{{ donation.blood_bank.name }}</div>
+        </div>
+
+        {% if donation.adverse_reaction %}
+            <div class="alert alert-warning mt-3 mb-0">
+                <strong><i class="bi bi-exclamation-triangle-fill me-1"></i>Adverse Donor Reaction Reported:</strong> {{ donation.adverse_reaction_notes }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card border-0 shadow-sm p-4 rounded-4">
+        <h5 class="fw-bold text-danger border-bottom pb-2 mb-3"><i class="bi bi-collection-fill me-2"></i>Linked Blood Bag Container</h5>
+        {% if blood_bag %}
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4 class="fw-bold text-dark">{{ blood_bag.bag_id }}</h4>
+                    <p class="mb-1"><strong>Group:</strong> <span class="badge badge-blood">{{ blood_bag.blood_group }}</span></p>
+                    <p class="mb-1"><strong>Expiry Date:</strong> {{ blood_bag.expiry_date|date:"F d, Y - H:i" }}</p>
+                    <p class="mb-1"><strong>Status:</strong> <span class="badge bg-secondary">{{ blood_bag.get_status_display }}</span></p>
+                    <p class="mb-0"><strong>Location:</strong> {{ blood_bag.storage_location }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{% url 'laboratory:blood_bag_detail' blood_bag.pk %}" class="btn btn-blood px-4">Open Blood Bag Testing Card &rarr;</a>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">No blood bag container created for this donation session yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

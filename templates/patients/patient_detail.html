@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.full_name }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+                <span class="badge bg-danger mb-2">{{ patient.patient_id }}</span>
+                <h3 class="fw-bold text-dark mb-0">{{ patient.full_name }}</h3>
+                <p class="text-muted mb-0">Hospital: {{ patient.hospital.name|default:"Unassigned" }} &bull; MRN: {{ patient.hospital_mrn|default:"N/A" }}</p>
+            </div>
+            <a href="{% url 'patients:update' patient.pk %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil me-1"></i>Edit</a>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3"><strong>Blood Group:</strong><br><span class="badge badge-blood fs-5">{{ patient.blood_group }}</span></div>
+            <div class="col-md-3"><strong>DOB & Gender:</strong><br>{{ patient.dob }} ({{ patient.get_gender_display }})</div>
+            <div class="col-md-3"><strong>Attending Doctor:</strong><br>{{ patient.attending_physician|default:"-" }}</div>
+            <div class="col-md-3"><strong>Ward / Room:</strong><br>{{ patient.ward_or_room|default:"-" }}</div>
+            <div class="col-md-12"><strong>Medical History:</strong><br>{{ patient.medical_history|default:"No special medical history recorded." }}</div>
+        </div>
+    </div>
+
+    <!-- Requisitions & Issues -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-3 rounded-3">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Blood Requisitions</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>ID</th><th>Date</th><th>Urgency</th><th>Status</th></tr></thead>
+                        <tbody>
+                            {% for r in requests %}
+                            <tr>
+                                <td><a href="{% url 'requests_app:detail' r.pk %}" class="fw-bold text-danger text-decoration-none">{{ r.request_id }}</a></td>
+                                <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+                                <td><span class="badge bg-secondary">{{ r.urgency }}</span></td>
+                                <td><span class="badge bg-light text-dark border">{{ r.get_status_display }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center text-muted py-3">No requisitions for this patient.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-3 rounded-3">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3">Transfused Blood Units</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>Issue ID</th><th>Unit ID</th><th>Issued Date</th><th>Status</th></tr></thead>
+                        <tbody>
+                            {% for iss in issues %}
+                            <tr>
+                                <td><strong>{{ iss.issue_id }}</strong></td>
+                                <td><span class="badge bg-secondary">{{ iss.inventory_item.unit_identifier }}</span></td>
+                                <td>{{ iss.issued_at|date:"Y-m-d H:i" }}</td>
+                                <td><span class="badge bg-success">{{ iss.get_status_display }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center text-muted py-3">No units issued yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

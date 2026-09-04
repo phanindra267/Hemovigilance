@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Audit Event #{{ log.pk }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4">
+        <h4 class="fw-bold text-danger mb-3"><i class="bi bi-shield-check me-2"></i>Audit Event Detail #{{ log.pk }}</h4>
+        <div class="row g-3 border-top pt-3">
+            <div class="col-md-3"><strong>Action:</strong><br><span class="badge bg-secondary fs-6">{{ log.get_action_display }}</span></div>
+            <div class="col-md-3"><strong>Entity Model:</strong><br>{{ log.model_name }}</div>
+            <div class="col-md-3"><strong>Record ID:</strong><br>{{ log.object_id }}</div>
+            <div class="col-md-3"><strong>Timestamp:</strong><br>{{ log.timestamp|date:"Y-m-d H:i:s T" }}</div>
+            <div class="col-md-6"><strong>User:</strong><br>{{ log.user.get_full_name|default:log.user.username|default:"System Automatic Process" }} ({{ log.user.email|default:"N/A" }})</div>
+            <div class="col-md-6"><strong>Client IP Address:</strong><br>{{ log.user_ip|default:"Internal Loopback / Background Daemon" }}</div>
+            <div class="col-md-12"><strong>Object Representation:</strong><br><code>{{ log.object_repr }}</code></div>
+            <div class="col-md-12"><strong>Audit Justification / Clinical Reason:</strong><br>{{ log.reason|default:"No explicit text provided." }}</div>
+            <div class="col-md-12"><strong>Captured Payload / Context:</strong><br><pre class="bg-light p-3 rounded small">{{ log.details|default:"{}" }}</pre></div>
+        </div>
+        <div class="mt-4 pt-3 border-top">
+            <a href="{% url 'audit:list' %}" class="btn btn-outline-secondary">&larr; Back to Audit Trail</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

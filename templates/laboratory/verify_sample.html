@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Medical Officer Review & Release ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 rounded-4">
+                <h4 class="fw-bold text-danger mb-2"><i class="bi bi-shield-check me-2"></i>Medical Officer Review & Release</h4>
+                <p class="text-muted mb-3">Sample: <strong>{{ sample.sample_id }}</strong> &bull; Blood Bag: <strong>{{ sample.blood_bag.bag_id }}</strong> [{{ sample.blood_bag.blood_group }}]</p>
+
+                {% if any_reactive %}
+                    <div class="alert alert-danger mb-4">
+                        <strong><i class="bi bi-exclamation-octagon-fill me-1"></i>CRITICAL WARNING:</strong>
+                        One or more screening assays yielded a REACTIVE result! Releasing this unit for transfusion is strictly forbidden under hemovigilance regulations.
+                    </div>
+                {% endif %}
+
+                <h6 class="fw-bold mb-2">Screening Results Summary</h6>
+                <ul class="list-group mb-4">
+                    {% for r in results %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div><strong>{{ r.get_test_category_display }}:</strong> {{ r.test_name }}</div>
+                        <span class="badge {% if r.result == 'NON_REACTIVE' %}bg-success{% else %}bg-danger{% endif %}">{{ r.get_result_display }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Verification Decision *</label>
+                        <select name="decision" class="form-select">
+                            {% if not any_reactive %}
+                                <option value="APPROVE_SAFE">APPROVE & RELEASE ? Verified Safe for Clinical Transfusion / Component Processing</option>
+                            {% endif %}
+                            <option value="REJECT_UNSAFE">REJECT & QUARANTINE ? Unit Reactive or Unfit (Lock in Biohazard Quarantine)</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Medical Officer Clinical Authorization Notes</label>
+                        <textarea name="notes" class="form-control" rows="2" placeholder="Enter authorization review remarks..."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'laboratory:sample_detail' sample.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-blood px-4 fw-bold">Execute Decision</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

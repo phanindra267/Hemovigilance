@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Record Screening Result ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm p-4 rounded-4">
+                <h4 class="fw-bold text-danger mb-2"><i class="bi bi-virus me-2"></i>Record Laboratory Screening Result</h4>
+                <p class="text-muted mb-4">Sample: <strong>{{ sample.sample_id }}</strong> (Bag: {{ sample.blood_bag.bag_id }})</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-12"><label class="form-label">Test Category *</label>{{ form.test_category }}</div>
+                        <div class="col-md-12"><label class="form-label">Test / Assay Name *</label>{{ form.test_name }}</div>
+                        <div class="col-md-12"><label class="form-label">Test Result *</label>{{ form.result }}</div>
+                        <div class="col-md-6"><label class="form-label">Kit Lot Number</label>{{ form.kit_lot_number }}</div>
+                        <div class="col-md-6"><label class="form-label">Kit Expiry Date</label>{{ form.kit_expiry }}</div>
+                        <div class="col-md-12"><label class="form-label">Quantitative Signal / Cutoff Ratio (S/CO)</label>{{ form.quantitative_value }}</div>
+                        <div class="col-md-12"><label class="form-label">Interpretation Notes</label>{{ form.interpretation_notes }}</div>
+                    </div>
+                    <div class="mt-4 pt-3 border-top text-end">
+                        <a href="{% url 'laboratory:sample_detail' sample.pk %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-blood px-4">Save Result</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

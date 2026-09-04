@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}About ? LIFEFlow Hemovigilance{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-3">
+        <h3 class="fw-bold text-danger mb-3"><i class="bi bi-droplet-fill me-2"></i>About LIFEFlow</h3>
+        <p class="lead text-secondary">LIFEFlow is a production-oriented Blood Bank Management and Hemovigilance Information System designed for blood transfusion centres, regional transfusion facilities, and affiliated hospitals.</p>
+        
+        <h5 class="fw-bold mt-4">Core Principles</h5>
+        <ul class="text-secondary">
+            <li><strong>Unit-Level Traceability:</strong> Every blood bag, apheresis donation, and separated component receives an immutable, globally unique tracking ID.</li>
+            <li><strong>Cold Chain Assurance:</strong> Continuous physical and digital logging of storage devices (refrigerators, platelet incubators, deep freezers) with automated threshold excursion alarms.</li>
+            <li><strong>Regulatory Hemovigilance:</strong> Full tracking of adverse events, return dispositions, quarantine investigations, and biohazard discard manifests with audit trails.</li>
+            <li><strong>Concurrency Safety:</strong> Database-level atomic reservations guarantee that no two users or emergency requisitions can lock or issue the same physical unit simultaneously.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

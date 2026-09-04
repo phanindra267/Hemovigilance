@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Sign In ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="text-danger display-4 mb-2"><i class="bi bi-droplet-fill"></i></div>
+                    <h3 class="fw-bold text-dark">LIFEFlow Portal</h3>
+                    <p class="text-muted small">Sign in with your authorized account credentials</p>
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">Password</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-blood w-100 py-2 rounded-3 fw-bold">Sign In to LIFEFlow</button>
+                </form>
+
+                <div class="mt-4 pt-3 border-top text-center">
+                    <p class="small text-muted mb-1">New voluntary blood donor?</p>
+                    <a href="{% url 'accounts:register_donor' %}" class="fw-semibold text-danger text-decoration-none">Create Donor Account &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

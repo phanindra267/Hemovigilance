@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ hospital.name }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+                <span class="badge bg-danger mb-2">{{ hospital.code }}</span>
+                <h3 class="fw-bold text-dark mb-0">{{ hospital.name }}</h3>
+                <p class="text-muted mb-0">{{ hospital.get_category_display }} &bull; License: {{ hospital.license_number }}</p>
+            </div>
+            {% if user.profile.is_medical_or_admin %}
+                <a href="{% url 'hospitals:update' hospital.pk %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil me-1"></i>Edit Hospital</a>
+            {% endif %}
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4"><strong>Contact Person:</strong><br>{{ hospital.contact_person }}</div>
+            <div class="col-md-4"><strong>Phone:</strong><br>{{ hospital.phone }}</div>
+            <div class="col-md-4"><strong>Emergency Helpline:</strong><br>{{ hospital.emergency_contact|default:"-" }}</div>
+            <div class="col-md-12"><strong>Full Address:</strong><br>{{ hospital.address }}, {{ hospital.city }}, {{ hospital.district }}, {{ hospital.state }} - {{ hospital.postal_code }}</div>
+        </div>
+    </div>
+
+    <!-- Recent Requisitions -->
+    <div class="card border-0 shadow-sm p-3 rounded-3">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clipboard-pulse text-danger me-2"></i>Blood Requisitions from this Hospital</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Request ID</th><th>Patient</th><th>Urgency</th><th>Required At</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody>
+                    {% for req in recent_requests %}
+                    <tr>
+                        <td><strong>{{ req.request_id }}</strong></td>
+                        <td>{{ req.patient.full_name }} <span class="badge badge-blood ms-1">{{ req.patient.blood_group }}</span></td>
+                        <td><span class="badge bg-secondary">{{ req.urgency }}</span></td>
+                        <td>{{ req.required_date_time|date:"Y-m-d H:i" }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ req.get_status_display }}</span></td>
+                        <td><a href="{% url 'requests_app:detail' req.pk %}" class="btn btn-outline-secondary btn-sm">Inspect</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted py-3">No requisitions from this hospital yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

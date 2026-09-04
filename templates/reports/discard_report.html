@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Discard & Wastage Report ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div><h3 class="fw-bold text-dark mb-0">Hemovigilance Discard & Wastage Report</h3><small class="text-muted">Total discards: {{ total_count }}</small></div>
+        <div class="d-flex gap-2 mt-2 mt-md-0">
+            <button onclick="window.print()" class="btn btn-outline-secondary btn-sm"><i class="bi bi-printer me-1"></i>Print</button>
+            <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}export=csv" class="btn btn-outline-success btn-sm"><i class="bi bi-filetype-csv me-1"></i>Export CSV</a>
+            <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}export=pdf" class="btn btn-blood btn-sm"><i class="bi bi-file-earmark-pdf me-1"></i>Download PDF</a>
+        </div>
+    </div>
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Discard ID</th><th>Unit ID</th><th>Group</th><th>Reason</th><th>Date</th><th>Authorized By</th><th>Method</th></tr></thead>
+                <tbody>
+                    {% for d in discards %}
+                    <tr>
+                        <td><strong>{{ d.discard_id }}</strong></td>
+                        <td><span class="badge bg-secondary">{{ d.inventory_item.unit_identifier }}</span></td>
+                        <td><span class="badge badge-blood">{{ d.inventory_item.blood_group }}</span></td>
+                        <td><span class="badge bg-danger">{{ d.get_discard_reason_display }}</span></td>
+                        <td>{{ d.discard_date|date:"Y-m-d H:i" }}</td>
+                        <td>{{ d.authorized_by.get_full_name|default:d.authorized_by.username }}</td>
+                        <td><small>{{ d.get_biohazard_disposal_method_display }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-4">No discard records.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

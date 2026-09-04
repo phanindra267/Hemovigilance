@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Laboratory Screening ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark mb-0">Laboratory Screening Samples</h3>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Sample ID</th><th>Blood Bag</th><th>Donor</th><th>Group</th><th>Collected</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for s in page_obj %}
+                    <tr>
+                        <td><a href="{% url 'laboratory:sample_detail' s.pk %}" class="fw-bold text-danger text-decoration-none">{{ s.sample_id }}</a></td>
+                        <td><a href="{% url 'laboratory:blood_bag_detail' s.blood_bag.pk %}" class="badge bg-primary text-decoration-none">{{ s.blood_bag.bag_id }}</a></td>
+                        <td>{{ s.blood_bag.donation.donor.full_name }}</td>
+                        <td><span class="badge badge-blood">{{ s.blood_bag.blood_group }}</span></td>
+                        <td>{{ s.collected_at|date:"M d, H:i" }}</td>
+                        <td><span class="badge bg-secondary">{{ s.get_status_display }}</span></td>
+                        <td>
+                            <a href="{% url 'laboratory:sample_detail' s.pk %}" class="btn btn-outline-secondary btn-sm">Details</a>
+                            <a href="{% url 'laboratory:add_result' s.pk %}" class="btn btn-outline-primary btn-sm">+ Add Test</a>
+                            <a href="{% url 'laboratory:verify_sample' s.pk %}" class="btn btn-warning btn-sm">Verify / Release</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-3">No laboratory samples found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

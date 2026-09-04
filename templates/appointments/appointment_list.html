@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Donation Appointments ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark mb-0">Donation Appointments</h3>
+        <a href="{% url 'appointments:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-calendar-plus me-1"></i>Schedule Appointment</a>
+    </div>
+
+    <div class="card border-0 shadow-sm p-3 mb-4">
+        <form method="get" class="row g-2">
+            <div class="col-md-5"><input type="text" name="search" class="form-control" placeholder="Search donor name or appointment ID..." value="{{ search }}"></div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    {% for s_val, s_name in statuses %}<option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"><input type="date" name="date" class="form-control" value="{{ date }}"></div>
+            <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Filter</button></div>
+        </form>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Appointment ID</th><th>Donor</th><th>Type</th><th>Scheduled Date</th><th>Time Slot</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for a in page_obj %}
+                    <tr>
+                        <td><strong>{{ a.appointment_id }}</strong></td>
+                        <td>{{ a.donor.full_name }} <span class="badge badge-blood ms-1">{{ a.donor.blood_group }}</span></td>
+                        <td>{{ a.get_appointment_type_display }}</td>
+                        <td>{{ a.scheduled_date }}</td>
+                        <td><span class="badge bg-light text-dark border">{{ a.time_slot }}</span></td>
+                        <td>
+                            {% if a.status == 'SCHEDULED' %}<span class="badge bg-primary">Scheduled</span>
+                            {% elif a.status == 'CHECKED_IN' %}<span class="badge bg-info text-dark">Checked-In</span>
+                            {% elif a.status == 'COMPLETED' %}<span class="badge bg-success">Completed</span>
+                            {% else %}<span class="badge bg-secondary">{{ a.get_status_display }}</span>{% endif %}
+                        </td>
+                        <td>
+                            {% if a.status == 'SCHEDULED' %}
+                                <a href="{% url 'appointments:checkin' a.pk %}" class="btn btn-success btn-sm"><i class="bi bi-check2-circle me-1"></i>Check-In</a>
+                                <a href="{% url 'appointments:cancel' a.pk %}" class="btn btn-outline-danger btn-sm">Cancel</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-3">No appointments found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Cancel Appointment ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center">
+                <i class="bi bi-exclamation-triangle text-danger display-4 mb-3"></i>
+                <h4 class="fw-bold text-dark">Cancel Appointment {{ appointment.appointment_id }}?</h4>
+                <p class="text-muted">Donor: {{ appointment.donor.full_name }} &bull; Date: {{ appointment.scheduled_date }}</p>
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Reason for Cancellation</label>
+                        <textarea name="cancellation_reason" class="form-control" rows="2" placeholder="Please provide reason..."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{% url 'appointments:list' %}" class="btn btn-outline-secondary px-4">Keep Appointment</a>
+                        <button type="submit" class="btn btn-danger px-4">Confirm Cancellation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

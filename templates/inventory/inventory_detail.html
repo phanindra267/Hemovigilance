@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ item.inventory_id }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+                <span class="badge bg-danger mb-2">{{ item.inventory_id }}</span>
+                <h3 class="fw-bold text-dark mb-0">{{ item.component_type }} [{{ item.blood_group }}]</h3>
+                <p class="text-muted mb-0">Unit Identifier: <strong>{{ item.unit_identifier }}</strong> &bull; Collected: {{ item.collection_date|date:"M d, Y" }}</p>
+            </div>
+            <div class="d-flex gap-2">
+                {% if item.status == 'AVAILABLE' %}
+                    <a href="{% url 'inventory:quarantine' item.pk %}" class="btn btn-warning btn-sm"><i class="bi bi-shield-exclamation me-1"></i>Quarantine Unit</a>
+                {% elif item.status == 'QUARANTINED' %}
+                    <a href="{% url 'inventory:release' item.pk %}" class="btn btn-success btn-sm"><i class="bi bi-shield-check me-1"></i>Release from Quarantine</a>
+                {% endif %}
+                {% if item.status != 'DISCARDED' and item.status != 'ISSUED' %}
+                    <a href="{% url 'requests_app:discard_unit' item.pk %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash3 me-1"></i>Biohazard Discard</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-3"><strong>Status:</strong><br><span class="badge bg-secondary fs-6">{{ item.get_status_display }}</span></div>
+            <div class="col-md-3"><strong>Blood Group:</strong><br><span class="badge badge-blood fs-6">{{ item.blood_group }}</span></div>
+            <div class="col-md-3"><strong>Volume:</strong><br>{{ item.volume_ml }} mL</div>
+            <div class="col-md-3"><strong>Expiry Date:</strong><br>{{ item.expiry_date|date:"F d, Y - H:i" }}</div>
+            <div class="col-md-6"><strong>Physical Storage Position:</strong><br>{{ item.storage_position|default:"Standard Controlled Cold Storage Vault" }}</div>
+            <div class="col-md-6"><strong>Clinical Issuability:</strong><br>
+                {% if item.is_issuable %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Issuable & Non-Quarantined</span>
+                {% else %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">Non-Issuable (Quarantined / Expired / Reserved)</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quarantine Trail -->
+    <div class="card border-0 shadow-sm p-3 rounded-3">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-exclamation text-danger me-2"></i>Quarantine Audit Log for this Unit</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Quarantine ID</th><th>Reason</th><th>Initiated By</th><th>Date</th><th>Released By</th><th>Release Date</th><th>Notes</th></tr></thead>
+                <tbody>
+                    {% for q in quarantine_records %}
+                    <tr>
+                        <td><strong>{{ q.quarantine_id }}</strong></td>
+                        <td>{{ q.get_reason_display }}</td>
+                        <td>{{ q.quarantined_by.get_full_name|default:q.quarantined_by.username }}</td>
+                        <td>{{ q.quarantine_date|date:"Y-m-d H:i" }}</td>
+                        <td>{{ q.released_by.get_full_name|default:q.released_by.username|default:"Still Quarantined" }}</td>
+                        <td>{{ q.release_date|default:"-" }}</td>
+                        <td><small>{{ q.notes|default:"-" }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-3">No quarantine events recorded.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

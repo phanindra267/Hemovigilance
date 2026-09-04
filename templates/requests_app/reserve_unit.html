@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Reserve Inventory Unit ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <h4 class="fw-bold text-danger mb-1"><i class="bi bi-lock-fill me-2"></i>Atomic Concurrency Unit Reservation</h4>
+        <p class="text-muted mb-0">Requisition: <strong>{{ request.request_id }}</strong> &bull; Component: <strong>{{ req_item.get_component_type_display }}</strong> &bull; Group: <span class="badge badge-blood">{{ req_item.blood_group }}</span></p>
+    </div>
+
+    <div class="card border-0 shadow-sm p-3 rounded-3">
+        <h5 class="fw-bold text-dark mb-3">Matching Available Inventory Units in Cold Storage:</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Unit ID</th><th>Component</th><th>Group</th><th>Volume</th><th>Expiry Date</th><th>Action</th></tr></thead>
+                <tbody>
+                    {% for unit in available_units %}
+                    <tr>
+                        <td><strong>{{ unit.unit_identifier }}</strong></td>
+                        <td>{{ unit.component_type }}</td>
+                        <td><span class="badge badge-blood">{{ unit.blood_group }}</span></td>
+                        <td>{{ unit.volume_ml }} mL</td>
+                        <td>{{ unit.expiry_date|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <form method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="unit_id" value="{{ unit.pk }}">
+                                <button type="submit" class="btn btn-blood btn-sm fw-bold"><i class="bi bi-lock me-1"></i>Lock & Reserve Unit</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-danger py-4">?? No matching available, unreserved stock found in inventory for {{ req_item.get_component_type_display }} [{{ req_item.blood_group }}].</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-3">
+            <a href="{% url 'requests_app:detail' request.pk %}" class="btn btn-outline-secondary">&larr; Back to Requisition</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

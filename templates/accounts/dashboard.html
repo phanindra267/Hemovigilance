@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Dashboard ? LIFEFlow Hemovigilance{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Operational Dashboard</h3>
+            <p class="text-secondary small mb-0">Role: <span class="badge bg-danger-subtle text-danger border">{{ profile.get_role_display }}</span> &bull; Facility: {{ profile.blood_bank.name|default:"LIFEFlow National Network" }}</p>
+        </div>
+        <div class="d-flex gap-2 mt-2 mt-md-0">
+            {% if profile.is_staff_role or user.is_superuser %}
+                <a href="{% url 'donations:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-plus-circle me-1"></i>Record Donation</a>
+                <a href="{% url 'requests_app:create' %}" class="btn btn-outline-danger btn-sm"><i class="bi bi-clipboard-plus me-1"></i>New Requisition</a>
+            {% elif profile.role == 'DONOR' %}
+                <a href="{% url 'appointments:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-calendar-plus me-1"></i>Book Appointment</a>
+            {% elif profile.role == 'HOSPITAL_USER' %}
+                <a href="{% url 'requests_app:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-plus-circle me-1"></i>Submit Blood Request</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Metrics Cards for Staff / Admin Roles -->
+    {% if profile.is_staff_role or user.is_superuser %}
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card card-stat p-3 bg-white border-start border-success border-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-secondary small fw-medium">Available Units</div>
+                            <h3 class="fw-bold text-success mb-0">{{ total_available_units|default:0 }}</h3>
+                        </div>
+                        <div class="fs-1 text-success opacity-50"><i class="bi bi-box-seam-fill"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stat p-3 bg-white border-start border-warning border-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-secondary small fw-medium">Quarantined Units</div>
+                            <h3 class="fw-bold text-warning mb-0">{{ total_quarantined_units|default:0 }}</h3>
+                        </div>
+                        <div class="fs-1 text-warning opacity-50"><i class="bi bi-shield-exclamation"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stat p-3 bg-white border-start border-danger border-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-secondary small fw-medium">Pending Requests</div>
+                            <h3 class="fw-bold text-danger mb-0">{{ total_pending_requests|default:0 }}</h3>
+                        </div>
+                        <div class="fs-1 text-danger opacity-50"><i class="bi bi-clipboard-pulse"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-stat p-3 bg-white border-start border-info border-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-secondary small fw-medium">Registered Donors</div>
+                            <h3 class="fw-bold text-info mb-0">{{ total_donors_count|default:0 }}</h3>
+                        </div>
+                        <div class="fs-1 text-info opacity-50"><i class="bi bi-people-fill"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities Grid -->
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-droplet-half text-danger me-2"></i>Recent Collections</h6>
+                        <a href="{% url 'donations:list' %}" class="small text-danger text-decoration-none">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light"><tr><th>ID</th><th>Donor</th><th>Type</th><th>Status</th></tr></thead>
+                            <tbody>
+                                {% for d in recent_donations %}
+                                <tr>
+                                    <td><a href="{% url 'donations:detail' d.pk %}" class="fw-bold text-dark text-decoration-none">{{ d.donation_id }}</a></td>
+                                    <td>{{ d.donor.full_name }} <span class="badge badge-blood ms-1">{{ d.donor.blood_group }}</span></td>
+                                    <td>{{ d.get_donation_type_display }}</td>
+                                    <td><span class="badge bg-secondary">{{ d.get_status_display }}</span></td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center text-muted py-3">No recent donations.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                        <h6 class="fw-bold mb-0"><i class="bi bi-clipboard-pulse text-danger me-2"></i>Active Requisitions</h6>
+                        <a href="{% url 'requests_app:list' %}" class="small text-danger text-decoration-none">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light"><tr><th>Request ID</th><th>Hospital / Patient</th><th>Urgency</th><th>Status</th></tr></thead>
+                            <tbody>
+                                {% for r in recent_requests %}
+                                <tr>
+                                    <td><a href="{% url 'requests_app:detail' r.pk %}" class="fw-bold text-dark text-decoration-none">{{ r.request_id }}</a></td>
+                                    <td>{{ r.hospital.name|truncatechars:18 }}<br><small class="text-muted">{{ r.patient.full_name }}</small></td>
+                                    <td><span class="badge {% if r.urgency == 'EMERGENCY' %}bg-danger{% elif r.urgency == 'URGENT' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ r.urgency }}</span></td>
+                                    <td><span class="badge bg-light text-dark border">{{ r.get_status_display }}</span></td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center text-muted py-3">No pending blood requests.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% elif profile.role == 'DONOR' %}
+        <!-- Donor Portal Dashboard -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="fw-bold text-danger mb-1">Welcome, {{ donor.full_name|default:user.get_full_name }}!</h4>
+                    <p class="text-muted mb-2">Blood Group: <span class="badge badge-blood fs-6">{{ donor.blood_group|default:"Unverified" }}</span> &bull; Donor ID: <strong>{{ donor.donor_id }}</strong></p>
+                    <p class="mb-0">
+                        Eligibility Status: 
+                        {% if donor.is_currently_eligible %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Eligible to Donate Blood Today</span>
+                        {% else %}
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1">Deferred until {{ donor.next_eligible_date|default:"review" }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{% url 'appointments:create' %}" class="btn btn-blood px-4 py-2 rounded-pill"><i class="bi bi-calendar-check me-1"></i>Book Appointment</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3 p-3">
+            <h6 class="fw-bold mb-3">Your Donation History ({{ donor.total_donations_count }} donations)</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light"><tr><th>Donation ID</th><th>Date</th><th>Type</th><th>Volume</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for d in my_donations %}
+                        <tr>
+                            <td>{{ d.donation_id }}</td>
+                            <td>{{ d.collection_date|date:"M d, Y" }}</td>
+                            <td>{{ d.get_donation_type_display }}</td>
+                            <td>{{ d.volume_ml }} mL</td>
+                            <td><span class="badge bg-success">{{ d.get_status_display }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-3">You have not completed any donations yet. Thank you for registering!</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% elif profile.role == 'HOSPITAL_USER' %}
+        <!-- Hospital Portal Dashboard -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+            <h4 class="fw-bold text-danger mb-1">{{ hospital.name }}</h4>
+            <p class="text-muted mb-0">Hospital Requisitions & Hemovigilance Distribution Desk &bull; {{ hospital.city }}</p>
+        </div>
+        <div class="card border-0 shadow-sm rounded-3 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0">Hospital Blood Requests</h6>
+                <a href="{% url 'requests_app:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-plus me-1"></i>New Request</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light"><tr><th>Request ID</th><th>Patient</th><th>Required Date</th><th>Urgency</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        {% for r in hospital_requests %}
+                        <tr>
+                            <td><strong>{{ r.request_id }}</strong></td>
+                            <td>{{ r.patient.full_name }} <span class="badge badge-blood ms-1">{{ r.patient.blood_group }}</span></td>
+                            <td>{{ r.required_date_time|date:"M d, H:i" }}</td>
+                            <td><span class="badge {% if r.urgency == 'EMERGENCY' %}bg-danger{% elif r.urgency == 'URGENT' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ r.urgency }}</span></td>
+                            <td><span class="badge bg-light text-dark border">{{ r.get_status_display }}</span></td>
+                            <td><a href="{% url 'requests_app:detail' r.pk %}" class="btn btn-outline-secondary btn-sm">Details</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center text-muted py-3">No blood requests submitted.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

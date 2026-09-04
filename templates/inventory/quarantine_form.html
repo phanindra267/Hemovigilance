@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Quarantine Unit ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4">
+                <h4 class="fw-bold text-danger mb-2"><i class="bi bi-shield-exclamation me-2"></i>Place Unit in Quarantine</h4>
+                <p class="text-muted mb-4">Unit: <strong>{{ item.unit_identifier }}</strong> ({{ item.component_type }} &bull; {{ item.blood_group }})</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3"><label class="form-label">Quarantine Reason *</label>{{ form.reason }}</div>
+                    <div class="mb-4"><label class="form-label">Investigation Notes / Incident Details</label>{{ form.notes }}</div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'inventory:detail' item.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-warning px-4 fw-bold">Lock in Quarantine</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

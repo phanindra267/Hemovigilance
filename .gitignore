@@ -1,0 +1,15 @@
+﻿.env
+__pycache__/
+*.py[cod]
+*.class
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+.system_generated/
+*.log
+.coverage
+htmlcov/
+.pytest_cache/
+.DS_Store
+Thumbs.db

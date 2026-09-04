@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: lifeflow_db
+      POSTGRES_USER: lifeflow_user
+      POSTGRES_PASSWORD: lifeflow_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: gunicorn lifeflow_project.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - DB_ENGINE=postgresql
+      - DB_NAME=lifeflow_db
+      - DB_USER=lifeflow_user
+      - DB_PASSWORD=lifeflow_password
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=production-secret-key-change-me-promptly
+      - ALLOWED_HOSTS=*
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

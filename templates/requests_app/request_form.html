@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ action_title }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 rounded-4">
+                <h4 class="fw-bold text-danger mb-4"><i class="bi bi-clipboard-plus me-2"></i>{{ action_title }}</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Requesting Hospital *</label>{{ form.hospital }}</div>
+                        <div class="col-md-6"><label class="form-label">Target Patient *</label>{{ form.patient }}</div>
+                        <div class="col-md-6"><label class="form-label">Fulfilling Blood Bank *</label>{{ form.blood_bank }}</div>
+                        <div class="col-md-6"><label class="form-label">Attending Physician / Doctor *</label>{{ form.requesting_doctor }}</div>
+                        <div class="col-md-6"><label class="form-label">Clinical Urgency *</label>{{ form.urgency }}</div>
+                        <div class="col-md-6"><label class="form-label">Required Delivery Timestamp *</label>{{ form.required_date_time }}</div>
+                        
+                        <div class="col-md-12"><hr class="my-2"><h6 class="fw-bold text-dark">Component Requisition Detail</h6></div>
+                        <div class="col-md-4"><label class="form-label">Component Type *</label>{{ item_form.component_type }}</div>
+                        <div class="col-md-4"><label class="form-label">Blood Group *</label>{{ item_form.blood_group }}</div>
+                        <div class="col-md-4"><label class="form-label">Units Requested *</label>{{ item_form.units_requested }}</div>
+
+                        <div class="col-md-12"><label class="form-label">Clinical Diagnosis *</label>{{ form.clinical_diagnosis }}</div>
+                        <div class="col-md-12"><label class="form-label">Transfusion Indication</label>{{ form.transfusion_indication }}</div>
+                        <div class="col-md-12"><label class="form-label">Special Requisition Directives (e.g. Leukoreduced)</label>{{ form.special_requirements }}</div>
+                    </div>
+                    <div class="mt-4 pt-3 border-top text-end">
+                        <a href="{% url 'requests_app:list' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-blood px-4">Submit Requisition</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

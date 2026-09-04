@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Hospital Directory ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark mb-0">Registered Hospitals & Transfusion Centers</h3>
+        {% if user.profile.is_staff_role or user.is_superuser %}
+            <a href="{% url 'hospitals:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-hospital me-1"></i>Register Hospital</a>
+        {% endif %}
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Hospital Code</th><th>Hospital Name</th><th>Category</th><th>City</th><th>Contact Person</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for h in page_obj %}
+                    <tr>
+                        <td><span class="badge bg-secondary">{{ h.code }}</span></td>
+                        <td><a href="{% url 'hospitals:detail' h.pk %}" class="fw-bold text-danger text-decoration-none">{{ h.name }}</a></td>
+                        <td><small>{{ h.get_category_display }}</small></td>
+                        <td>{{ h.city }}</td>
+                        <td>{{ h.contact_person }}</td>
+                        <td>{{ h.phone }}</td>
+                        <td>{% if h.is_verified %}<span class="badge bg-success">Verified</span>{% else %}<span class="badge bg-warning text-dark">Pending</span>{% endif %}</td>
+                        <td>
+                            <a href="{% url 'hospitals:detail' h.pk %}" class="btn btn-outline-secondary btn-sm">Details</a>
+                            {% if user.profile.is_medical_or_admin %}
+                                <a href="{% url 'hospitals:update' h.pk %}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-3">No hospitals registered.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

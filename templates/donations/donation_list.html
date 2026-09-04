@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Blood Donations ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark mb-0">Blood Collection Sessions</h3>
+        <a href="{% url 'donations:create' %}" class="btn btn-blood btn-sm"><i class="bi bi-plus-circle me-1"></i>Record Donation</a>
+    </div>
+
+    <div class="card border-0 shadow-sm p-3 mb-4">
+        <form method="get" class="row g-2">
+            <div class="col-md-5"><input type="text" name="search" class="form-control" placeholder="Search by donor name or donation ID..." value="{{ search }}"></div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    {% for s_val, s_name in statuses %}<option value="{{ s_val }}" {% if status == s_val %}selected{% endif %}>{{ s_name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="donation_type" class="form-select">
+                    <option value="">All Types</option>
+                    {% for t_val, t_name in donation_types %}<option value="{{ t_val }}" {% if donation_type == t_val %}selected{% endif %}>{{ t_name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100"><i class="bi bi-search me-1"></i>Filter</button></div>
+        </form>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Donation ID</th><th>Donor</th><th>Type</th><th>Volume</th><th>Collection Date</th><th>Status</th><th>Blood Bag</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for d in page_obj %}
+                    <tr>
+                        <td><a href="{% url 'donations:detail' d.pk %}" class="fw-bold text-danger text-decoration-none">{{ d.donation_id }}</a></td>
+                        <td>{{ d.donor.full_name }} <span class="badge badge-blood ms-1">{{ d.donor.blood_group }}</span></td>
+                        <td>{{ d.get_donation_type_display }}</td>
+                        <td>{{ d.volume_ml }} mL</td>
+                        <td>{{ d.collection_date|date:"M d, Y H:i" }}</td>
+                        <td><span class="badge bg-secondary">{{ d.get_status_display }}</span></td>
+                        <td>
+                            {% if d.blood_bag %}
+                                <a href="{% url 'laboratory:blood_bag_detail' d.blood_bag.pk %}" class="badge bg-primary text-decoration-none">{{ d.blood_bag.bag_id }}</a>
+                            {% else %}
+                                <span class="text-muted small">Not Created</span>
+                            {% endif %}
+                        </td>
+                        <td><a href="{% url 'donations:detail' d.pk %}" class="btn btn-outline-secondary btn-sm">View</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-3">No donation records found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

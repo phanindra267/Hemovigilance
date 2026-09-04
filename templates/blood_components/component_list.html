@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Blood Components ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-dark mb-0">Blood Components Inventory</h3>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Component ID</th><th>Parent Bag</th><th>Type</th><th>Group</th><th>Volume</th><th>Prepared</th><th>Expiry</th><th>Status</th><th>Storage</th></tr></thead>
+                <tbody>
+                    {% for c in page_obj %}
+                    <tr>
+                        <td><a href="{% url 'blood_components:detail' c.pk %}" class="fw-bold text-danger text-decoration-none">{{ c.component_id }}</a></td>
+                        <td>{{ c.parent_bag.bag_id }}</td>
+                        <td><strong>{{ c.get_component_type_display }}</strong></td>
+                        <td><span class="badge badge-blood">{{ c.blood_group }}</span></td>
+                        <td>{{ c.volume_ml }} mL</td>
+                        <td>{{ c.prepared_date|date:"Y-m-d" }}</td>
+                        <td>{{ c.expiry_date|date:"Y-m-d" }}</td>
+                        <td><span class="badge bg-secondary">{{ c.get_status_display }}</span></td>
+                        <td><small>{{ c.storage_location }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="9" class="text-center text-muted py-3">No components found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

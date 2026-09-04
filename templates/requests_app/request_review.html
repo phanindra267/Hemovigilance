@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Review Requisition ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm p-4 rounded-4">
+                <h4 class="fw-bold text-danger mb-2"><i class="bi bi-shield-check me-2"></i>Medical Officer Requisition Review</h4>
+                <p class="text-muted mb-3">Requisition: <strong>{{ request.request_id }}</strong> (Hospital: {{ request.hospital.name }} &bull; Patient: {{ request.patient.full_name }})</p>
+
+                <div class="alert alert-light border small mb-4">
+                    <strong>Clinical Diagnosis:</strong> {{ request.clinical_diagnosis }}<br>
+                    <strong>Urgency:</strong> {{ request.get_urgency_display }}<br>
+                    <strong>Required At:</strong> {{ request.required_date_time }}
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Review Authorization Decision *</label>
+                        <select name="action" class="form-select">
+                            <option value="APPROVE">APPROVE ? Cleared for Inventory Unit Reservation & Crossmatching</option>
+                            <option value="REJECT">REJECT ? Disapproved / Clinically Inappropriate</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Decision Notes / Rejection Justification (if applicable)</label>
+                        <textarea name="reason" class="form-control" rows="2" placeholder="Clinical justification..."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'requests_app:detail' request.pk %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-blood px-4 fw-bold">Submit Medical Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

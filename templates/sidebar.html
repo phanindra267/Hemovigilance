@@ -1,0 +1,99 @@
+<aside class="sidebar d-none d-md-block">
+    <div class="py-3 px-3 border-bottom border-secondary">
+        <small class="text-uppercase text-secondary fw-bold" style="font-size: 0.7rem; letter-spacing: 0.08em;">Operations Menu</small>
+    </div>
+    <ul class="nav flex-column py-2">
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:dashboard' %}">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+        </li>
+
+        {% if user.profile.is_staff_role or user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'donors:list' %}">
+                    <i class="bi bi-people-fill"></i> Donor Registry
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'donations:list' %}">
+                    <i class="bi bi-droplet-half"></i> Blood Donations
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'laboratory:blood_bag_list' %}">
+                    <i class="bi bi-collection-fill"></i> Blood Bags
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'laboratory:sample_list' %}">
+                    <i class="bi bi-virus"></i> Laboratory Screening
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'blood_components:list' %}">
+                    <i class="bi bi-pie-chart-fill"></i> Components
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'inventory:stock' %}">
+                    <i class="bi bi-box-seam-fill"></i> Inventory & Traceability
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'inventory:temperature_list' %}">
+                    <i class="bi bi-thermometer-half"></i> Temperature Cold-Chain
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'requests_app:list' %}">
+                <i class="bi bi-clipboard-pulse"></i> Blood Requisitions
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'appointments:list' %}">
+                <i class="bi bi-calendar-check-fill"></i> Appointments
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'camps:list' %}">
+                <i class="bi bi-geo-alt-fill"></i> Blood Camps
+            </a>
+        </li>
+
+        {% if user.profile.is_staff_role or user.is_superuser or user.profile.role == 'HOSPITAL_USER' %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'patients:list' %}">
+                    <i class="bi bi-person-lines-fill"></i> Patients
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'hospitals:list' %}">
+                    <i class="bi bi-hospital-fill"></i> Hospitals
+                </a>
+            </li>
+        {% endif %}
+
+        {% if user.profile.is_medical_or_admin or user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'reports:index' %}">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i> Reports & Audits
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'audit:list' %}">
+                    <i class="bi bi-journal-text"></i> Audit Trail
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:user_list' %}">
+                    <i class="bi bi-person-gear"></i> User Management
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</aside>

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Operational & Hemovigilance Reports ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="mb-4">
+        <h3 class="fw-bold text-dark mb-1"><i class="bi bi-file-earmark-bar-graph-fill text-danger me-2"></i>Executive & Clinical Reports Suite</h3>
+        <p class="text-secondary mb-0">Generate, filter, print, and export CSV & PDF regulatory audit reports.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
+                <i class="bi bi-people-fill text-danger display-5 mb-3"></i>
+                <h5 class="fw-bold">Donor Registry Report</h5>
+                <p class="text-secondary small mb-3">Comprehensive voluntary donor database, donation frequency, eligibility statuses, and geographic distribution.</p>
+                <a href="{% url 'reports:donors' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
+                <i class="bi bi-droplet-half text-danger display-5 mb-3"></i>
+                <h5 class="fw-bold">Donations Collection Report</h5>
+                <p class="text-secondary small mb-3">Total whole blood collections, mobile camp outputs, apheresis yields, volume metrics, and phlebotomy audits.</p>
+                <a href="{% url 'reports:donations' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
+                <i class="bi bi-box-seam-fill text-danger display-5 mb-3"></i>
+                <h5 class="fw-bold">Inventory & Expiry Report</h5>
+                <p class="text-secondary small mb-3">Real-time cold storage inventory matrix by ABO/Rh group, component type, quarantine state, and shelf-life aging.</p>
+                <a href="{% url 'reports:inventory' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
+                <i class="bi bi-clipboard-pulse text-danger display-5 mb-3"></i>
+                <h5 class="fw-bold">Crossmatch & Issue Report</h5>
+                <p class="text-secondary small mb-3">Hospital distribution logs, crossmatching confirmations, emergency STAT deliveries, and recipient traceability.</p>
+                <a href="{% url 'reports:issues' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
+                <i class="bi bi-trash3-fill text-danger display-5 mb-3"></i>
+                <h5 class="fw-bold">Discard & Wastage Report</h5>
+                <p class="text-secondary small mb-3">Regulatory hemovigilance wastage audit: expired units, reactive TTI screenings, cold-chain violations, and biohazard manifests.</p>
+                <a href="{% url 'reports:discards' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100 rounded-3">
+                <i class="bi bi-star-fill text-danger display-5 mb-3"></i>
+                <h5 class="fw-bold">Rare Donor Registry</h5>
+                <p class="text-secondary small mb-3">Dedicated emergency contact registry for scarce blood groups (AB-, B-, A-, O-) for immediate trauma response.</p>
+                <a href="{% url 'reports:rare_donors' %}" class="btn btn-outline-danger btn-sm mt-auto">Open Report &rarr;</a>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm p-4 rounded-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-1"><i class="bi bi-graph-up text-danger me-2"></i>Monthly Operational Summary Dashboard</h5>
+                        <p class="text-muted small mb-0">High-level blood bank KPIs: collections, transfusions, discards, and net inventory reserve index.</p>
+                    </div>
+                    <a href="{% url 'reports:monthly_summary' %}" class="btn btn-blood px-4">View Executive Summary &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

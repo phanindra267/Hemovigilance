@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ component.component_id }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4">
+        <span class="badge bg-danger mb-2 align-self-start">{{ component.component_id }}</span>
+        <h3 class="fw-bold text-dark">{{ component.get_component_type_display }}</h3>
+        <p class="text-muted">Parent Bag: <strong>{{ component.parent_bag.bag_id }}</strong></p>
+
+        <div class="row g-3 border-top pt-3 mt-2">
+            <div class="col-md-3"><strong>Blood Group:</strong><br><span class="badge badge-blood fs-5">{{ component.blood_group }}</span></div>
+            <div class="col-md-3"><strong>Volume:</strong><br>{{ component.volume_ml }} mL</div>
+            <div class="col-md-3"><strong>Status:</strong><br><span class="badge bg-secondary fs-6">{{ component.get_status_display }}</span></div>
+            <div class="col-md-3"><strong>Expiry Date:</strong><br>{{ component.expiry_date|date:"F d, Y - H:i" }}</div>
+            <div class="col-md-6"><strong>Storage Location:</strong><br>{{ component.storage_location }}</div>
+            <div class="col-md-6"><strong>Special Processing:</strong><br>Leukoreduced: {{ component.leukoreduced|yesno:"Yes,No" }} &bull; Irradiated: {{ component.irradiated|yesno:"Yes,No" }}</div>
+        </div>
+        <div class="mt-4 pt-3 border-top">
+            <a href="{% url 'blood_components:list' %}" class="btn btn-outline-secondary">&larr; Back to Components</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

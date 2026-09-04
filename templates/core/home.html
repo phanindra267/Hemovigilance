@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}LIFEFlow ? Blood Bank Management & Hemovigilance System{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Banner -->
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-white mb-5" style="background: linear-gradient(135deg, #7a1212 0%, #a81c1c 50%, #dc2626 100%);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-white text-danger fw-bold px-3 py-2 mb-3 rounded-pill">NATIONAL HEMOVIGILANCE NETWORK</span>
+                <h1 class="display-5 fw-bold mb-3">Every Drop Traceable.<br>Every Transfusion Safe.</h1>
+                <p class="lead opacity-90 mb-4">
+                    LIFEFlow is an enterprise-grade blood bank management and hemovigilance information system. 
+                    From donor registration and laboratory serological screening to cold chain tracking and hospital crossmatch issue.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'accounts:login' %}" class="btn btn-light text-danger fw-bold px-4 py-2 rounded-pill shadow-sm">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Staff / Hospital Login
+                    </a>
+                    <a href="{% url 'accounts:register_donor' %}" class="btn btn-outline-light fw-bold px-4 py-2 rounded-pill">
+                        <i class="bi bi-heart-fill me-1"></i> Register as Voluntary Donor
+                    </a>
+                    <a href="{% url 'accounts:register_hospital' %}" class="btn btn-dark opacity-90 fw-bold px-4 py-2 rounded-pill">
+                        <i class="bi bi-hospital me-1"></i> Hospital Requisitions
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center d-none d-lg-block">
+                <i class="bi bi-droplet-half display-1 opacity-75" style="font-size: 8rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Features -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-3 p-4">
+                <div class="text-danger fs-1 mb-3"><i class="bi bi-shield-check"></i></div>
+                <h5 class="fw-bold">100% Traceable Lifecycle</h5>
+                <p class="text-secondary small mb-0">From donor phlebotomy bag to patient bedside. Verified by automated cold chain and state-transition locking.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-3 p-4">
+                <div class="text-danger fs-1 mb-3"><i class="bi bi-virus"></i></div>
+                <h5 class="fw-bold">Laboratory Safety Gate</h5>
+                <p class="text-secondary small mb-0">Strict screening workflow for HIV, HBV, HCV, Syphilis, and Malaria. Quarantined units cannot be issued until released by a Medical Officer.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm rounded-3 p-4">
+                <div class="text-danger fs-1 mb-3"><i class="bi bi-lightning-charge"></i></div>
+                <h5 class="fw-bold">Atomic Requisitions</h5>
+                <p class="text-secondary small mb-0">Emergency STAT ordering and database row-level locking prevent double reservations or stock race conditions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Compatibility Reference Chart -->
+    <div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
+        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-grid-3x3-gap-fill text-danger me-2"></i>Red Blood Cell Compatibility Matrix (Configurable SOP Reference)</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Recipient Blood Type</th>
+                        <th>Compatible Donor Red Blood Cells (PRBC)</th>
+                        <th>Universal Recipient / Donor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="badge badge-blood">O-</span></td><td>O- only</td><td><span class="badge bg-danger">Universal Red Cell Donor</span></td></tr>
+                    <tr><td><span class="badge badge-blood">O+</span></td><td>O+, O-</td><td>-</td></tr>
+                    <tr><td><span class="badge badge-blood">A-</span></td><td>A-, O-</td><td>-</td></tr>
+                    <tr><td><span class="badge badge-blood">A+</span></td><td>A+, A-, O+, O-</td><td>-</td></tr>
+                    <tr><td><span class="badge badge-blood">B-</span></td><td>B-, O-</td><td>-</td></tr>
+                    <tr><td><span class="badge badge-blood">B+</span></td><td>B+, B-, O+, O-</td><td>-</td></tr>
+                    <tr><td><span class="badge badge-blood">AB-</span></td><td>AB-, A-, B-, O-</td><td>-</td></tr>
+                    <tr><td><span class="badge badge-blood">AB+</span></td><td>AB+, AB-, A+, A-, B+, B-, O+, O-</td><td><span class="badge bg-success">Universal Red Cell Recipient</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <small class="text-muted mt-2 d-block"><i class="bi bi-info-circle me-1"></i>Clinical crossmatching tube testing and antibody screening are strictly required prior to issue per hospital blood centre SOPs.</small>
+    </div>
+</div>
+{% endblock %}

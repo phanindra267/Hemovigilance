@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ action_title }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm p-4 rounded-4">
+                <h4 class="fw-bold text-danger mb-4"><i class="bi bi-person-heart me-2"></i>{{ action_title }}</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">First Name *</label>{{ form.first_name }}</div>
+                        <div class="col-md-6"><label class="form-label">Last Name *</label>{{ form.last_name }}</div>
+                        <div class="col-md-4"><label class="form-label">Date of Birth *</label>{{ form.dob }}</div>
+                        <div class="col-md-4"><label class="form-label">Gender *</label>{{ form.gender }}</div>
+                        <div class="col-md-4"><label class="form-label">Blood Group *</label>{{ form.blood_group }}</div>
+                        <div class="col-md-6"><label class="form-label">Hospital</label>{{ form.hospital }}</div>
+                        <div class="col-md-6"><label class="form-label">Hospital MRN / IPD No</label>{{ form.hospital_mrn }}</div>
+                        <div class="col-md-6"><label class="form-label">Attending Physician</label>{{ form.attending_physician }}</div>
+                        <div class="col-md-6"><label class="form-label">Ward / Bed No</label>{{ form.ward_or_room }}</div>
+                        <div class="col-md-6"><label class="form-label">Contact Phone *</label>{{ form.phone }}</div>
+                        <div class="col-md-6"><label class="form-label">Email</label>{{ form.email }}</div>
+                        <div class="col-md-12"><label class="form-label">Address</label>{{ form.address }}</div>
+                        <div class="col-md-12"><label class="form-label">Medical History</label>{{ form.medical_history }}</div>
+                        <div class="col-md-12"><label class="form-label">Transfusion History</label>{{ form.transfusion_history }}</div>
+                    </div>
+                    <div class="mt-4 pt-3 border-top text-end">
+                        <a href="{% url 'patients:list' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-blood px-4">Save Patient</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}404 - Resource Not Found{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="card shadow-sm border-0 p-5 mx-auto" style="max-width: 600px;">
+        <i class="bi bi-shield-exclamation text-danger display-1 mb-3"></i>
+        <h2 class="fw-bold text-danger">404 - Resource Not Found</h2>
+        <p class="text-secondary mt-2">The requested record, blood bag, or requisition could not be located in the database.</p>
+        <div class="mt-4">
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-blood px-4">Back to Dashboard</a>
+            <a href="{% url 'core:home' %}" class="btn btn-outline-secondary px-4 ms-2">Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

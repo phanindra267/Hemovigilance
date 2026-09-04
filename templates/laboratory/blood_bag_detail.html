@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}{{ bag.bag_id }} ? LIFEFlow{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+            <div>
+                <span class="badge bg-danger mb-2">{{ bag.bag_id }}</span>
+                <h3 class="fw-bold text-dark mb-0">Blood Bag Detail Card</h3>
+                <p class="text-muted mb-0">Donor: {{ bag.donation.donor.full_name }} &bull; Collected: {{ bag.collection_date|date:"M d, Y - H:i" }}</p>
+            </div>
+            <div class="d-flex gap-2">
+                {% if bag.status == 'TESTED_SAFE' %}
+                    <a href="{% url 'blood_components:separate' bag.pk %}" class="btn btn-success"><i class="bi bi-pie-chart-fill me-1"></i>Separate Components</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-3"><strong>Blood Group:</strong><br><span class="badge badge-blood fs-5">{{ bag.blood_group }}</span></div>
+            <div class="col-md-3"><strong>Volume:</strong><br>{{ bag.volume_ml }} mL</div>
+            <div class="col-md-3"><strong>Status:</strong><br><span class="badge bg-secondary fs-6">{{ bag.get_status_display }}</span></div>
+            <div class="col-md-3"><strong>Expiry Date:</strong><br>{{ bag.expiry_date|date:"F d, Y - H:i" }}</div>
+            <div class="col-md-6"><strong>Storage Location:</strong><br>{{ bag.storage_location }}</div>
+            <div class="col-md-6"><strong>Container Type:</strong><br>{{ bag.get_bag_type_display }}</div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm p-3 rounded-3 mb-4">
+        <div class="card-header bg-white border-0 py-2 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-virus text-danger me-2"></i>Laboratory Screening Samples</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Sample ID</th><th>Collected At</th><th>Tests Conducted</th><th>Status</th><th>Verified By</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for sample in samples %}
+                    <tr>
+                        <td><strong>{{ sample.sample_id }}</strong></td>
+                        <td>{{ sample.collected_at|date:"M d, Y H:i" }}</td>
+                        <td>{{ sample.screening_results.count }} test(s) recorded</td>
+                        <td><span class="badge bg-secondary">{{ sample.get_status_display }}</span></td>
+                        <td>{{ sample.verified_by.get_full_name|default:sample.verified_by.username|default:"Unverified" }}</td>
+                        <td>
+                            <a href="{% url 'laboratory:sample_detail' sample.pk %}" class="btn btn-outline-secondary btn-sm">View Tests</a>
+                            <a href="{% url 'laboratory:add_result' sample.pk %}" class="btn btn-outline-primary btn-sm">+ Add Test</a>
+                            <a href="{% url 'laboratory:verify_sample' sample.pk %}" class="btn btn-warning btn-sm">Verify / Release</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted py-3">No samples linked.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if components %}
+        <div class="card border-0 shadow-sm p-3 rounded-3">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart-fill text-danger me-2"></i>Separated Blood Components</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light"><tr><th>Component ID</th><th>Type</th><th>Volume</th><th>Prepared Date</th><th>Expiry Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                        {% for c in components %}
+                        <tr>
+                            <td><a href="{% url 'blood_components:detail' c.pk %}" class="fw-bold text-danger text-decoration-none">{{ c.component_id }}</a></td>
+                            <td>{{ c.get_component_type_display }}</td>
+                            <td>{{ c.volume_ml }} mL</td>
+                            <td>{{ c.prepared_date|date:"Y-m-d" }}</td>
+                            <td>{{ c.expiry_date|date:"Y-m-d" }}</td>
+                            <td><span class="badge bg-secondary">{{ c.get_status_display }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
