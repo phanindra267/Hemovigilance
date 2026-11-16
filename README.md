@@ -225,6 +225,8 @@ redlink-hemovigilance/
 │   ├── CURRICULUM_MAPPING.md     # Academic syllabus compliance matrix (Units I-VI)
 │   ├── DATABASE.md               # Database schema, ER relationships & index strategy
 │   ├── DEPLOYMENT.md             # Cloud (Render), Docker, VPS & LAN hosting guide
+│   ├── ProjectPresentation.pptx  # Complete 20-Slide Professional PowerPoint Presentation
+│   ├── ProjectPresentation.pdf   # Slide Deck Export (PDF format)
 │   ├── ProjectReport.pdf         # Complete 28-Page IEEE SRS Project Report (PDF Document)
 │   ├── ProjectReport.docx        # Full SRS IEEE Project Report (Word Document)
 │   ├── ProjectReport.md          # Full SRS Project Report (Markdown)
