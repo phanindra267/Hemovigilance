@@ -5,17 +5,16 @@ The project contains comprehensive unit and integration tests verifying every la
 
 | Test Module | Coverage | Status |
 |---|---|---|
-| core.test_lifecycle | Complete End-to-End Transfusion Lifecycle (12 stages) | Passed |
-| ccounts.tests | Authentication, Login, Role Restrictions, 403 Forbidden | Passed |
-| laboratory.tests | Blood Bag, Sample Tubes, TTI Reactive Rejections | Passed |
-| inventory.tests | Cold Storage, Expiry Detection, Quarantine Release | Passed |
-| 
-equests_app.tests| Atomic Reservation, Double-Reservation Prevention, Discards | Passed |
-| 
-eports.tests | CSV Data Stream & ReportLab PDF Document Generation | Passed |
+| `core.test_lifecycle` | Complete End-to-End Transfusion Lifecycle (12 stages) | Passed |
+| `accounts.tests` | Authentication, Login, Role Restrictions, 403 Forbidden | Passed |
+| `laboratory.tests` | Blood Bag, Sample Tubes, TTI Reactive Rejections | Passed |
+| `inventory.tests` | Cold Storage, Expiry Detection, Quarantine Release | Passed |
+| `requests_app.tests` | Atomic Reservation, Double-Reservation Prevention, Discards | Passed |
+| `reports.tests` | CSV Data Stream & PDF Document Generation | Passed |
 
 ## 2. Executing Tests
-`ash
+
+```bash
 # Run entire test suite
 python manage.py test
 
@@ -24,7 +23,10 @@ python manage.py test core.test_lifecycle
 
 # Run with verbose output
 python manage.py test -v 2
-`
+
+# Run using Makefile
+make test
+```
 
 ## 3. Negative Workflow Testing
 - Attempting to issue an expired unit is strictly blocked with a safety error.

@@ -200,6 +200,74 @@ For detailed bare-metal, systemd, or Nginx setup, see [DEPLOYMENT.md](DEPLOYMENT
 
 ---
 
+## Repository File & Folder Structure
+
+```text
+redlink-hemovigilance/
+├── .github/                      # CI/CD and GitHub community health templates
+│   ├── ISSUE_TEMPLATE/           # Structured bug report & feature request templates
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   ├── workflows/                # GitHub Actions automated CI pipelines
+│   │   └── ci.yml
+│   └── pull_request_template.md  # Standardized PR review checklist
+├── accounts/                     # User management, 9 RBAC roles, auth & profiles
+├── appointments/                 # Donor appointment scheduling & check-in
+├── audit/                        # Regulatory audit trail & thread-local logging middleware
+├── blood_components/             # Component separation (PRBC, FFP, Platelets, Cryo)
+├── camps/                        # Mobile/community donation drive logistics
+├── core/                         # Base models, system config, master layout & error handlers
+│   └── management/commands/      # Custom CLI tools (seed_demo_data, check_expiry, etc.)
+├── docs/                         # Comprehensive project documentation & reports
+│   ├── screenshots/              # Application UI screenshots and visual walkthroughs
+│   ├── ProjectReport.docx        # Full SRS IEEE Project Report (Word Document)
+│   ├── ProjectReport.md          # Full SRS Project Report (Markdown)
+│   └── README.md                 # Docs directory index
+├── donations/                    # Phlebotomy collection, adverse reaction tracking
+├── donors/                       # Voluntary donor registry & clinical eligibility checks
+├── hospitals/                    # Affiliated hospital network registry
+├── inventory/                    # Multi-level storage hierarchy, stock & quarantine
+├── laboratory/                   # Serological screening (HIV, HBV, HCV, Syphilis, Malaria)
+├── lifeflow_project/             # Django project configuration (settings, urls, wsgi, asgi)
+├── notifications/                # In-app alerts, cold-chain excursion & STAT warnings
+├── patients/                     # Transfusion recipients & hospital MRN records
+├── reports/                      # Operational reporting & CSV/PDF export engine
+├── requests_app/                 # Hospital blood orders, atomic reservation & triage
+├── scripts/                      # Developer automation and deployment utilities
+│   ├── backup_db.sh              # Automated PostgreSQL backup with retention rotation
+│   ├── seed_data.sh              # Database demo data seeder
+│   ├── setup.bat                 # One-click Windows development setup
+│   ├── setup.sh                  # One-click Linux/macOS development setup
+│   └── README.md                 # Scripts documentation
+├── static/                       # Custom CSS, JavaScript & branding assets
+├── templates/                    # Global Django templates, navigation & error pages
+├── .env.example                  # Environment variable blueprint
+├── .gitattributes               # Git line-ending normalization rules
+├── .gitignore                    # Comprehensive Git ignore rules
+├── ARCHITECTURE.md               # System architectural design & component hierarchy
+├── DATABASE.md                   # Database schema, ER relationships & index strategy
+├── DEPLOYMENT.md                 # Cloud (Render), Docker, VPS & LAN hosting guide
+├── SECURITY.md                   # RBAC, audit trails & clinical security controls
+├── TESTING.md                    # Test execution instructions & test suite matrix
+├── WORKFLOWS.md                  # 12-stage vein-to-vein clinical state machine
+├── API_OR_URL_REFERENCE.md       # Exhaustive catalog of all 260+ system routes
+├── CURRICULUM_MAPPING.md         # Academic syllabus compliance matrix (Units I-VI)
+├── CHANGELOG.md                  # Version release history & semantic changelog
+├── CONTRIBUTING.md               # Contribution rules & code style guidelines
+├── CODE_OF_CONDUCT.md            # Community contributor covenant
+├── Dockerfile                    # Multi-stage production container image
+├── docker-compose.yml            # Multi-container orchestration (App + Postgres + Nginx)
+├── Makefile                      # Developer command shortcuts (run, test, migrate, seed)
+├── nginx.conf                    # Nginx reverse proxy configuration
+├── pyproject.toml                # Project packaging metadata & tool configurations
+├── requirements.txt              # Pinned production Python dependencies
+├── build.sh                      # Cloud build script (Render/Railway/Fly)
+├── manage.py                     # Django management CLI entry point
+└── LICENSE                       # MIT Open Source License
+```
+
+---
+
 ## Project Documentation Index
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) — Architectural patterns, cold chain schema, safety rules
