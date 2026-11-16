@@ -1,0 +1,67 @@
+[project]
+name = "redlink-hemovigilance"
+version = "1.0.0"
+description = "RedLink – Blood Bank Management & Hemovigilance System"
+authors = [
+    { name = "Phanindra", email = "phanindra267@example.com" }
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["blood-bank", "hemovigilance", "django", "healthcare"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django",
+    "Framework :: Django :: 6.0",
+    "Intended Audience :: Healthcare Industry",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = []  # See requirements.txt for pinned dependencies
+
+[project.urls]
+Homepage = "https://github.com/phanindra267/Hemovigilance"
+Repository = "https://github.com/phanindra267/Hemovigilance"
+"Bug Tracker" = "https://github.com/phanindra267/Hemovigilance/issues"
+
+[tool.black]
+line-length = 120
+target-version = ["py311", "py312"]
+exclude = '''
+/(
+    \.git
+  | migrations
+  | staticfiles
+  | venv
+  | \.venv
+)/
+'''
+
+[tool.flake8]
+max-line-length = 120
+exclude = [
+    "migrations",
+    "staticfiles",
+    "venv",
+    ".venv",
+    "__pycache__",
+]
+ignore = ["E203", "W503"]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "staticfiles/*",
+    "venv/*",
+    "manage.py",
+    "lifeflow_project/asgi.py",
+    "lifeflow_project/wsgi.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
