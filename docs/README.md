@@ -8,7 +8,8 @@ This directory contains the complete technical documentation, regulatory specifi
 
 | Document | Format | Description |
 |---|---|---|
-| [`ProjectReport.docx`](ProjectReport.docx) | Word (.docx) | Complete IEEE Std 830-1998 Software Requirements Specification with Client Proofs & Database Design |
+| [`ProjectReport.pdf`](ProjectReport.pdf) | PDF (.pdf) | Complete Official IEEE Std 830-1998 Software Requirements Specification (28 Pages, 7 Embedded High-Res Diagrams) |
+| [`ProjectReport.docx`](ProjectReport.docx) | Word (.docx) | Editable IEEE Std 830-1998 Software Requirements Specification with Client Proofs & Database Design |
 | [`ProjectReport.md`](ProjectReport.md) | Markdown | Complete SRS Report (text mirror) |
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Markdown | Multi-tier architecture, component hierarchy (Mermaid), and 15-app separation of concerns |
 | [`DATABASE.md`](DATABASE.md) | Markdown | Database specification, Mermaid ER diagram, indexing strategy, and identifier standards |
