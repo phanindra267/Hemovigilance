@@ -196,7 +196,7 @@ docker compose exec web python manage.py collectstatic --noinput
 docker compose exec web python manage.py seed_demo_data
 ```
 
-For detailed bare-metal, systemd, or Nginx setup, see [DEPLOYMENT.md](DEPLOYMENT.md).
+For detailed bare-metal, systemd, or Nginx setup, see [DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ---
 
@@ -220,9 +220,17 @@ redlink-hemovigilance/
 │   └── management/commands/      # Custom CLI tools (seed_demo_data, check_expiry, etc.)
 ├── docs/                         # Comprehensive project documentation & reports
 │   ├── screenshots/              # Application UI screenshots and visual walkthroughs
+│   ├── API_OR_URL_REFERENCE.md   # Exhaustive catalog of all 260+ system routes
+│   ├── ARCHITECTURE.md           # System architectural design & component hierarchy
+│   ├── CURRICULUM_MAPPING.md     # Academic syllabus compliance matrix (Units I-VI)
+│   ├── DATABASE.md               # Database schema, ER relationships & index strategy
+│   ├── DEPLOYMENT.md             # Cloud (Render), Docker, VPS & LAN hosting guide
 │   ├── ProjectReport.docx        # Full SRS IEEE Project Report (Word Document)
 │   ├── ProjectReport.md          # Full SRS Project Report (Markdown)
-│   └── README.md                 # Docs directory index
+│   ├── README.md                 # Documentation hub index
+│   ├── SECURITY.md               # RBAC, audit trails & clinical security controls
+│   ├── TESTING.md                # Test execution instructions & test suite matrix
+│   └── WORKFLOWS.md              # 12-stage vein-to-vein clinical state machine
 ├── donations/                    # Phlebotomy collection, adverse reaction tracking
 ├── donors/                       # Voluntary donor registry & clinical eligibility checks
 ├── hospitals/                    # Affiliated hospital network registry
@@ -244,14 +252,6 @@ redlink-hemovigilance/
 ├── .env.example                  # Environment variable blueprint
 ├── .gitattributes               # Git line-ending normalization rules
 ├── .gitignore                    # Comprehensive Git ignore rules
-├── ARCHITECTURE.md               # System architectural design & component hierarchy
-├── DATABASE.md                   # Database schema, ER relationships & index strategy
-├── DEPLOYMENT.md                 # Cloud (Render), Docker, VPS & LAN hosting guide
-├── SECURITY.md                   # RBAC, audit trails & clinical security controls
-├── TESTING.md                    # Test execution instructions & test suite matrix
-├── WORKFLOWS.md                  # 12-stage vein-to-vein clinical state machine
-├── API_OR_URL_REFERENCE.md       # Exhaustive catalog of all 260+ system routes
-├── CURRICULUM_MAPPING.md         # Academic syllabus compliance matrix (Units I-VI)
 ├── CHANGELOG.md                  # Version release history & semantic changelog
 ├── CONTRIBUTING.md               # Contribution rules & code style guidelines
 ├── CODE_OF_CONDUCT.md            # Community contributor covenant
@@ -270,14 +270,15 @@ redlink-hemovigilance/
 
 ## Project Documentation Index
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) — Architectural patterns, cold chain schema, safety rules
-- [DATABASE.md](DATABASE.md) — Entity-relationship models, primary keys, indexing strategy
-- [WORKFLOWS.md](WORKFLOWS.md) — 12-stage vein-to-vein clinical state machine
-- [SECURITY.md](SECURITY.md) — Role-based access control, session security, CSRF, audit logging
-- [TESTING.md](TESTING.md) — Test plan, coverage matrix, automated test execution
-- [DEPLOYMENT.md](DEPLOYMENT.md) — Nginx reverse proxy, Gunicorn, Docker, systemd services
-- [API_OR_URL_REFERENCE.md](API_OR_URL_REFERENCE.md) — Exhaustive catalog of all 260+ system routes
-- [CURRICULUM_MAPPING.md](CURRICULUM_MAPPING.md) — Academic syllabus compliance matrix across Units I to VI
+- [docs/README.md](docs/README.md) — Comprehensive Documentation Hub Index
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — Architectural patterns, cold chain schema, safety rules
+- [DATABASE.md](docs/DATABASE.md) — Entity-relationship models, primary keys, indexing strategy
+- [WORKFLOWS.md](docs/WORKFLOWS.md) — 12-stage vein-to-vein clinical state machine
+- [SECURITY.md](docs/SECURITY.md) — Role-based access control, session security, CSRF, audit logging
+- [TESTING.md](docs/TESTING.md) — Test plan, coverage matrix, automated test execution
+- [DEPLOYMENT.md](docs/DEPLOYMENT.md) — Nginx reverse proxy, Gunicorn, Docker, systemd services
+- [API_OR_URL_REFERENCE.md](docs/API_OR_URL_REFERENCE.md) — Exhaustive catalog of all 260+ system routes
+- [CURRICULUM_MAPPING.md](docs/CURRICULUM_MAPPING.md) — Academic syllabus compliance matrix across Units I to VI
 - [CONTRIBUTING.md](CONTRIBUTING.md) — Contribution guidelines and development workflow
 - [LICENSE](LICENSE) — Open Source MIT License
 
