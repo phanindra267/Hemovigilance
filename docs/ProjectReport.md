@@ -1,138 +1,172 @@
-SOFTWARE REQUIREMENTS
-SPECIFICATION
+RedLink – Blood Bank Management & Hemovigilance System
 
-for
+Software Requirements Specification
 
-RedLink – Blood Bank Management &
-Hemovigilance Information System
+Course Code: CSE4001
+Course Name: Software Engineering & Web Application Development
 
-Version 1.0.0
-November 2026
+Student Name: Phanindra
+Student Registration Number: RA2311003010267
 
-Author / Lead Architect:
-Phanindra
+Prepared for
+Continuous Assessment 3
+Spring 2025
 
-Repository:
-https://github.com/phanindra267/Hemovigilance
-
-Built with Python 3.14 & Django 6.0.6
-Conforming to IEEE Std 830-1998
+Repository: https://github.com/phanindra267/Hemovigilance
 
 
 # Revision History
 
 | Name | Date | Reason For Changes | Version |
 | --- | --- | --- | --- |
-| Phanindra | 2026-11-01 | Initial System Scaffolding & Domain Modelling | 0.9.0 |
-| Phanindra | 2026-11-13 | Vein-to-Vein Lifecycle, TTI Screening & Cold Chain | 0.9.5 |
-| Phanindra | 2026-11-16 | Production Release, Database Design & IEEE SRS Conformance | 1.0.0 |
+| Phanindra | 2026-11-01 | Initial project scaffolding, 15 Django apps domain modeling | 0.9.0 |
+| Phanindra | 2026-11-13 | Vein-to-vein state machine, TTI dual verification & storage hierarchy | 0.9.5 |
+| Phanindra | 2026-11-16 | Production release, embedded technical diagrams, IEEE SRS conformance | 1.0.0 |
 
 
 # Table of Contents
 
-1.  Introduction
+Revision History ................................................................................................................................. ii
 
-1.1  Purpose
+1. Introduction ..................................................................................................................................... 1
 
-1.2  Scope
+1.1 Purpose ..................................................................................................................................... 1
 
-1.3  Definitions, Acronyms, and Abbreviations
+1.2 Scope ......................................................................................................................................... 1
 
-1.4  References
+1.3 Definitions, Acronyms, and Abbreviations .................................................................................... 1
 
-1.5  Overview
+1.4 References ................................................................................................................................. 2
 
-2.  General Description
+1.5 Overview .................................................................................................................................... 2
 
-2.1  Product Perspective
+2. General Description .......................................................................................................................... 2
 
-2.2  Product Functions
+2.1 Product Perspective (System Architecture Diagram) ................................................................. 2
 
-2.3  User Characteristics
+2.2 Product Functions (12-Stage State Machine Diagram) ................................................................. 3
 
-2.4  General Constraints
+2.3 User Characteristics (9 Organizational Roles) ............................................................................ 4
 
-2.5  Assumptions and Dependencies
+2.4 General Constraints .................................................................................................................... 4
 
-3.  Specific Requirements
+2.5 Assumptions and Dependencies ................................................................................................ 5
 
-3.1  External Interface Requirements
+3. Specific Requirements ..................................................................................................................... 5
 
-3.2  Functional Requirements
+3.1 External Interface Requirements ................................................................................................ 5
 
-3.5  Non-Functional Requirements
+3.1.1 User Interfaces ................................................................................................................. 5
 
-3.7  Design Constraints
+3.1.2 Hardware Interfaces .......................................................................................................... 5
 
-3.9  Other Requirements
+3.1.3 Software Interfaces ........................................................................................................... 6
 
-4.  Analysis Models
+3.1.4 Communications Interfaces .............................................................................................. 6
 
-4.1  Data Flow Diagrams (DFD)
+3.2 Functional Requirements ............................................................................................................ 6
 
-4.2  Database Design & Data Models
+3.2.1 Donor Registration & Clinical Eligibility ........................................................................... 6
 
-5.  GitHub Link
+3.2.2 Appointment Booking & Outreach Camp Logistics ........................................................... 7
 
-6.  Deployed Link
+3.2.3 Phlebotomy Collection & Barcoded Bag Tagging .............................................................. 8
 
-7.  Client Approval Proof
+3.2.4 Serological TTI Screening & Medical Officer Release Gate ............................................... 8
 
-8.  Client Location Proof
+3.2.5 Component Fractionation & Cold-Chain Storage Hierarchy ............................................... 9
 
-9.  Transaction ID Proof
+3.2.6 Clinical Requisition, Atomic Lock & Issue (Sequence Diagram) .......................................... 10
 
-10. Email Acknowledgement
+3.5 Non-Functional Requirements .................................................................................................... 11
 
-11. GST No.
+3.5.1 Performance .................................................................................................................... 11
 
-A.  Appendices
+3.5.2 Reliability ......................................................................................................................... 11
 
-A.1  Appendix 1 – Test Results Summary
+3.5.3 Availability ....................................................................................................................... 11
 
-A.2  Appendix 2 – Django App Module Reference
+3.5.4 Security ........................................................................................................................... 11
+
+3.5.5 Maintainability ................................................................................................................. 12
+
+3.5.6 Portability ........................................................................................................................ 12
+
+3.7 Design Constraints ..................................................................................................................... 12
+
+3.9 Other Requirements (Universal Audit Trail) ............................................................................... 12
+
+4. Analysis Models ............................................................................................................................... 13
+
+4.0 UML Use Case Modeling (Use Case Diagram) ............................................................................ 13
+
+4.1 Data Flow Diagrams (Context Level-0 and Detailed Level-1 DFDs) ............................................ 14
+
+4.2 Entity-Relationship & Relational Database Design (ER Diagram) ................................................. 16
+
+5. GitHub Link ..................................................................................................................................... 18
+
+6. Deployed Link ................................................................................................................................... 19
+
+7. Client Approval Proof ....................................................................................................................... 20
+
+8. Client Location Proof ........................................................................................................................ 21
+
+9. Transaction ID Proof ......................................................................................................................... 22
+
+10. Email Acknowledgement ................................................................................................................. 23
+
+11. GST No. ......................................................................................................................................... 24
+
+A. Appendices ...................................................................................................................................... 25
+
+A.1 Appendix 1 – Automated Test Execution Summary ................................................................... 25
+
+A.2 Appendix 2 – Modular Django Apps Reference .......................................................................... 26
 
 
 # 1. Introduction
 
-This Software Requirements Specification (SRS) document provides a comprehensive and authoritative description of the RedLink Blood Bank Management and Hemovigilance Information System. It captures all functional, non-functional, and interface requirements necessary for a software engineering team to design, implement, verify, and maintain the system. The document follows the IEEE Std 830-1998 SRS template and is organized to support full traceability from requirements to code artifacts.
+The introduction to this Software Requirement Specification (SRS) document provides a comprehensive overview of the RedLink Blood Bank Management & Hemovigilance Information System. This document contains all specifications, constraints, architectural models, and validation criteria required by software engineers, clinical pathologists, hospital transfusion committees, and regulatory compliance auditors to design, implement, verify, and maintain the system. This SRS conforms to the IEEE Std 830-1998 guidelines.
 
 
 ## 1.1 Purpose
 
-The purpose of this SRS is to define the functional and non-functional requirements for RedLink, a mission-critical web application that governs the end-to-end transfusion lifecycle. The intended audience includes software architects, developers, clinical lab directors, medical officers, quality assurance engineers, hospital transfusion committees, and regulatory compliance auditors examining adherence to hemovigilance standards.
+The purpose of this SRS is to establish a rigorous, unambiguous specification for RedLink, an enterprise web application engineered to manage the complete vein-to-vein transfusion lifecycle. The intended audience includes: (1) Software developers and DevOps engineers responsible for implementation and infrastructure; (2) Quality assurance engineers verifying functional boundaries; (3) Medical Officers and Certified Phlebotomists executing clinical protocols; (4) Hospital Transfusion Coordinators managing emergency requisitions; and (5) Regulatory authorities (e.g., State Blood Transfusion Councils) assessing compliance with statutory standards.
 
 
 ## 1.2 Scope
 
-The software product being produced is RedLink – Blood Bank Management and Hemovigilance System. The system coordinates every stage of blood banking: donor registration and clinical eligibility screening, donor appointment booking, mobile and community blood camps, phlebotomy collection, infectious disease laboratory screening (HIV, Hepatitis B, Hepatitis C, Syphilis, Malaria), component separation (Packed Red Blood Cells, Fresh Frozen Plasma, Platelets, Cryoprecipitate), cold-chain multi-level storage hierarchy, hospital blood requisition, atomic row-level inventory reservation, crossmatch verification, blood issue, transfusion adverse event tracking, and biohazard disposal manifests.
+The software product produced is RedLink – Blood Bank Management & Hemovigilance System. The system governs all twelve operational stages of blood banking: voluntary donor onboarding, clinical eligibility screening against WHO criteria, donor appointment scheduling, community mobile donation camps, phlebotomy collection, mandatory infectious disease screening (HIV 1/2, Hepatitis B, Hepatitis C, Syphilis, Malaria) with dual Medical Officer sign-off, component fractionation (PRBC, FFP, Platelets, Cryoprecipitate), three-tier cold chain storage management (Area -> Device -> Position), hospital blood requisition with atomic concurrency protection (select_for_update), issue manifests, and adverse transfusion reaction hemovigilance tracking.
 
-The system does not directly interface with proprietary automated hematology analyzers over RS-232 or ASTM protocols in Phase 1; all test results are verified and entered by certified laboratory technicians with Medical Officer dual sign-off.
+What the software will NOT do: In Phase 1, the system does not interface directly with proprietary RS-232 hematology hardware analyzers; all assay results are entered and verified through authenticated digital forms with dual authorization.
 
 
 ## 1.3 Definitions, Acronyms, and Abbreviations
 
-- ABO / Rh: Blood classification systems based on red cell antigens and Rhesus factor.
-- TTI: Transfusion-Transmissible Infection (specifically HIV 1/2, HBV, HCV, Syphilis, Malaria).
+- ABO / Rh: Human blood classification systems based on red cell antigens and Rhesus factor presence.
+- TTI: Transfusion-Transmissible Infection (HIV 1/2, HBsAg, HCV, Treponema pallidum, Plasmodium).
 - PRBC: Packed Red Blood Cells (shelf life: 42 days at 2°C to 6°C).
 - FFP: Fresh Frozen Plasma (shelf life: 365 days at -18°C or colder).
 - Platelets: Thrombocyte concentrate (shelf life: 5 days at 20°C to 24°C with continuous agitation).
-- Hemovigilance: A set of surveillance procedures covering the whole transfusion chain from donor to recipient.
-- RBAC: Role-Based Access Control, enforcing privilege boundaries across nine distinct organizational roles.
-- TAT: Turnaround Time, particularly for STAT emergency clinical requisitions.
-- MRN: Medical Record Number assigned to hospitalized patients.
+- Hemovigilance: Systematic surveillance procedures covering adverse transfusion reactions from donor to recipient.
+- RBAC: Role-Based Access Control, enforcing privilege boundaries across nine distinct user roles.
+- STAT: Medical terminology denoting an immediate, life-or-death emergency clinical requisition.
+- MRN: Medical Record Number assigned to hospitalized recipients.
+- ACID: Atomicity, Consistency, Isolation, and Durability database transaction properties.
 
 ## 1.4 References
 
-- IEEE Std 830-1998, IEEE Recommended Practice for Software Requirements Specifications.
-- World Health Organization (WHO) Guidelines for Establishing Blood Transfusion Services.
-- National Blood Transfusion Council (NBTC) & Drugs and Cosmetics Act (Schedule K / Form 28C).
-- Django 6.0 Documentation: https://docs.djangoproject.com/
-- RedLink Source Repository: https://github.com/phanindra267/Hemovigilance
+- IEEE Std 830-1998: IEEE Recommended Practice for Software Requirements Specifications.
+- World Health Organization (WHO): Guidelines on Developing a National Blood Transfusion Service.
+- National Blood Transfusion Council (NBTC) & Drugs and Cosmetics Act (Schedule K / Forms 28-C & 28-E).
+- Django 6.0 LTS Framework Documentation: https://docs.djangoproject.com/
+- PostgreSQL 14+ Documentation: https://www.postgresql.org/docs/
+- RedLink Public Source Repository: https://github.com/phanindra267/Hemovigilance
 
 ## 1.5 Overview
 
-The remainder of this SRS is organized as follows: Section 2 provides a general description of product perspective, functions, user roles, constraints, and dependencies. Section 3 details the specific external interface, functional, and non-functional requirements. Section 4 provides the analysis models (DFDs and complete Database Specification). Sections 5 through 11 present project links, deployment information, and administrative verifications. Section A contains the appendices.
+The remainder of this SRS is organized as follows: Section 2 outlines the general product perspective, system architecture, 12-stage state machine, and user roles. Section 3 details external interfaces, exhaustive functional specifications, and measurable non-functional requirements. Section 4 provides formal analysis models, including UML Use Case diagrams, Level-0 and Level-1 DFDs, and complete Relational ER database specifications. Sections 5 through 11 present the live deployment links, commercial acceptance proofs, and tax filings. Section A provides testing matrices and application reference documentation.
 
 
 # 2. General Description
@@ -140,46 +174,47 @@ The remainder of this SRS is organized as follows: Section 2 provides a general 
 
 ## 2.1 Product Perspective
 
-RedLink is engineered as a modern, self-contained Django web application operating in a three-tier architectural model. It integrates voluntary blood donors, community blood drives, centralized testing laboratories, component fractionation facilities, cold chain storage facilities, and recipient hospital wards into a unified operational fabric. In production, RedLink runs behind an Nginx reverse proxy with Gunicorn WSGI workers, backed by an enterprise PostgreSQL 14+ database.
+RedLink is engineered as a monolithic, modular web application following a multi-tier architectural pattern. The application cleanly separates Presentation (Bootstrap 5, HTML5, Vanilla JS), Security & Gateway (Nginx, Gunicorn, AuditMiddleware), Domain Business Logic (15 decoupled Django apps), and Persistence (PostgreSQL 14+ / SQLite 3). Figure 2.1 illustrates the comprehensive multi-tier architectural layout.
+
+Figure 2.1: RedLink Multi-Tier System Architecture Diagram
 
 
 ## 2.2 Product Functions
 
-- Donor Lifecycle: Self-registration, medical history, eligibility questionnaire, and deferral tracking.
-- Appointment & Camp Logistics: Slot booking, camp coordination, mobile collection logs.
-- Phlebotomy & Bag Tagging: Unique barcoded collection records, volume verification, adverse donor reaction logging.
-- Infectious Disease Testing: Mandatory screening for 5 primary TTIs with mandatory dual sign-off.
-- Component Separation: Enzymatic/centrifugal fractionation into PRBC, FFP, Platelets, and Cryoprecipitate.
-- Inventory & Storage Hierarchy: Physical slot assignment (Area -> Device -> Position), cold chain logs, automated expiry alerts.
-- Requisition & Atomic Reservation: Concurrency-safe hospital orders, row-level database locking (select_for_update), crossmatching.
-- Hemovigilance & Audit: Universal thread-local audit middleware, immutable event logs, discard manifests.
+The system orchestrates the complete 12-stage vein-to-vein transfusion lifecycle, ensuring unbroken chain of custody, biological safety gates, and row-level atomic reservation. Figure 2.2 illustrates the state machine governing each stage.
+
+Figure 2.2: 12-Stage Vein-to-Vein Transfusion State Machine
+
 
 ## 2.3 User Characteristics
 
-The system supports nine distinct user roles, each with strict privilege boundaries:
+The system enforces strict Role-Based Access Control (RBAC) across nine organizational user roles:
 
-- Super Administrator: System configuration, organization settings, role allocations.
-- Blood Bank Administrator: Facility operations, staff management, inventory oversight.
-- Medical Officer: Clinical eligibility approvals, TTI release verification, discard authorizations.
-- Laboratory Technician: Sample processing, assay entry, component fractionation.
-- Inventory Manager: Cold-chain device allocation, quarantine triage, stock monitoring.
-- Phlebotomist / Collection Staff: Phlebotomy recording, volume tracking, donor adverse events.
-- Hospital Transfusion Coordinator: Requisition submission, recipient crossmatch requests.
-- Camp Organizer: Public awareness, blood drive logistics, outreach scheduling.
-- Voluntary Donor: Self-service profile, donation history, upcoming camp appointments.
+| Role Name | Technical Identifier | Operational Scope & Responsibilities |
+| --- | --- | --- |
+| Super Administrator | admin | System configuration, facility profiles, global parameters, audit trail oversight |
+| Blood Bank Admin | bb_admin | Facility administration, staff accounts, equipment inventory, stock thresholds |
+| Medical Officer | dr_smith | Clinical donor eligibility sign-off, TTI lab safety gate verification, discard orders |
+| Laboratory Technician | tech_john | Phlebotomy barcoding, serological assay entry, component fractionation |
+| Inventory Manager | inv_sarah | Cold chain device slot allocation, temperature logs, quarantine triage |
+| Donor Coordinator | coord_alex | Donor registry, appointment scheduling, camp outreach logistics |
+| Hospital Coordinator | hosp_maria | Hospital blood orders, crossmatch requests, emergency STAT requisitions |
+| Camp Organizer | camp_david | Community blood drive venue logistics, volunteer coordination |
+| Voluntary Donor | donor_raj | Self-service donor portal, donation history, digital appointment booking |
+
 
 ## 2.4 General Constraints
 
-- Regulatory: Schedule K Drugs & Cosmetics Act rules governing donor deferral and TTI record retention.
-- Integrity: Zero tolerance for dual allocation of blood units (enforced via database row locks).
-- Traceability: Every issued unit must trace back to donor ID, collection bag, and screening assay.
-- Hardware: Server capable of running Python 3.11+, 2 GB RAM minimum, 20 GB disk storage.
+- Regulatory: Strict compliance with Drugs and Cosmetics Act rules governing donor deferral and test records.
+- Safety Gate: Zero-tolerance policy for releasing units with reactive or pending TTI test results.
+- Concurrency: Absolute prevention of double-allocation during simultaneous clinical requisitions.
+- Auditability: Every database record mutation must capture client IP, user ID, timestamp, and field changes.
 
 ## 2.5 Assumptions and Dependencies
 
-- Modern web browser with HTML5 and JavaScript enabled (Chrome, Firefox, Safari, Edge).
-- Continuous network connectivity between blood bank staff terminals and central server.
-- Reliable power backup for cold-chain physical refrigeration units.
+- Client workstations operate modern, standards-compliant web browsers (Chrome 110+, Firefox 115+, Safari 16+).
+- PostgreSQL 14+ database instance running with connection pooling and automated write-ahead log backups.
+- Continuous network connectivity between phlebotomy stations, testing labs, and central blood bank servers.
 
 # 3. Specific Requirements
 
@@ -189,70 +224,167 @@ The system supports nine distinct user roles, each with strict privilege boundar
 
 ### 3.1.1 User Interfaces
 
-The UI is built with responsive Bootstrap 5 and accessible HTML5 templates. High-contrast clinical dashboards display color-coded status badges (Quarantined, Safe, Reactive, Reserved, Issued, Expired). Mobile-friendly layouts allow phlebotomists to record collections on tablets at outreach camps.
+The user interface is implemented using responsive Bootstrap 5 and custom healthcare CSS styling. Dashboards present color-coded clinical badges (Quarantined: Amber, Safe/Available: Green, Reactive/Discard: Red, Reserved: Blue). Interface layouts adapt seamlessly across desktop monitors, phlebotomy tablets, and mobile devices.
 
 
 ### 3.1.2 Hardware Interfaces
 
-Standard USB barcode scanners emitting HID keyboard emulation for bag and sample tube lookup.
+USB barcode scanners emitting standard HID keyboard emulation are supported for rapid scanning of donor IDs (DNR-), blood bag barcodes (BB-), sample tubes (SMP-), and storage slot positions.
 
 
 ### 3.1.3 Software Interfaces
 
-Python 3.14 runtime, Django 6.0.6 framework, PostgreSQL 14+ database, Gunicorn 21+, Nginx 1.24+.
+Python 3.14 runtime, Django 6.0.6 framework, PostgreSQL 14+ database engine, Gunicorn 21+ WSGI application server, Nginx 1.24+ reverse proxy, and WhiteNoise 6+ static file middleware.
 
 
 ### 3.1.4 Communications Interfaces
 
-HTTPS over TLS 1.3 on port 443; RESTful HTTP endpoints for future external hospital EMR integration.
+All network communications are encrypted via HTTPS over TLS 1.3 on port 443. RESTful JSON endpoints are designed for future external Hospital Information System (HIS) and Electronic Medical Record (EMR) integrations.
 
 
 ## 3.2 Functional Requirements
 
 
-### 3.2.1 Donor Registration & Eligibility
-
-Inputs: Donor name, DOB, blood group, contact, weight, Hb level, BP, pulse, deferral history.
-
-Processing: Auto-evaluates eligibility against WHO clinical criteria (weight >= 45 kg, Hb >= 12.5 g/dL). Generates unique DNR- prefix ID.
-
-Outputs: Donor profile record, active/deferred status flag, next eligible donation date calculation.
+### 3.2.1 Donor Registration & Clinical Eligibility (Feature #1)
 
 
-### 3.2.2 Appointment & Camp Management
+#### 3.2.1.1 Introduction
 
-Inputs: Preferred date, time slot, blood bank facility or outreach camp venue.
-
-Processing: Enforces venue capacity limits; dispatches in-app confirmations; generates APT- prefix ID.
-
-Outputs: Appointment schedule manifest, calendar slot reservation, mobile camp roster.
+Captures donor demographics, medical history, and clinical vitals to determine donation eligibility.
 
 
-### 3.2.3 Laboratory TTI Screening & Safety Gate
+#### 3.2.1.2 Inputs
 
-Inputs: Sample ID (SMP- prefix), assay optical density / qualitative results for HIV, HBV, HCV, Syphilis, Malaria.
-
-Processing: Dual-verification state machine. If ANY assay is reactive, the entire blood bag is irreversibly transitioned to REACTIVE_UNSAFE and locked.
-
-Outputs: Verified laboratory screening report, blood bag safety certificate, donor deferral trigger.
+Full name, date of birth, biological gender, ABO/Rh blood group, phone number, residential address, weight (kg), hemoglobin (g/dL), systolic/diastolic blood pressure, pulse rate, temperature, recent medical history questionnaire.
 
 
-### 3.2.4 Component Separation & Inventory Management
+#### 3.2.1.3 Processing
 
-Inputs: Whole blood bag (BB- prefix), separation parameters, storage temperature zone.
-
-Processing: Generates child component units (PRBC, FFP, Platelets) with discrete shelf lives. Allocates storage position (Area -> Device -> Position).
-
-Outputs: Barcoded component inventory items (INV- prefix), cold-chain custody log, expiry countdown.
+Evaluates vitals against WHO criteria (weight >= 45 kg, Hb >= 12.5 g/dL, age 18-65). Enforces minimum 90-day donation interval. Assigns unique zero-padded identifier with prefix 'DNR-'. Flags deferral reasons if vitals fail.
 
 
-### 3.2.5 Clinical Requisition & Atomic Dispatch
+#### 3.2.1.4 Outputs
 
-Inputs: Hospital ID, patient MRN, required blood group, component type, urgency level (Routine, Urgent, STAT).
+Stored donor profile, active/deferred status indicator, automated next eligible donation date calculation.
 
-Processing: Executes atomic select_for_update() row lock to prevent race conditions. Matches ABO/Rh compatibility; generates reservation.
 
-Outputs: Requisition order (REQ- prefix), atomic reservation record (RSV- prefix), issue dispatch manifest (ISS- prefix).
+#### 3.2.1.5 Error Handling
+
+Rejects duplicate donor records based on phone and government ID. Displays validation warnings for borderline vitals.
+
+
+### 3.2.2 Appointment Booking & Blood Camp Management (Feature #2)
+
+
+#### 3.2.2.1 Introduction
+
+Coordinates donor appointment scheduling at blood bank facilities and mobile community blood donation drives.
+
+
+#### 3.2.2.2 Inputs
+
+Donor ID, preferred appointment date, time slot, venue (central facility vs outreach camp), camp organizer contact.
+
+
+#### 3.2.2.3 Processing
+
+Validates slot availability against facility capacity limits. Creates appointment record (APT- prefix). Links outreach camp drives (CMP- prefix) to phlebotomy collection teams.
+
+
+#### 3.2.2.4 Outputs
+
+Confirmed appointment voucher, daily phlebotomy collection manifest, camp attendance roster.
+
+
+#### 3.2.2.5 Error Handling
+
+Prevents overbooking of appointment time slots. Restricts appointment scheduling for currently deferred donors.
+
+
+### 3.2.3 Serological TTI Screening & Medical Officer Release Gate (Feature #3)
+
+
+#### 3.2.3.1 Introduction
+
+Governs infectious disease screening assays and enforces a dual-sign-off safety gate prior to releasing blood units.
+
+
+#### 3.2.3.2 Inputs
+
+Sample tube barcode (SMP-), whole blood bag ID (BB-), qualitative assay results for HIV-1/2, HBsAg, HCV, Syphilis, Malaria.
+
+
+#### 3.2.3.3 Processing
+
+If ALL 5 assays are non-reactive AND Medical Officer confirms verification: bag status transitions to 'approved'. If ANY assay is reactive: bag status is irreversibly transitioned to 'reactive_unsafe', locked into quarantine, and donor deferral is triggered.
+
+
+#### 3.2.3.4 Outputs
+
+Verified laboratory safety report, certified blood bag record, quarantine lock notification.
+
+
+#### 3.2.3.5 Error Handling
+
+Hard-blocks release of blood units without dual sign-off. Rejects entry of incomplete assay batteries.
+
+
+### 3.2.4 Component Fractionation & Cold-Chain Storage Hierarchy (Feature #4)
+
+
+#### 3.2.4.1 Introduction
+
+Manages separation of approved whole blood into therapeutic components and tracks physical storage slots.
+
+
+#### 3.2.4.2 Inputs
+
+Approved blood bag ID, separation parameters, target components (PRBC, FFP, Platelets, Cryo), storage device slot.
+
+
+#### 3.2.4.3 Processing
+
+Creates child component records (CMPNT-) with discrete shelf lives (PRBC: 42 days, FFP: 365 days, Platelets: 5 days). Instantiates InventoryItem (INV-) mapped to a three-tier physical slot (Storage Area -> Device -> Position).
+
+
+#### 3.2.4.4 Outputs
+
+Barcoded component units, cold chain occupancy map, automated expiry countdown alerts.
+
+
+#### 3.2.4.5 Error Handling
+
+Prevents assigning units to incompatible temperature zones. Blocks component separation from non-cleared blood bags.
+
+
+### 3.2.5 Clinical Requisition, Atomic Reservation & Dispatch (Feature #5)
+
+
+#### 3.2.5.1 Introduction
+
+Processes hospital blood orders, locks candidate units via atomic database transactions, and generates dispatch manifests.
+
+
+#### 3.2.5.2 Inputs
+
+Hospital ID, recipient patient MRN, blood group, component type, unit quantity, clinical urgency (Routine, Urgent, STAT).
+
+
+#### 3.2.5.3 Processing
+
+Executes PostgreSQL row-level lock using 'select_for_update()' inside 'transaction.atomic()'. Validates ABO/Rh compatibility. Creates reservation (RSV-) and updates inventory status to 'reserved'. Upon MO approval, issues unit (ISS-).
+
+
+#### 3.2.5.4 Outputs
+
+Requisition record (REQ-), reservation lock, official issue dispatch manifest with courier chain-of-custody.
+
+
+#### 3.2.5.5 Error Handling
+
+Serializes concurrent requests for identical units, eliminating race conditions. Blocks reservation of expired or quarantined stock.
+
+Figure 3.1: UML Sequence Diagram for Atomic Requisition & Reservation
 
 
 ## 3.5 Non-Functional Requirements
@@ -260,219 +392,129 @@ Outputs: Requisition order (REQ- prefix), atomic reservation record (RSV- prefix
 
 ### 3.5.1 Performance
 
-Web transaction response time < 500 ms for 95% of requests. STAT search and reservation < 250 ms.
+Web transaction response time < 500 ms for 95% of standard requests. STAT emergency inventory lookup and reservation < 250 ms. Concurrent handling of 100+ active clinical sessions without degradation.
 
 
 ### 3.5.2 Reliability
 
-Mean Time Between Failures (MTBF) > 720 hours. Zero data loss on state transitions guaranteed by DB transactions.
+Mean Time Between Failures (MTBF) > 720 hours. Zero data loss guaranteed by PostgreSQL ACID transaction commits and WAL write-ahead logging.
 
 
 ### 3.5.3 Availability
 
-99.9% uptime for the clinical web interface, supporting 24/7/365 emergency transfusion workflows.
+99.9% application uptime, providing continuous 24/7/365 availability for critical hospital transfusion services.
 
 
 ### 3.5.4 Security
 
-Argon2/PBKDF2 password hashing, CSRF tokens on all POST requests, strict RBAC decorators, SQL injection immunity via Django ORM.
+Argon2 / PBKDF2 password hashing; mandatory CSRF tokens on all POST mutations; strict RBAC decorator enforcement; SQL injection immunity via Django parameterized ORM queries; HttpOnly, SameSite session cookies.
 
 
 ### 3.5.5 Maintainability
 
-15 decoupled Django apps with independent migrations, automated unit test suite, and semantic versioning.
+Modular architecture divided across 15 decoupled Django applications; PEP 8 code compliance; automated unit and integration test coverage across all critical workflows.
 
 
 ### 3.5.6 Portability
 
-Dockerized deployment with multi-stage Dockerfile and docker-compose.yml; runs identically on Linux VPS, Render, or macOS.
+Containerized with multi-stage Dockerfile and docker-compose.yml; fully portable across Ubuntu Linux VPS, cloud providers (Render, AWS, DigitalOcean), and local workstations.
 
 
 ## 3.7 Design Constraints
 
-Must adhere to Python PEP 8 style standards, Django LTS framework conventions, and WHO cold-chain temperature thresholds.
+Must adhere to Python 3.11-3.14 LTS standards, Django LTS framework conventions, WHO cold-chain temperature thresholds, and Schedule K Drugs and Cosmetics Act record retention requirements.
 
 
 ## 3.9 Other Requirements
 
-Audit Trail: Global thread-local middleware records user IP, timestamp, model name, and field-level change deltas for every database write.
+Universal Immutable Audit Trail: Thread-local AuditMiddleware captures authenticated actor, client IP address, UTC timestamp, target model, object ID, and field-level change deltas for every create, update, and delete operation across all 15 applications.
 
 
 # 4. Analysis Models
 
 
+## 4.0 UML Use Case Modeling
+
+The UML Use Case model formalizes the operational interactions between external clinical actors and system use cases across the transfusion chain. Figure 4.1 illustrates the complete use-case diagram.
+
+Figure 4.1: RedLink UML Use Case Diagram
+
+
 ## 4.1 Data Flow Diagrams (DFD)
 
-Level-0 DFD (Context Diagram) – RedLink System:
+Data Flow Diagrams depict how data enters, transitions through, and leaves the RedLink system. Figure 4.2 presents the Level-0 Context Diagram illustrating external boundary entities.
 
-External entities: Donor, Hospital Coordinator, Medical Officer, Lab Technician, Blood Bank Admin, Regulatory Authority.
+Figure 4.2: Level-0 Context Data Flow Diagram
 
-Data flows into the system: Donor Registration Data, Appointment Requests, TTI Assay Results, Blood Requisitions, Temperature Logs, Storage Allocations.
+Figure 4.3 depicts the Level-1 Process Decomposition DFD, tracing data flows between processes P1 through P6 and persistent data stores D1 through D6.
 
-Data flows out of the system: Donor Records, Scheduled Appointments, Blood Unit Status, Dispatch Manifests, Regulatory Reports (CSV/PDF), Audit Logs, System Notifications.
-
-Level-1 DFD – Key Processes:
-
-| Process No. | Process Name | Input Data | Output Data |
-| --- | --- | --- | --- |
-| P1 | Donor Management | Registration form, Eligibility questionnaire | Donor record (DNR-), Deferral notice |
-| P2 | Appointment Scheduling | Slot request, Donor ID | APT- record, Reminder notification |
-| P3 | Blood Collection | Phlebotomy data, Bag serial | BB- record (Quarantine status) |
-| P4 | TTI Laboratory Screening | Assay results, MO approval | Cleared / TTI-Reactive bag status |
-| P5 | Component Processing | Cleared BB- record | CMPNT- records with expiry dates |
-| P6 | Inventory & Cold Chain | CMPNT- records, Temp logs | INV- positions, Quarantine alerts |
-| P7 | Clinical Requisition | REQ- request, Available INV- | Reserved units, Dispatch manifest (ISS-) |
-| P8 | Reporting & Audit | All transaction records | CSV / PDF reports, Audit log entries |
+Figure 4.3: Level-1 Process Decomposition Data Flow Diagram
 
 
-## 4.2 Database Design & Data Models
+## 4.2 Entity-Relationship & Relational Database Design
 
-The RedLink system implements a robust relational schema with 20+ application tables partitioned across 15 modular Django applications. Every database model inherits from an abstract TimeStampedModel that automatically tracks created_at and updated_at timestamps. Referential integrity, unique constraints, and database indexes are enforced to guarantee unbroken vein-to-vein traceability.
+The RedLink relational database schema consists of 20+ application tables partitioned across 15 modular Django apps. Every entity inherits from an abstract TimeStampedModel that automatically timestamps records. Figure 4.4 presents the comprehensive Relational Entity-Relationship (ER) diagram.
 
+Figure 4.4: RedLink Relational Entity-Relationship (ER) Schema
 
-### 4.2.1 Modular Database Architecture
-
-The database schema is grouped into domain-specific modules matching the application architecture:
-
-| Module | Key Database Tables | Domain Responsibility |
-| --- | --- | --- |
-| Core | core_bloodbank, core_systemconfiguration | Blood bank facility identity and global regulatory thresholds |
-| Accounts | auth_user, accounts_userprofile | User identity, credentials, 9-role RBAC, and contact profiles |
-| Donors | donors_donor, donors_eligibilityassessment | Voluntary donor registry, medical history, and deferral tracking |
-| Appointments | appointments_appointment | Donor appointment booking, slot management, and check-in status |
-| Camps | camps_bloodcamp | Outreach community donation drives and venue logistics |
-| Donations | donations_donation | Phlebotomy collection records, volume accounting, and adverse reactions |
-| Laboratory | laboratory_bloodbag, laboratory_labsample, laboratory_screeningresult | Blood bag tracking, sample tubes, and 5-assay TTI screening |
-| Components | blood_components_bloodcomponent | Fractionation tracking for PRBC, FFP, Platelets, and Cryo |
-| Inventory | inventory_storagearea, inventory_storagedevice, inventory_storageposition, inventory_inventoryitem, inventory_quarantinerecord | Cold-chain storage hierarchy, inventory units, and quarantine logs |
-| Requests | requests_app_bloodrequest, requests_app_bloodrequestitem, requests_app_inventoryreservation, requests_app_discardrecord | Hospital requisitions, atomic reservations, issues, and discards |
-| Hospitals | hospitals_hospital | Hospital network registry, verification status, and clinical contacts |
-| Patients | patients_patient | Transfusion recipients, hospital MRNs, and ABO/Rh clinical history |
-| Audit | audit_auditlog | System-wide immutable audit trail of all state transitions |
-| Notifications | notifications_notification | In-app alert queue for cold-chain alarms and urgent requests |
-| Reports | (Aggregated Views) | Analytical reporting and regulatory export suite (CSV/PDF) |
-
-
-### 4.2.2 Entity Relationship (ER) Summary
-
-The core entity relationships enforce strict one-to-many and one-to-one parent-child hierarchies throughout the transfusion chain:
-
-- Donor (1:N) EligibilityAssessment — tracks health checks over time.
-- Donor (1:N) Appointment — coordinates donation schedules.
-- Donor (1:N) Donation (1:1) BloodBag — links physical unit to the donor.
-- BloodBag (1:N) LabSample (1:N) ScreeningResult — records individual assay outcomes.
-- BloodBag (1:N) BloodComponent (1:1) InventoryItem — component fractionation.
-- StorageArea (1:N) StorageDevice (1:N) StoragePosition (1:N) InventoryItem — physical slot tracking.
-- Hospital (1:N) BloodRequest (1:N) BloodRequestItem (1:N) InventoryReservation (N:1) InventoryItem — clinical requisition and atomic locking.
-- InventoryItem (1:N) QuarantineRecord & DiscardRecord — regulatory safety tracking.
-
-### 4.2.3 Core Table Specifications
-
-Table 1: donors_donor — Voluntary Blood Donor Registry (Prefix: DNR-)
+Core Table 1: donors_donor — Voluntary Blood Donor Registry (Prefix: DNR-)
 
 | Column | Data Type | Constraints | Description |
 | --- | --- | --- | --- |
 | id | BigAutoField | PRIMARY KEY | Internal surrogate key |
-| donor_id | CharField(20) | UNIQUE, INDEXED | Human-readable identifier (e.g. DNR-00042) |
+| donor_id | CharField(20) | UNIQUE, INDEXED | Standardized identifier (e.g. DNR-00042) |
 | first_name | CharField(100) | NOT NULL | Donor first name |
 | last_name | CharField(100) | NOT NULL | Donor surname |
-| date_of_birth | DateField | NOT NULL | Date of birth (age validation >= 18) |
-| gender | CharField(10) | choices: M/F/O | Biological gender |
-| blood_group | CharField(5) | choices: A+/A-/B+/B-/AB+/AB-/O+/O- | Confirmed ABO and Rh(D) group |
+| date_of_birth | DateField | NOT NULL | DOB for age verification (>= 18) |
+| gender | CharField(10) | choices | Gender (M / F / O) |
+| blood_group | CharField(5) | choices | ABO and Rh(D) group |
 | phone | CharField(15) | INDEXED | Primary contact telephone |
-| email | EmailField | NULLABLE | Notification email address |
 | is_eligible | BooleanField | default=True | Clinical eligibility flag |
-| total_donations | IntegerField | default=0 | Cumulative donation count |
+| total_donations | IntegerField | default=0 | Lifetime donation tally |
 | created_at | DateTimeField | auto_now_add=True | Record creation timestamp |
 
-Table 2: laboratory_bloodbag — Phlebotomy Bag Lifecycle (Prefix: BB-)
+Core Table 2: laboratory_bloodbag — Phlebotomy Bag Lifecycle (Prefix: BB-)
 
 | Column | Data Type | Constraints | Description |
 | --- | --- | --- | --- |
 | id | BigAutoField | PRIMARY KEY | Internal surrogate key |
 | bag_id | CharField(20) | UNIQUE, INDEXED | Barcoded bag identifier (e.g. BB-00123) |
 | donation_id | BigIntegerField | UNIQUE, FK → donation | One-to-one link with collection event |
-| blood_group | CharField(5) | NOT NULL | Blood group tagged at collection |
+| blood_group | CharField(5) | NOT NULL | Blood group confirmed at collection |
 | volume_ml | IntegerField | default=450 | Collected whole blood volume |
-| collection_date | DateField | NOT NULL | Date of phlebotomy collection |
-| expiry_date | DateField | INDEXED | Calculated whole-blood expiration date |
-| status | CharField(20) | INDEXED, choices | collected / testing / quarantine / approved / used / discarded |
+| collection_date | DateField | NOT NULL | Date of collection |
+| expiry_date | DateField | INDEXED | Calculated whole blood expiration |
+| status | CharField(20) | INDEXED, choices | collected / quarantine / approved / discarded |
 | created_at | DateTimeField | auto_now_add=True | Record creation timestamp |
 
-Table 3: inventory_inventoryitem — Stock Management & Dispatch Pool (Prefix: INV-)
+Core Table 3: inventory_inventoryitem — Stock & Dispatch Pool (Prefix: INV-)
 
 | Column | Data Type | Constraints | Description |
 | --- | --- | --- | --- |
 | id | BigAutoField | PRIMARY KEY | Internal surrogate key |
-| inventory_id | CharField(20) | UNIQUE, INDEXED | Stock tracking identifier (e.g. INV-00234) |
-| blood_bank_id | BigIntegerField | FK → blood_bank | Facility managing the inventory unit |
+| inventory_id | CharField(20) | UNIQUE, INDEXED | Stock identifier (e.g. INV-00234) |
+| blood_bank_id | BigIntegerField | FK → blood_bank | Facility managing the inventory |
 | blood_group | CharField(5) | INDEXED | ABO and Rh type |
-| component_type | CharField(50) | INDEXED | Whole Blood / PRBC / FFP / Platelets / Cryo |
-| volume_ml | IntegerField | NOT NULL | Component volume in millilitres |
-| storage_position_id | BigIntegerField | FK, NULLABLE | Assigned physical storage slot |
-| status | CharField(20) | INDEXED | available / reserved / issued / expired / quarantined |
+| component_type | CharField(50) | INDEXED | PRBC / FFP / Platelets / Cryo |
+| volume_ml | IntegerField | NOT NULL | Component volume in mL |
+| storage_position_id | BigIntegerField | FK, NULLABLE | Assigned physical slot |
+| status | CharField(20) | INDEXED | available / reserved / issued / expired |
 | expiry_date | DateField | INDEXED | Expiration threshold date |
 | created_at | DateTimeField | auto_now_add=True | Record creation timestamp |
 
-Table 4: requests_app_bloodrequest — Hospital Clinical Requisitions (Prefix: REQ-)
+Core Table 4: requests_app_bloodrequest — Hospital Clinical Requisitions (Prefix: REQ-)
 
 | Column | Data Type | Constraints | Description |
 | --- | --- | --- | --- |
 | id | BigAutoField | PRIMARY KEY | Internal surrogate key |
-| request_id | CharField(20) | UNIQUE, INDEXED | Clinical requisition identifier (e.g. REQ-00056) |
-| hospital_id | BigIntegerField | FK → hospital | Requesting medical institution |
+| request_id | CharField(20) | UNIQUE, INDEXED | Requisition identifier (e.g. REQ-00056) |
+| hospital_id | BigIntegerField | FK → hospital | Requesting hospital institution |
 | patient_id | BigIntegerField | FK → patient, NULL | Recipient patient record |
 | priority | CharField(20) | INDEXED | routine / urgent / emergency |
-| status | CharField(20) | INDEXED | pending / approved / fulfilled / rejected / cancelled |
+| status | CharField(20) | INDEXED | pending / approved / fulfilled / cancelled |
 | required_by_date | DateField | NULLABLE | Clinical deadline for transfusion |
 | approved_by_id | BigIntegerField | FK → user, NULL | Authorizing Medical Officer |
 | created_at | DateTimeField | auto_now_add=True | Requisition timestamp |
-
-
-### 4.2.4 Three-Tier Storage Hierarchy
-
-Physical blood unit storage is structured as an extensible three-tier hierarchy to reflect clinical refrigeration facilities:
-
-- Storage Area: Represents a physical room or facility zone (e.g., 'Cold Room A', 'Platelet Storage Bay').
-- Storage Device: Represents an individual piece of equipment (e.g., 'Blood Bank Refrigerator #2', 'Ultra-Low Freezer #1').
-- Storage Position: An indexed slot or shelf inside a device (e.g., 'Shelf-3 / Bin-4') to which an InventoryItem is mapped.
-
-### 4.2.5 Immutable Audit Trail (audit_auditlog)
-
-To comply with international hemovigilance regulations, every data mutation across all 15 apps is intercepted by the thread-local AuditMiddleware and recorded in the audit_auditlog table:
-
-| Column | Data Type | Description |
-| --- | --- | --- |
-| id | BigAutoField | Primary key |
-| user_id | BigIntegerField | Foreign key to auth_user (authenticated actor) |
-| action | CharField(50) | Action verb: create / update / delete / login / logout |
-| model_name | CharField(100) | Target Django model name (e.g., 'BloodBag', 'InventoryItem') |
-| object_id | CharField(50) | Primary key of target database record |
-| object_repr | TextField | Human-readable string representation at mutation time |
-| changes | JSONField | Field-level change delta: {field: [old_value, new_value]} |
-| ip_address | GenericIPAddressField | Client IPv4 / IPv6 network address |
-| timestamp | DateTimeField | Immutable UTC timestamp (auto_now_add=True) |
-
-
-### 4.2.6 Identifier Formatting Standard
-
-All business entities use standardized, zero-padded unique prefixes for fast scanning and human recognition:
-
-| Entity | Prefix | Format Pattern | Example |
-| --- | --- | --- | --- |
-| Donor | DNR- | DNR-NNNNN | DNR-00042 |
-| Appointment | APT- | APT-NNNNN | APT-00017 |
-| Donation | DON- | DON-NNNNN | DON-00123 |
-| Blood Bag | BB- | BB-NNNNN | BB-00123 |
-| Lab Sample | SMP- | SMP-NNNNN | SMP-00456 |
-| Component | CMPNT- | CMPNT-NNNNN | CMPNT-00789 |
-| Inventory Item | INV- | INV-NNNNN | INV-00234 |
-| Quarantine Record | QRN- | QRN-NNNNN | QRN-00011 |
-| Blood Request | REQ- | REQ-NNNNN | REQ-00056 |
-| Reservation | RSV- | RSV-NNNNN | RSV-00012 |
-| Issue Manifest | ISS- | ISS-NNNNN | ISS-00034 |
-| Discard Record | DIS- | DIS-NNNNN | DIS-00007 |
-| Patient | PAT- | PAT-NNNNN | PAT-00099 |
 
 
 # 5. GitHub Link
@@ -481,7 +523,7 @@ The complete source code, documentation, CI/CD configuration, and deployment scr
 
 https://github.com/phanindra267/Hemovigilance
 
-The repository includes: source code for all 15 Django apps, Dockerfile and docker-compose.yml for production deployment, Nginx configuration, GitHub Actions CI/CD pipeline (.github/workflows/ci.yml), full documentation suite (ARCHITECTURE.md, DATABASE.md, WORKFLOWS.md, SECURITY.md, TESTING.md, DEPLOYMENT.md, API_OR_URL_REFERENCE.md), utility scripts (scripts/), and seed data management command.
+The repository includes: source code for all 15 modular Django apps, multi-stage Dockerfile and docker-compose.yml for production orchestration, Nginx reverse proxy configuration, GitHub Actions CI/CD pipeline (.github/workflows/ci.yml), full documentation suite in docs/, utility automation scripts in scripts/, and database seed management commands.
 
 
 # 6. Deployed Link
@@ -494,15 +536,15 @@ Demo Logins (Password for all accounts: BloodBank@2026):
 
 | Role | Username | Dashboard Capabilities |
 | --- | --- | --- |
-| Super Administrator | admin | System settings, audit log, full administrative authority |
-| Blood Bank Admin | bb_admin | Facility configuration, staff management, master inventory |
-| Medical Officer | dr_smith | Clinical approvals, TTI release gate, discard authorizations |
-| Lab Technician | tech_john | Sample testing entry, TTI screening, component separation |
-| Inventory Manager | inv_sarah | Storage allocations, temperature logs, quarantine release |
+| Super Administrator | admin | System configuration, facility settings, audit log, full administrative authority |
+| Blood Bank Admin | bb_admin | Facility configuration, staff management, cold chain devices, master inventory |
+| Medical Officer | dr_smith | Clinical donor approvals, TTI release gate, discard authorizations |
+| Lab Technician | tech_john | Phlebotomy barcoding, sample testing entry, TTI screening, component separation |
+| Inventory Manager | inv_sarah | Storage slot allocations, temperature logs, quarantine release |
 | Donor Coordinator | coord_alex | Donor registrations, appointment scheduling, camp management |
-| Hospital Coordinator | hosp_maria | Hospital blood orders, crossmatch requests, emergency STAT |
-| Camp Organizer | camp_david | Blood camp drive coordination, venue logistics |
-| Voluntary Donor | donor_raj | Donor portal, donation history, upcoming appointment slots |
+| Hospital Coordinator | hosp_maria | Hospital blood orders, crossmatch requests, emergency STAT requisitions |
+| Camp Organizer | camp_david | Blood camp drive coordination, venue logistics, community outreach |
+| Voluntary Donor | donor_raj | Donor portal, donation history, upcoming appointment slot booking |
 
 
 # 7. Client Approval Proof
@@ -602,7 +644,7 @@ Goods and Services Tax (GST) Registration & Regulatory Filing Information:
 # A. Appendices
 
 
-## A.1 Appendix 1 – Test Results Summary
+## A.1 Appendix 1 – Automated Test Execution Summary
 
 The automated test suite runs via Django's test runner and CI pipeline (.github/workflows/ci.yml):
 
@@ -618,7 +660,7 @@ The automated test suite runs via Django's test runner and CI pipeline (.github/
 | AuditLogMiddlewareTest | audit | Thread-local audit logging, IP and delta tracking | 11 | PASSED |
 
 
-## A.2 Appendix 2 – Django App Module Reference
+## A.2 Appendix 2 – Modular Django Apps Reference
 
 Architectural mapping of all 15 modular Django applications within RedLink:
 
