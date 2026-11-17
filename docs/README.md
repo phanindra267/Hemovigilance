@@ -8,7 +8,7 @@ This directory contains the complete technical documentation, regulatory specifi
 
 | Document | Format | Description |
 |---|---|---|
-| [`ProjectPresentation.pptx`](ProjectPresentation.pptx) | PowerPoint (.pptx) | Complete 24-Slide Redesigned Master Presentation (16:9 Widescreen, Clickable Navigation, 15 Embedded High-Res Graphics, Viva-Ready) |
+| [`ProjectPresentation.pptx`](ProjectPresentation.pptx) | PowerPoint (.pptx) | Complete 24-Slide Redesigned Master Presentation (16:9 Widescreen, Clickable Navigation, 20 Embedded High-Res Graphics & Infographics, 70/30 Visual Balance, Viva-Ready) |
 | [`ProjectPresentation.pdf`](ProjectPresentation.pdf) | PDF (.pdf) | Complete Presentation Slide Deck Export (24 High-Resolution Slides) |
 | [`ProjectReport.pdf`](ProjectReport.pdf) | PDF (.pdf) | Complete Official IEEE Std 830-1998 Software Requirements Specification (28 Pages, 7 Embedded High-Res Diagrams) |
 | [`ProjectReport.docx`](ProjectReport.docx) | Word (.docx) | Editable IEEE Std 830-1998 Software Requirements Specification with Client Proofs & Database Design |
